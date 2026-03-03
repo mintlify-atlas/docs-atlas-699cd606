@@ -1,0 +1,260 @@
+---
+title: 'Hooks Overview'
+description: 'Understanding the GitHub Copilot hooks system for automated workflows'
+---
+
+# Hooks Overview
+
+Hooks enable automated workflows triggered by specific events during GitHub Copilot coding agent sessions, such as session start, session end, user prompts, and tool usage.
+
+## What Are Hooks?
+
+Hooks are event-driven automations that execute custom scripts or commands during GitHub Copilot coding agent sessions. They follow the [GitHub Copilot hooks specification](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks) and provide a powerful way to extend your development workflow.
+
+<CardGroup cols={2}>
+  <Card title="Session Tracking" icon="clock">
+    Log session starts and ends for audit trails and usage analytics
+  </Card>
+  <Card title="Auto-Commit" icon="git-alt">
+    Automatically commit and push changes when sessions end
+  </Card>
+  <Card title="Governance" icon="shield-halved">
+    Scan prompts for security threats and compliance violations
+  </Card>
+  <Card title="Custom Workflows" icon="wand-magic-sparkles">
+    Integrate with external tools and services
+  </Card>
+</CardGroup>
+
+## Hook Structure
+
+Each hook is a folder containing:
+
+<Steps>
+  <Step title="README.md with Frontmatter">
+    A documentation file with required metadata:
+    ```yaml
+    ---
+    name: 'Hook Name'
+    description: 'What this hook does'
+    tags: ['category', 'type']
+    ---
+    ```
+  </Step>
+  
+  <Step title="hooks.json Configuration">
+    A JSON file defining hook events and commands:
+    ```json
+    {
+      "version": 1,
+      "hooks": {
+        "sessionStart": [...],
+        "sessionEnd": [...],
+        "userPromptSubmitted": [...]
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Bundled Scripts & Assets">
+    Helper scripts, utilities, or configuration files referenced in hooks.json
+  </Step>
+</Steps>
+
+## Available Hook Events
+
+Hooks can be triggered by the following events during a Copilot coding agent session:
+
+<AccordionGroup>
+  <Accordion title="sessionStart">
+    Triggered when a new Copilot coding agent session begins.
+    
+    **Common Use Cases:**
+    - Initialize session logging
+    - Set up environment variables
+    - Load project-specific configurations
+    - Start time tracking
+  </Accordion>
+  
+  <Accordion title="sessionEnd">
+    Triggered when a Copilot coding agent session ends.
+    
+    **Common Use Cases:**
+    - Auto-commit and push changes
+    - Generate session reports
+    - Clean up temporary files
+    - Log session duration and statistics
+  </Accordion>
+  
+  <Accordion title="userPromptSubmitted">
+    Triggered each time the user submits a prompt to the agent.
+    
+    **Common Use Cases:**
+    - Log user prompts for audit
+    - Scan prompts for security threats
+    - Track prompt patterns and analytics
+    - Filter or validate prompts
+  </Accordion>
+  
+  <Accordion title="preToolUse">
+    Triggered before the agent uses a tool.
+    
+    **Common Use Cases:**
+    - Validate tool parameters
+    - Log tool usage for compliance
+    - Set up tool-specific environments
+    - Implement custom authorization
+  </Accordion>
+  
+  <Accordion title="postToolUse">
+    Triggered after the agent uses a tool.
+    
+    **Common Use Cases:**
+    - Log tool results
+    - Clean up tool artifacts
+    - Track tool performance
+    - Trigger follow-up actions
+  </Accordion>
+  
+  <Accordion title="errorOccurred">
+    Triggered when an error occurs during the session.
+    
+    **Common Use Cases:**
+    - Log errors for debugging
+    - Send error notifications
+    - Trigger recovery procedures
+    - Collect diagnostic information
+  </Accordion>
+</AccordionGroup>
+
+## Hook Configuration
+
+The `hooks.json` file defines which commands run on which events. Here's a complete example:
+
+```json hooks.json
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-session-start.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-session-end.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-prompt.sh",
+        "cwd": ".",
+        "env": {
+          "LOG_LEVEL": "INFO"
+        },
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
+```
+
+### Configuration Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `version` | number | Hook specification version (currently `1`) |
+| `type` | string | Command type (currently only `"command"` supported) |
+| `bash` | string | Path to the script to execute |
+| `cwd` | string | Working directory for the command (`.` for repository root) |
+| `env` | object | Environment variables to pass to the script |
+| `timeoutSec` | number | Maximum execution time in seconds |
+
+## Installation
+
+To install a hook in your repository:
+
+<Steps>
+  <Step title="Copy Hook Folder">
+    Copy the hook folder to your repository's `.github/hooks/` directory:
+    ```bash
+    cp -r hooks/session-logger .github/hooks/
+    ```
+  </Step>
+  
+  <Step title="Make Scripts Executable">
+    Ensure any bundled scripts are executable:
+    ```bash
+    chmod +x .github/hooks/session-logger/*.sh
+    ```
+  </Step>
+  
+  <Step title="Commit to Default Branch">
+    Commit the hook to your repository's default branch:
+    ```bash
+    git add .github/hooks/session-logger
+    git commit -m "Add session logger hook"
+    git push
+    ```
+  </Step>
+  
+  <Step title="Hooks Activate Automatically">
+    Hooks automatically execute during Copilot coding agent sessions once committed to the default branch.
+  </Step>
+</Steps>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Keep Scripts Fast" icon="bolt">
+    Use short timeouts and optimize scripts to avoid blocking the agent
+  </Card>
+  <Card title="Handle Errors Gracefully" icon="triangle-exclamation">
+    Always include error handling - hooks should never crash the session
+  </Card>
+  <Card title="Respect Privacy" icon="user-shield">
+    Don't log sensitive data like full prompts or credentials
+  </Card>
+  <Card title="Make Hooks Optional" icon="toggle-on">
+    Support environment variables to disable hooks when needed
+  </Card>
+</CardGroup>
+
+### Security Considerations
+
+- **Validate inputs**: Never trust data from hooks without validation
+- **Use least privilege**: Run scripts with minimal permissions
+- **Avoid external calls**: Minimize network requests in hooks
+- **Protect logs**: Add log directories to `.gitignore`
+- **Review scripts**: Audit hook scripts before installing them
+
+## When to Use Hooks
+
+Hooks are ideal for:
+
+- **Automated session logging** and audit trails
+- **Auto-committing changes** at session end
+- **Tracking usage analytics** for teams
+- **Integrating with external tools** (Slack, monitoring systems)
+- **Enforcing governance policies** on prompts and tool usage
+- **Custom session workflows** specific to your project
+
+For more complex repository automation that runs in GitHub Actions, see [Agentic Workflows](/resources/workflows/overview).
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Browse Hook Catalog" icon="book" href="/resources/hooks/catalog">
+    Explore available hooks and installation examples
+  </Card>
+  <Card title="GitHub Copilot Hooks Spec" icon="book-open" href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks">
+    Read the official hooks specification
+  </Card>
+</CardGroup>

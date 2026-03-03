@@ -1,0 +1,995 @@
+---
+title: Instructions Catalog
+description: Browse the complete collection of custom instructions organized by technology and use case
+---
+
+## About This Catalog
+
+This catalog contains **175+ custom instructions** that automatically guide GitHub Copilot to follow best practices, coding standards, and project-specific conventions. Instructions are organized by technology, framework, and use case.
+
+<Note>
+Each instruction includes an **applyTo** pattern that automatically activates when working with matching files. Click the file name to view the source on GitHub.
+</Note>
+
+## Frontend Frameworks
+
+### React Ecosystem
+
+<CardGroup cols={2}>
+  <Card title="React" icon="react">
+    **File:** `reactjs.instructions.md`  
+    **Applies to:** `**/*.jsx, **/*.tsx, **/*.js, **/*.ts, **/*.css, **/*.scss`
+    
+    ReactJS development standards with modern hooks, patterns, and best practices. Includes component design, state management, performance optimization, and testing guidelines.
+  </Card>
+
+  <Card title="Next.js" icon="n">
+    **File:** `nextjs.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css`
+    
+    Best practices for Next.js App Router with modern caching, tooling, and server/client boundaries (Next.js 16.1.1+).
+  </Card>
+
+  <Card title="Next.js + Tailwind" icon="wind">
+    **File:** `nextjs-tailwind.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts, **/*.jsx, **/*.js`
+    
+    Combined Next.js and Tailwind CSS patterns for rapid development.
+  </Card>
+
+  <Card title="TanStack Start" icon="layer-group">
+    **File:** `tanstack-start-shadcn-tailwind.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts`
+    
+    TanStack Start with shadcn/ui and Tailwind CSS integration.
+  </Card>
+</CardGroup>
+
+### Angular
+
+<Card title="Angular" icon="angular">
+  **File:** `angular.instructions.md`  
+  **Applies to:** `**/*.ts, **/*.html, **/*.scss, **/*.css`
+  
+  Angular-specific coding standards with Signals for state management, standalone components, and TypeScript best practices. Includes architecture, testing, and performance optimization.
+</Card>
+
+### Vue.js
+
+<Card title="Vue.js 3" icon="vuejs">
+  **File:** `vuejs3.instructions.md`  
+  **Applies to:** `**/*.vue, **/*.ts, **/*.js, **/*.scss`
+  
+  Vue 3 development with Composition API, TypeScript, Pinia state management, and modern patterns. Includes component design, reactivity, and testing.
+</Card>
+
+### Other Frontend Frameworks
+
+<CardGroup cols={2}>
+  <Card title="Svelte" icon="s">
+    **File:** `svelte.instructions.md`  
+    **Applies to:** `**/*.svelte, **/*.ts, **/*.js`
+    
+    Svelte component development patterns and best practices.
+  </Card>
+
+  <Card title="Astro" icon="rocket">
+    **File:** `astro.instructions.md`  
+    **Applies to:** `**/*.astro, **/*.ts, **/*.tsx`
+    
+    Astro development standards for content-driven websites.
+  </Card>
+</CardGroup>
+
+## Backend Frameworks & Languages
+
+### .NET Ecosystem
+
+<CardGroup cols={2}>
+  <Card title="C#" icon="microsoft">
+    **File:** `csharp.instructions.md`  
+    **Applies to:** `**/*.cs`
+    
+    C# development guidelines with C# 14 features, naming conventions, nullable reference types, and best practices.
+  </Card>
+
+  <Card title="ASP.NET REST APIs" icon="server">
+    **File:** `aspnet-rest-apis.instructions.md`  
+    **Applies to:** `**/*.cs`
+    
+    Guidelines for building REST APIs with ASP.NET including authentication, validation, versioning, and documentation.
+  </Card>
+
+  <Card title="Blazor" icon="bolt">
+    **File:** `blazor.instructions.md`  
+    **Applies to:** `**/*.razor, **/*.razor.cs, **/*.razor.css`
+    
+    Blazor component and application patterns for building interactive web UIs with .NET.
+  </Card>
+
+  <Card title=".NET MAUI" icon="mobile">
+    **File:** `dotnet-maui.instructions.md`  
+    **Applies to:** `**/*.xaml, **/*.cs`
+    
+    .NET MAUI component and application patterns for cross-platform mobile development.
+  </Card>
+
+  <Card title=".NET Framework" icon="windows">
+    **File:** `dotnet-framework.instructions.md`  
+    **Applies to:** `**/*.cs, **/*.vb`
+    
+    Guidance for .NET Framework projects including project structure and NuGet management.
+  </Card>
+
+  <Card title=".NET WPF" icon="desktop">
+    **File:** `dotnet-wpf.instructions.md`  
+    **Applies to:** `**/*.xaml, **/*.cs`
+    
+    WPF application development with MVVM patterns and XAML best practices.
+  </Card>
+</CardGroup>
+
+### Java & JVM
+
+<CardGroup cols={2}>
+  <Card title="Java" icon="java">
+    **File:** `java.instructions.md`  
+    **Applies to:** `**/*.java`
+    
+    Java development guidelines with modern language features and best practices.
+  </Card>
+
+  <Card title="Spring Boot" icon="leaf">
+    **File:** `springboot.instructions.md`  
+    **Applies to:** `**/*.java`
+    
+    Spring Boot application development patterns, dependency injection, and REST API design.
+  </Card>
+
+  <Card title="Quarkus" icon="cube">
+    **File:** `quarkus.instructions.md`  
+    **Applies to:** `**/*.java`
+    
+    Quarkus framework patterns for cloud-native Java applications.
+  </Card>
+
+  <Card title="Scala 2" icon="code">
+    **File:** `scala2.instructions.md`  
+    **Applies to:** `**/*.scala`
+    
+    Scala 2 development patterns and functional programming best practices.
+  </Card>
+</CardGroup>
+
+### Node.js & TypeScript
+
+<CardGroup cols={2}>
+  <Card title="TypeScript" icon="code">
+    **File:** `typescript-5-es2022.instructions.md`  
+    **Applies to:** `**/*.ts, **/*.tsx`
+    
+    TypeScript 5 with ES2022 features, strict mode, and type-safety patterns.
+  </Card>
+
+  <Card title="NestJS" icon="n">
+    **File:** `nestjs.instructions.md`  
+    **Applies to:** `**/*.ts`
+    
+    NestJS framework patterns for building scalable server-side applications.
+  </Card>
+
+  <Card title="Node.js + Vitest" icon="node">
+    **File:** `nodejs-javascript-vitest.instructions.md`  
+    **Applies to:** `**/*.js, **/*.ts`
+    
+    Node.js and JavaScript code generation with Vitest testing framework.
+  </Card>
+</CardGroup>
+
+### Python
+
+<CardGroup cols={2}>
+  <Card title="Python" icon="python">
+    **File:** `python.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Python coding conventions following PEP 8 with type hints, docstrings, and best practices.
+  </Card>
+
+  <Card title="LangChain Python" icon="link">
+    **File:** `langchain-python.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    LangChain development patterns for building LLM applications with Python.
+  </Card>
+</CardGroup>
+
+### Other Languages
+
+<CardGroup cols={2}>
+  <Card title="Go" icon="golang">
+    **File:** `go.instructions.md`  
+    **Applies to:** `**/*.go`
+    
+    Go development standards and idiomatic patterns.
+  </Card>
+
+  <Card title="Rust" icon="rust">
+    **File:** `rust.instructions.md`  
+    **Applies to:** `**/*.rs`
+    
+    Rust development with ownership, borrowing, and memory safety patterns.
+  </Card>
+
+  <Card title="Ruby on Rails" icon="gem">
+    **File:** `ruby-on-rails.instructions.md`  
+    **Applies to:** `**/*.rb, **/*.erb`
+    
+    Ruby on Rails conventions and best practices.
+  </Card>
+
+  <Card title="PHP Symfony" icon="php">
+    **File:** `php-symfony.instructions.md`  
+    **Applies to:** `**/*.php`
+    
+    Symfony framework patterns for PHP applications.
+  </Card>
+
+  <Card title="Dart & Flutter" icon="mobile">
+    **File:** `dart-n-flutter.instructions.md`  
+    **Applies to:** `**/*.dart`
+    
+    Dart and Flutter development following official recommendations.
+  </Card>
+
+  <Card title="Swift" icon="apple">
+    **File:** `swift-mcp-server.instructions.md`  
+    **Applies to:** `**/*.swift`
+    
+    Swift development for MCP server implementation.
+  </Card>
+
+  <Card title="Kotlin" icon="k">
+    **File:** `kotlin-mcp-server.instructions.md`  
+    **Applies to:** `**/*.kt`
+    
+    Kotlin development patterns for MCP servers.
+  </Card>
+
+  <Card title="Clojure" icon="code">
+    **File:** `clojure.instructions.md`  
+    **Applies to:** `**/*.clj, **/*.cljs`
+    
+    Clojure functional programming patterns and REPL-driven development.
+  </Card>
+
+  <Card title="R" icon="chart-line">
+    **File:** `r.instructions.md`  
+    **Applies to:** `**/*.r, **/*.R`
+    
+    R programming for statistical computing and data analysis.
+  </Card>
+</CardGroup>
+
+## Infrastructure as Code
+
+<CardGroup cols={2}>
+  <Card title="Terraform" icon="terraform">
+    **File:** `terraform.instructions.md`  
+    **Applies to:** `**/*.tf`
+    
+    Terraform conventions and guidelines for infrastructure provisioning with security, modularity, and maintainability focus.
+  </Card>
+
+  <Card title="Terraform Azure" icon="microsoft">
+    **File:** `terraform-azure.instructions.md`  
+    **Applies to:** `**/*.tf`
+    
+    Azure-specific Terraform patterns and best practices.
+  </Card>
+
+  <Card title="Terraform SAP BTP" icon="cloud">
+    **File:** `terraform-sap-btp.instructions.md`  
+    **Applies to:** `**/*.tf`
+    
+    SAP Business Technology Platform infrastructure with Terraform.
+  </Card>
+
+  <Card title="Bicep" icon="microsoft">
+    **File:** `bicep-code-best-practices.instructions.md`  
+    **Applies to:** `**/*.bicep`
+    
+    Infrastructure as Code with Bicep for Azure resources.
+  </Card>
+
+  <Card title="Azure Verified Modules (Bicep)" icon="shield">
+    **File:** `azure-verified-modules-bicep.instructions.md`  
+    **Applies to:** `**/*.bicep`
+    
+    Azure Verified Modules patterns for Bicep.
+  </Card>
+
+  <Card title="Azure Verified Modules (Terraform)" icon="shield">
+    **File:** `azure-verified-modules-terraform.instructions.md`  
+    **Applies to:** `**/*.tf`
+    
+    Azure Verified Modules patterns for Terraform.
+  </Card>
+
+  <Card title="Ansible" icon="server">
+    **File:** `ansible.instructions.md`  
+    **Applies to:** `**/*.yml, **/*.yaml`
+    
+    Ansible conventions and best practices for automation.
+  </Card>
+</CardGroup>
+
+## Cloud & DevOps
+
+### Azure
+
+<CardGroup cols={2}>
+  <Card title="Azure Functions TypeScript" icon="bolt">
+    **File:** `azure-functions-typescript.instructions.md`  
+    **Applies to:** `**/*.ts`
+    
+    TypeScript patterns for Azure Functions serverless development.
+  </Card>
+
+  <Card title="Azure DevOps Pipelines" icon="pipeline">
+    **File:** `azure-devops-pipelines.instructions.md`  
+    **Applies to:** `**/*.yml, **/*.yaml`
+    
+    Best practices for Azure DevOps Pipeline YAML files.
+  </Card>
+
+  <Card title="Azure Logic Apps & Power Automate" icon="workflow">
+    **File:** `azure-logic-apps-power-automate.instructions.md`  
+    **Applies to:** `**/*.json`
+    
+    Workflow Definition Language patterns for Logic Apps and Power Automate.
+  </Card>
+</CardGroup>
+
+### AWS
+
+<Card title="AWS AppSync Event API" icon="aws">
+  **File:** `aws-appsync.instructions.md`  
+  **Applies to:** `**/*.js`
+  
+  AWS AppSync Event API handlers with APPSYNC_JS runtime patterns.
+</Card>
+
+### Containerization & Kubernetes
+
+<CardGroup cols={2}>
+  <Card title="Docker Best Practices" icon="docker">
+    **File:** `containerization-docker-best-practices.instructions.md`  
+    **Applies to:** `**/Dockerfile, **/*.dockerfile`
+    
+    Comprehensive Docker best practices for optimized, secure images.
+  </Card>
+
+  <Card title="Kubernetes Manifests" icon="dharmachakra">
+    **File:** `kubernetes-manifests.instructions.md`  
+    **Applies to:** `**/*.yml, **/*.yaml`
+    
+    Kubernetes manifest patterns and best practices.
+  </Card>
+
+  <Card title="Kubernetes Deployment" icon="ship">
+    **File:** `kubernetes-deployment-best-practices.instructions.md`  
+    **Applies to:** `**/*.yml, **/*.yaml`
+    
+    Best practices for Kubernetes deployments, services, and configurations.
+  </Card>
+</CardGroup>
+
+### CI/CD
+
+<Card title="GitHub Actions" icon="github">
+  **File:** `github-actions-ci-cd-best-practices.instructions.md`  
+  **Applies to:** `**/.github/workflows/*.yml, **/.github/workflows/*.yaml`
+  
+  GitHub Actions workflow patterns for CI/CD pipelines.
+</Card>
+
+## Database & Data
+
+<CardGroup cols={2}>
+  <Card title="MongoDB DBA" icon="database">
+    **File:** `mongo-dba.instructions.md`  
+    **Applies to:** `**/*.js, **/*.ts`
+    
+    MongoDB database administration patterns.
+  </Card>
+
+  <Card title="MS SQL DBA" icon="database">
+    **File:** `ms-sql-dba.instructions.md`  
+    **Applies to:** `**/*.sql`
+    
+    Microsoft SQL Server administration and T-SQL best practices.
+  </Card>
+
+  <Card title="SQL Stored Procedures" icon="code">
+    **File:** `sql-sp-generation.instructions.md`  
+    **Applies to:** `**/*.sql`
+    
+    SQL stored procedure generation patterns.
+  </Card>
+</CardGroup>
+
+## Testing Frameworks
+
+<CardGroup cols={2}>
+  <Card title="Playwright TypeScript" icon="play">
+    **File:** `playwright-typescript.instructions.md`  
+    **Applies to:** `**/*.spec.ts, **/*.test.ts`
+    
+    Playwright end-to-end testing with TypeScript.
+  </Card>
+
+  <Card title="Playwright Python" icon="python">
+    **File:** `playwright-python.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Playwright testing patterns for Python.
+  </Card>
+
+  <Card title="Playwright .NET" icon="microsoft">
+    **File:** `playwright-dotnet.instructions.md`  
+    **Applies to:** `**/*.cs`
+    
+    Playwright testing for .NET applications.
+  </Card>
+
+  <Card title="PowerShell Pester" icon="terminal">
+    **File:** `powershell-pester-5.instructions.md`  
+    **Applies to:** `**/*.Tests.ps1`
+    
+    Pester 5 testing framework for PowerShell.
+  </Card>
+</CardGroup>
+
+## Microsoft Power Platform
+
+### Power Apps & PCF
+
+<CardGroup cols={2}>
+  <Card title="PCF Code Components" icon="cube">
+    **File:** `pcf-code-components.instructions.md`  
+    **Applies to:** `**/ControlManifest.Input.xml, **/*.tsx, **/*.ts`
+    
+    PowerApps Component Framework structure and implementation.
+  </Card>
+
+  <Card title="PCF Best Practices" icon="star">
+    **File:** `pcf-best-practices.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts`
+    
+    Best practices for developing PCF code components.
+  </Card>
+
+  <Card title="PCF Model-Driven Apps" icon="table">
+    **File:** `pcf-model-driven-apps.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts`
+    
+    PCF components for model-driven apps.
+  </Card>
+
+  <Card title="PCF Canvas Apps" icon="palette">
+    **File:** `pcf-canvas-apps.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts`
+    
+    PCF components for canvas apps with security and configuration.
+  </Card>
+
+  <Card title="Power Apps Canvas YAML" icon="code">
+    **File:** `power-apps-canvas-yaml.instructions.md`  
+    **Applies to:** `**/*.pa.yaml, **/*.fx.yaml`
+    
+    Power Apps Canvas app YAML format patterns.
+  </Card>
+
+  <Card title="Power Apps Code Apps" icon="mobile">
+    **File:** `power-apps-code-apps.instructions.md`  
+    **Applies to:** `**/*.tsx, **/*.ts`
+    
+    Code-first Power Apps development patterns.
+  </Card>
+</CardGroup>
+
+### Power BI
+
+<CardGroup cols={2}>
+  <Card title="Power BI DAX" icon="calculator">
+    **File:** `power-bi-dax-best-practices.instructions.md`  
+    **Applies to:** `**/*.dax`
+    
+    DAX best practices for Power BI calculations.
+  </Card>
+
+  <Card title="Power BI Data Modeling" icon="diagram-project">
+    **File:** `power-bi-data-modeling-best-practices.instructions.md`  
+    **Applies to:** `**/*.pbit, **/*.pbix`
+    
+    Power BI data modeling best practices.
+  </Card>
+
+  <Card title="Power BI Report Design" icon="chart-simple">
+    **File:** `power-bi-report-design-best-practices.instructions.md`  
+    **Applies to:** `**/*.pbix`
+    
+    Power BI report design and visualization best practices.
+  </Card>
+
+  <Card title="Power BI Security & RLS" icon="lock">
+    **File:** `power-bi-security-rls-best-practices.instructions.md`  
+    **Applies to:** `**/*.dax, **/*.pbix`
+    
+    Row-level security and data protection in Power BI.
+  </Card>
+
+  <Card title="Power BI Custom Visuals" icon="paintbrush">
+    **File:** `power-bi-custom-visuals-development.instructions.md`  
+    **Applies to:** `**/*.ts, **/*.tsx`
+    
+    Custom visual development for Power BI.
+  </Card>
+
+  <Card title="Power BI DevOps & ALM" icon="code-branch">
+    **File:** `power-bi-devops-alm-best-practices.instructions.md`  
+    **Applies to:** `**/*.json, **/*.yml`
+    
+    Application lifecycle management for Power BI solutions.
+  </Card>
+</CardGroup>
+
+### Dataverse
+
+<CardGroup cols={2}>
+  <Card title="Dataverse Python SDK" icon="python">
+    **File:** `dataverse-python.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Dataverse SDK for Python development patterns.
+  </Card>
+
+  <Card title="Dataverse Best Practices" icon="star">
+    **File:** `dataverse-python-best-practices.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Best practices for Dataverse Python SDK usage.
+  </Card>
+
+  <Card title="Dataverse Authentication" icon="key">
+    **File:** `dataverse-python-authentication-security.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Authentication and security patterns for Dataverse.
+  </Card>
+
+  <Card title="Dataverse Performance" icon="gauge-high">
+    **File:** `dataverse-python-performance-optimization.instructions.md`  
+    **Applies to:** `**/*.py`
+    
+    Performance optimization for Dataverse operations.
+  </Card>
+</CardGroup>
+
+### Power Platform Connectors
+
+<Card title="Power Platform Connector" icon="plug">
+  **File:** `power-platform-connector.instructions.md`  
+  **Applies to:** `**/*.json`
+  
+  Custom connector development for Power Platform.
+</Card>
+
+## Salesforce
+
+<CardGroup cols={2}>
+  <Card title="Apex" icon="cloud">
+    **File:** `apex.instructions.md`  
+    **Applies to:** `**/*.cls, **/*.trigger`
+    
+    Salesforce Apex development guidelines and best practices.
+  </Card>
+
+  <Card title="Lightning Web Components" icon="bolt">
+    **File:** `lwc.instructions.md`  
+    **Applies to:** `**/*.js, **/*.html, **/*.css`
+    
+    Lightning Web Components development patterns.
+  </Card>
+</CardGroup>
+
+## MCP Server Development
+
+Model Context Protocol (MCP) server implementation guides for various languages:
+
+<CardGroup cols={2}>
+  <Card title="TypeScript MCP" icon="code">
+    **File:** `typescript-mcp-server.instructions.md`  
+    **Applies to:** `**/*.ts`
+  </Card>
+
+  <Card title="Python MCP" icon="python">
+    **File:** `python-mcp-server.instructions.md`  
+    **Applies to:** `**/*.py`
+  </Card>
+
+  <Card title="C# MCP" icon="microsoft">
+    **File:** `csharp-mcp-server.instructions.md`  
+    **Applies to:** `**/*.cs`
+  </Card>
+
+  <Card title="Go MCP" icon="golang">
+    **File:** `go-mcp-server.instructions.md`  
+    **Applies to:** `**/*.go`
+  </Card>
+
+  <Card title="Java MCP" icon="java">
+    **File:** `java-mcp-server.instructions.md`  
+    **Applies to:** `**/*.java`
+  </Card>
+
+  <Card title="Kotlin MCP" icon="k">
+    **File:** `kotlin-mcp-server.instructions.md`  
+    **Applies to:** `**/*.kt`
+  </Card>
+
+  <Card title="PHP MCP" icon="php">
+    **File:** `php-mcp-server.instructions.md`  
+    **Applies to:** `**/*.php`
+  </Card>
+
+  <Card title="Ruby MCP" icon="gem">
+    **File:** `ruby-mcp-server.instructions.md`  
+    **Applies to:** `**/*.rb`
+  </Card>
+
+  <Card title="Rust MCP" icon="rust">
+    **File:** `rust-mcp-server.instructions.md`  
+    **Applies to:** `**/*.rs`
+  </Card>
+
+  <Card title="Swift MCP" icon="apple">
+    **File:** `swift-mcp-server.instructions.md`  
+    **Applies to:** `**/*.swift`
+  </Card>
+</CardGroup>
+
+## Cross-Cutting Concerns
+
+### Security
+
+<CardGroup cols={2}>
+  <Card title="Security & OWASP" icon="shield-halved">
+    **File:** `security-and-owasp.instructions.md`  
+    **Applies to:** `**`
+    
+    OWASP security guidelines and vulnerability prevention.
+  </Card>
+
+  <Card title="Agent Safety" icon="user-shield">
+    **File:** `agent-safety.instructions.md`  
+    **Applies to:** `**`
+    
+    Safety and governance for AI agent systems.
+  </Card>
+</CardGroup>
+
+### Accessibility
+
+<CardGroup cols={2}>
+  <Card title="Accessibility (a11y)" icon="universal-access">
+    **File:** `a11y.instructions.md`  
+    **Applies to:** `**`
+    
+    WCAG 2.2 Level AA compliance and accessibility best practices.
+  </Card>
+
+  <Card title="Markdown Accessibility" icon="markdown">
+    **File:** `markdown-accessibility.instructions.md`  
+    **Applies to:** `**/*.md, **/*.mdx`
+    
+    Accessible markdown content guidelines.
+  </Card>
+</CardGroup>
+
+### Performance & Optimization
+
+<CardGroup cols={2}>
+  <Card title="Performance Optimization" icon="gauge-high">
+    **File:** `performance-optimization.instructions.md`  
+    **Applies to:** `**`
+    
+    General performance optimization patterns.
+  </Card>
+
+  <Card title="Object Calisthenics" icon="dumbbell">
+    **File:** `object-calisthenics.instructions.md`  
+    **Applies to:** `**`
+    
+    Nine rules for better object-oriented code.
+  </Card>
+</CardGroup>
+
+### Code Quality
+
+<CardGroup cols={2}>
+  <Card title="Code Review" icon="magnifying-glass">
+    **File:** `code-review-generic.instructions.md`  
+    **Applies to:** `**`
+    
+    Generic code review guidelines and best practices.
+  </Card>
+
+  <Card title="Self-Explanatory Code" icon="comment">
+    **File:** `self-explanatory-code-commenting.instructions.md`  
+    **Applies to:** `**`
+    
+    Guidelines for writing self-documenting code with minimal comments.
+  </Card>
+
+  <Card title="Context Engineering" icon="sitemap">
+    **File:** `context-engineering.instructions.md`  
+    **Applies to:** `**`
+    
+    Structuring code for better GitHub Copilot context.
+  </Card>
+</CardGroup>
+
+### AI & Prompt Engineering
+
+<CardGroup cols={2}>
+  <Card title="AI Prompt Engineering" icon="wand-magic-sparkles">
+    **File:** `ai-prompt-engineering-safety-best-practices.instructions.md`  
+    **Applies to:** `**`
+    
+    Comprehensive AI prompt engineering and safety frameworks.
+  </Card>
+
+  <Card title="Custom Agent Guidelines" icon="robot">
+    **File:** `agents.instructions.md`  
+    **Applies to:** `**/*.agent.md`
+    
+    Guidelines for creating custom GitHub Copilot agent files.
+  </Card>
+
+  <Card title="Agent Skills Guidelines" icon="star">
+    **File:** `agent-skills.instructions.md`  
+    **Applies to:** `**/SKILL.md`
+    
+    Creating high-quality Agent Skills for GitHub Copilot.
+  </Card>
+
+  <Card title="Custom Instructions Guidelines" icon="file-lines">
+    **File:** `instructions.instructions.md`  
+    **Applies to:** `**/*.instructions.md`
+    
+    Meta-instructions for creating custom instruction files.
+  </Card>
+
+  <Card title="Copilot Prompts" icon="terminal">
+    **File:** `prompt.instructions.md`  
+    **Applies to:** `**/*.prompt.md`
+    
+    Guidelines for creating Copilot prompt files.
+  </Card>
+</CardGroup>
+
+## Scripting & Shell
+
+<CardGroup cols={2}>
+  <Card title="Shell Scripts" icon="terminal">
+    **File:** `shell.instructions.md`  
+    **Applies to:** `**/*.sh, **/*.bash`
+    
+    Shell scripting best practices and patterns.
+  </Card>
+
+  <Card title="PowerShell" icon="windows">
+    **File:** `powershell.instructions.md`  
+    **Applies to:** `**/*.ps1, **/*.psm1`
+    
+    PowerShell scripting conventions and best practices.
+  </Card>
+
+  <Card title="Makefile" icon="gear">
+    **File:** `makefile.instructions.md`  
+    **Applies to:** `**/Makefile, **/*.mk`
+    
+    Makefile structure and build automation patterns.
+  </Card>
+</CardGroup>
+
+## Content & Documentation
+
+<CardGroup cols={2}>
+  <Card title="Markdown" icon="markdown">
+    **File:** `markdown.instructions.md`  
+    **Applies to:** `**/*.md, **/*.mdx`
+    
+    Markdown formatting and structure guidelines.
+  </Card>
+
+  <Card title="Localization" icon="language">
+    **File:** `localization.instructions.md`  
+    **Applies to:** `**/*.json, **/*.yml`
+    
+    Internationalization and localization best practices.
+  </Card>
+
+  <Card title="WordPress" icon="wordpress">
+    **File:** `wordpress.instructions.md`  
+    **Applies to:** `**/*.php`
+    
+    WordPress theme and plugin development.
+  </Card>
+
+  <Card title="Moodle" icon="graduation-cap">
+    **File:** `moodle.instructions.md`  
+    **Applies to:** `**/*.php`
+    
+    Moodle plugin and module development.
+  </Card>
+</CardGroup>
+
+## Linux Administration
+
+<CardGroup cols={2}>
+  <Card title="Arch Linux" icon="linux">
+    **File:** `arch-linux.instructions.md`  
+    **Applies to:** `**/*.sh`
+    
+    Arch Linux administration and pacman workflows.
+  </Card>
+
+  <Card title="Debian Linux" icon="debian">
+    **File:** `debian-linux.instructions.md`  
+    **Applies to:** `**/*.sh`
+    
+    Debian administration and apt package management.
+  </Card>
+
+  <Card title="Fedora Linux" icon="fedora">
+    **File:** `fedora-linux.instructions.md`  
+    **Applies to:** `**/*.sh`
+    
+    Fedora administration and dnf package management.
+  </Card>
+
+  <Card title="CentOS Linux" icon="centos">
+    **File:** `centos-linux.instructions.md`  
+    **Applies to:** `**/*.sh`
+    
+    CentOS administration and RHEL-compatible tooling.
+  </Card>
+</CardGroup>
+
+## Specialized Tools & Frameworks
+
+<CardGroup cols={2}>
+  <Card title="GenAIScript" icon="robot">
+    **File:** `genaiscript.instructions.md`  
+    **Applies to:** `**/*.genai.mjs, **/*.genai.js`
+    
+    GenAIScript patterns for AI automation.
+  </Card>
+
+  <Card title="Tailwind v4" icon="wind">
+    **File:** `tailwind-v4-vite.instructions.md`  
+    **Applies to:** `**/*.css, **/*.html`
+    
+    Tailwind CSS v4 with Vite configuration.
+  </Card>
+
+  <Card title="HTML/CSS Style Guide" icon="palette">
+    **File:** `html-css-style-color-guide.instructions.md`  
+    **Applies to:** `**/*.html, **/*.css`
+    
+    HTML and CSS styling and color usage guidelines.
+  </Card>
+
+  <Card title="CMake & vcpkg" icon="c">
+    **File:** `cmake-vcpkg.instructions.md`  
+    **Applies to:** `**/CMakeLists.txt, **/*.cmake`
+    
+    C++ project configuration and package management.
+  </Card>
+
+  <Card title="ColdFusion CFC" icon="code">
+    **File:** `coldfusion-cfc.instructions.md`  
+    **Applies to:** `**/*.cfc`
+    
+    ColdFusion component patterns.
+  </Card>
+
+  <Card title="ColdFusion CFM" icon="code">
+    **File:** `coldfusion-cfm.instructions.md`  
+    **Applies to:** `**/*.cfm`
+    
+    ColdFusion page and application patterns.
+  </Card>
+</CardGroup>
+
+## Migration & Upgrade Guides
+
+<Accordion title=".NET Upgrades">
+  - **dotnet-upgrade.instructions.md** - Comprehensive .NET framework upgrades
+  - **dotnet-maui-9-to-dotnet-maui-10-upgrade.instructions.md** - MAUI 9 to 10 migration
+</Accordion>
+
+<Accordion title="Java Upgrades">
+  - **java-11-to-java-17-upgrade.instructions.md** - Java 11 to 17 migration
+  - **java-17-to-java-21-upgrade.instructions.md** - Java 17 to 21 migration
+  - **java-21-to-java-25-upgrade.instructions.md** - Java 21 to 25 migration
+</Accordion>
+
+<Accordion title="Spring Boot Migrations">
+  - **springboot-4-migration.instructions.md** - Spring Boot 4 migration guide
+  - **convert-jpa-to-spring-data-cosmos.instructions.md** - JPA to Spring Data Cosmos
+  - **convert-cassandra-to-spring-data-cosmos.instructions.md** - Cassandra to Spring Data Cosmos
+</Accordion>
+
+## Utility & Development Tools
+
+<CardGroup cols={2}>
+  <Card title="DevBox Image Definition" icon="box">
+    **File:** `devbox-image-definition.instructions.md`  
+    **Applies to:** `**/*.yaml, **/*.yml`
+    
+    DevBox development environment configuration.
+  </Card>
+
+  <Card title="Context7" icon="search">
+    **File:** `context7.instructions.md`  
+    **Applies to:** `**`
+    
+    Using Context7 for authoritative external documentation.
+  </Card>
+
+  <Card title="Copilot Thought Logging" icon="brain">
+    **File:** `copilot-thought-logging.instructions.md`  
+    **Applies to:** `**`
+    
+    Track and document Copilot's decision-making process.
+  </Card>
+
+  <Card title="Memory Bank" icon="database">
+    **File:** `memory-bank.instructions.md`  
+    **Applies to:** `**`
+    
+    Persistent memory patterns for AI interactions.
+  </Card>
+
+  <Card title="Task Implementation" icon="list-check">
+    **File:** `task-implementation.instructions.md`  
+    **Applies to:** `**`
+    
+    Structured task implementation patterns.
+  </Card>
+
+  <Card title="Spec-Driven Workflow" icon="file-contract">
+    **File:** `spec-driven-workflow-v1.instructions.md`  
+    **Applies to:** `**`
+    
+    Specification-driven development workflow.
+  </Card>
+</CardGroup>
+
+## Browse All Instructions
+
+<Info>
+To view the complete source code for any instruction file, visit the [Awesome GitHub Copilot repository](https://github.com/github/awesome-copilot/tree/main/instructions) on GitHub.
+</Info>
+
+### Installation
+
+Each instruction can be installed directly into VS Code or VS Code Insiders using the install buttons in the main repository README. Alternatively, download the `.instructions.md` file and add it to your project's `.github/instructions/` directory.
+
+## Contributing
+
+Have a custom instruction to share? Contributions are welcome! See the [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md) for details on adding new instructions to the catalog.

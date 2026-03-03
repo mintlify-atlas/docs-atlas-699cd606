@@ -1,97 +1,224 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Welcome to Awesome GitHub Copilot"
+description: "A community-created collection of custom agents, instructions, and skills to supercharge your GitHub Copilot experience"
 ---
 
-## Setting up
+<img
+  className="block dark:hidden"
+  src="/images/hero-light.svg"
+  alt="Awesome GitHub Copilot Hero Light"
+/>
+<img
+  className="hidden dark:block"
+  src="/images/hero-dark.svg"
+  alt="Awesome GitHub Copilot Hero Dark"
+/>
 
-Get your documentation site up and running in minutes.
+## What is Awesome GitHub Copilot?
+
+Awesome GitHub Copilot is a comprehensive, community-driven toolkit that enhances GitHub Copilot with specialized capabilities across different domains, languages, and use cases. Whether you're building a web app, managing infrastructure, or working with data, you'll find pre-built customizations that help you code faster and smarter.
+
+<Note>
+  This repository provides everything you need to customize GitHub Copilot for your specific workflows - from AI agents with specialized knowledge to coding standards that automatically guide your development.
+</Note>
+
+## Core Resources
+
+Awesome GitHub Copilot offers six types of resources to enhance your development workflow:
+
+<CardGroup cols={2}>
+  <Card
+    title="Custom Agents"
+    icon="robot"
+    href="/resources/agents/overview"
+  >
+    Specialized GitHub Copilot agents that integrate with MCP servers to provide enhanced capabilities for specific workflows and tools.
+  </Card>
+
+  <Card
+    title="Instructions"
+    icon="compass"
+    href="/resources/instructions/overview"
+  >
+    Comprehensive coding standards and best practices that automatically apply to specific file patterns or entire projects.
+  </Card>
+
+  <Card
+    title="Skills"
+    icon="sparkles"
+    href="/resources/skills/overview"
+  >
+    Self-contained folders with instructions and bundled resources that enhance AI capabilities for specialized tasks.
+  </Card>
+
+  <Card
+    title="Hooks"
+    icon="webhook"
+    href="/resources/hooks/overview"
+  >
+    Automated workflows triggered by specific events during development, testing, and deployment.
+  </Card>
+
+  <Card
+    title="Agentic Workflows"
+    icon="workflow"
+    href="/resources/workflows/overview"
+  >
+    AI-powered repository automations that run coding agents in GitHub Actions with natural language instructions.
+  </Card>
+
+  <Card
+    title="Plugins"
+    icon="puzzle-piece"
+    href="/resources/plugins/overview"
+  >
+    Curated plugins of related agents and skills organized around specific themes and workflows.
+  </Card>
+</CardGroup>
+
+## Why Use Awesome GitHub Copilot?
+
+<AccordionGroup>
+  <Accordion icon="gauge-high" title="Boost Productivity">
+    Pre-built agents and instructions save time and provide consistent results. Instead of writing the same patterns repeatedly, let specialized agents handle common tasks while you focus on solving unique problems.
+  </Accordion>
+
+  <Accordion icon="shield-check" title="Follow Best Practices">
+    Benefit from community-curated coding standards and patterns. Each instruction and agent embodies expertise from developers who've solved similar challenges, helping you avoid common pitfalls.
+  </Accordion>
+
+  <Accordion icon="user-graduate" title="Access Specialized Expertise">
+    Get expert-level guidance through specialized custom agents. Whether you need help with Azure architecture, Terraform, accessibility, or database optimization, there's an agent with deep domain knowledge ready to assist.
+  </Accordion>
+
+  <Accordion icon="arrows-rotate" title="Stay Current">
+    Keep up with the latest patterns and practices across technologies. The community continuously updates resources with new frameworks, tools, and best practices.
+  </Accordion>
+</AccordionGroup>
+
+## Featured Plugins
+
+Discover our most popular curated plugins that bundle related agents and skills:
+
+<CardGroup cols={3}>
+  <Card
+    title="Awesome Copilot"
+    icon="wand-magic-sparkles"
+    href="https://github.com/github/awesome-copilot/tree/main/plugins/awesome-copilot"
+  >
+    Meta skills that help you discover and generate curated GitHub Copilot agents, collections, instructions, and skills.
+  </Card>
+
+  <Card
+    title="Copilot SDK"
+    icon="code"
+    href="https://github.com/github/awesome-copilot/tree/main/plugins/copilot-sdk"
+  >
+    Build applications with the GitHub Copilot SDK across C#, Go, Node.js/TypeScript, and Python.
+  </Card>
+
+  <Card
+    title="Partners"
+    icon="handshake"
+    href="https://github.com/github/awesome-copilot/tree/main/plugins/partners"
+  >
+    Custom agents created by GitHub partners for DevOps, security, databases, cloud infrastructure, and more.
+  </Card>
+</CardGroup>
+
+## How It Works
+
+Awesome GitHub Copilot resources are designed to work seamlessly with your existing development workflow:
+
+<Steps>
+  <Step title="Install the MCP Server">
+    The Awesome Copilot MCP (Model Context Protocol) Server provides functionality for searching and installing resources directly from this repository. Install it once in VS Code, VS Code Insiders, or Visual Studio.
+  </Step>
+
+  <Step title="Browse and Install Resources">
+    Search through hundreds of agents, instructions, and skills. Install them with a single click using the MCP server or manually download the files you need.
+  </Step>
+
+  <Step title="Activate and Use">
+    Agents become available in your Copilot chat interface. Instructions automatically apply to matching files. Skills can be loaded on demand for specialized tasks.
+  </Step>
+
+  <Step title="Customize and Extend">
+    All resources are open source and fully customizable. Fork, modify, and share your own variations with the community.
+  </Step>
+</Steps>
+
+## Quick Start
+
+Ready to enhance your GitHub Copilot experience? Get started in minutes:
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start Guide"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Install the MCP server and get your first agent running in under 5 minutes.
+  </Card>
+
+  <Card
+    title="Browse Resources"
+    icon="grid-2"
+    href="/resources/agents/catalog"
+  >
+    Explore the full catalog of available agents, instructions, and skills.
+  </Card>
+
+  <Card
+    title="Installation Options"
+    icon="download"
+    href="/installation/mcp-server"
+  >
+    Choose between automated MCP server installation or manual file downloads.
+  </Card>
+
+  <Card
+    title="Cookbook"
+    icon="book"
+    href="/cookbook/overview"
+  >
+    Learn with practical, copy-paste-ready code snippets and real-world examples.
+  </Card>
+</CardGroup>
+
+## Community-Driven
+
+This project thrives on contributions from developers worldwide. Every agent, instruction, and skill is created and maintained by the community.
 
 <Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
+  title="Contribute to Awesome GitHub Copilot"
+  icon="users"
+  href="/community/contributing"
   horizontal
 >
-  Follow our three step quickstart guide.
+  Join hundreds of contributors who are shaping the future of AI-assisted development.
 </Card>
 
-## Make it yours
+<Warning>
+  The customizations in this repository are sourced from and created by third-party developers. GitHub does not verify, endorse, or guarantee the functionality or security of these resources. Please carefully inspect any agent and its documentation before installing.
+</Warning>
 
-Design a docs site that looks great and empowers your users.
+## Next Steps
 
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Install Your First Agent"
+    icon="play"
+    href="/quickstart"
   >
-    Edit your docs locally and preview them in real time.
+    Follow the quick start guide to install the MCP server and activate your first custom agent.
   </Card>
+
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
+    title="Explore Use Cases"
     icon="map"
-    href="/essentials/navigation"
+    href="/usage/agents"
   >
-    Organize your docs to help users find what they need and succeed with your product.
+    Learn how to use agents, instructions, skills, hooks, workflows, and plugins in your daily development.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+</CardGroup>

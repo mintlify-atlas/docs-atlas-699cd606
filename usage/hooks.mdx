@@ -1,0 +1,513 @@
+---
+title: Using Hooks
+description: Automate workflows with event-triggered hooks during GitHub Copilot sessions
+---
+
+# Using Hooks
+
+Hooks enable automated workflows triggered by specific events during GitHub Copilot coding agent sessions. Each hook is a folder containing scripts and configuration that execute automatically during CCA (Copilot Coding Agent) sessions.
+
+## What are Hooks?
+
+Hooks are event-driven automations that execute during GitHub Copilot coding agent sessions. They enable:
+
+- **Session Logging** - Track all CCA activity for audit and analysis
+- **Auto-Commit** - Automatically commit changes when sessions end
+- **Integration** - Connect to external tools and services
+- **Governance** - Scan prompts for security and compliance
+- **Analytics** - Collect usage metrics and patterns
+
+<Note>
+  Hooks are specifically designed for **Copilot Coding Agent (CCA)** sessions, not general VS Code or CLI usage.
+</Note>
+
+## Hook Structure
+
+Each hook is a folder containing:
+
+```
+hooks/session-logger/
+├── README.md              # Documentation with frontmatter
+├── hooks.json            # Hook configuration
+├── log-session-start.sh  # sessionStart handler
+├── log-prompt.sh         # userPromptSubmitted handler
+└── log-session-end.sh    # sessionEnd handler
+```
+
+<Accordion title="README.md Frontmatter Requirements">
+  ```markdown
+  ---
+  name: Session Logger
+  description: 'Logs all Copilot coding agent session activity'
+  hooks: [sessionStart, sessionEnd, userPromptSubmitted]
+  tags: [logging, audit, monitoring]
+  ---
+  ```
+
+  - **name** (required): Human-readable hook name
+  - **description** (required): Wrapped in single quotes, not empty
+  - **hooks** (extracted from hooks.json): List of event types
+  - **tags** (optional): Categorization tags
+  - **Folder naming**: Lowercase with hyphens
+</Accordion>
+
+<Accordion title="hooks.json Configuration">
+  ```json
+  {
+    "hooks": [
+      {
+        "event": "sessionStart",
+        "script": "./log-session-start.sh"
+      },
+      {
+        "event": "userPromptSubmitted",
+        "script": "./log-prompt.sh"
+      },
+      {
+        "event": "sessionEnd",
+        "script": "./log-session-end.sh"
+      }
+    ]
+  }
+  ```
+
+  Each hook specifies:
+  - **event**: The trigger event (see below)
+  - **script**: Path to the executable script (relative to hooks.json)
+</Accordion>
+
+## Available Hook Events
+
+Hooks can respond to these CCA session events:
+
+<Tabs>
+  <Tab title="sessionStart">
+    **Triggered:** When a Copilot coding agent session begins
+
+    **Use Cases:**
+    - Initialize logging infrastructure
+    - Set up session tracking
+    - Validate environment configuration
+    - Send session start notifications
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # log-session-start.sh
+    SESSION_ID=$(date +%s)
+    echo "Session started: $SESSION_ID" >> .copilot/session.log
+    ```
+  </Tab>
+
+  <Tab title="sessionEnd">
+    **Triggered:** When a Copilot coding agent session ends
+
+    **Use Cases:**
+    - Auto-commit and push changes
+    - Generate session summary
+    - Clean up temporary files
+    - Send completion notifications
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # auto-commit.sh
+    git add .
+    git commit -m "CCA session changes"
+    git push
+    ```
+  </Tab>
+
+  <Tab title="userPromptSubmitted">
+    **Triggered:** When user submits a prompt during the session
+
+    **Use Cases:**
+    - Log all user interactions
+    - Scan for security/compliance issues
+    - Track usage patterns
+    - Implement governance rules
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # audit-prompt.sh
+    PROMPT="$1"
+    echo "[$(date)] Prompt: $PROMPT" >> .copilot/prompts.log
+
+    # Check for sensitive patterns
+    if echo "$PROMPT" | grep -i "password\|secret\|key"; then
+      echo "WARNING: Sensitive data detected" >&2
+    fi
+    ```
+  </Tab>
+
+  <Tab title="preToolUse">
+    **Triggered:** Before CCA uses a tool
+
+    **Use Cases:**
+    - Validate tool usage permissions
+    - Log tool invocations
+    - Implement rate limiting
+    - Apply governance policies
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # pre-tool-check.sh
+    TOOL="$1"
+    echo "Tool requested: $TOOL" >> .copilot/tools.log
+    ```
+  </Tab>
+
+  <Tab title="postToolUse">
+    **Triggered:** After CCA uses a tool
+
+    **Use Cases:**
+    - Verify tool execution results
+    - Log outcomes and errors
+    - Update metrics
+    - Trigger follow-up actions
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # post-tool-log.sh
+    TOOL="$1"
+    RESULT="$2"
+    echo "Tool completed: $TOOL (status: $RESULT)" >> .copilot/tools.log
+    ```
+  </Tab>
+
+  <Tab title="errorOccurred">
+    **Triggered:** When an error occurs during the session
+
+    **Use Cases:**
+    - Log error details
+    - Send error notifications
+    - Trigger debugging workflows
+    - Collect diagnostics
+
+    **Example:**
+    ```bash
+    #!/bin/bash
+    # error-handler.sh
+    ERROR="$1"
+    echo "[ERROR $(date)] $ERROR" >> .copilot/errors.log
+    # Send alert to monitoring system
+    curl -X POST https://monitoring.example.com/alert \
+      -d "{\"error\": \"$ERROR\"}"
+    ```
+  </Tab>
+</Tabs>
+
+## Installing Hooks
+
+<Steps>
+  <Step title="Copy hook folder">
+    Copy the entire hook folder to `.github/hooks/` in your repository:
+
+    ```bash
+    # From awesome-copilot repo
+    cp -r hooks/session-logger .github/hooks/
+    ```
+  </Step>
+
+  <Step title="Make scripts executable">
+    Ensure all bundled scripts have execute permissions:
+
+    ```bash
+    chmod +x .github/hooks/session-logger/*.sh
+    ```
+  </Step>
+
+  <Step title="Commit to repository">
+    Hooks must be committed to your repository's default branch:
+
+    ```bash
+    git add .github/hooks/session-logger
+    git commit -m "Add session logging hook"
+    git push
+    ```
+  </Step>
+
+  <Step title="Test with CCA">
+    Start a Copilot coding agent session to trigger the hooks and verify they execute correctly.
+  </Step>
+</Steps>
+
+<Note>
+  Hooks only execute during **Copilot Coding Agent (CCA)** sessions, not during regular Copilot chat or completions.
+</Note>
+
+## Hook Examples from the Repository
+
+<Tabs>
+  <Tab title="Session Logger">
+    **Purpose:** Logs all CCA session activity
+
+    ```json
+    // hooks.json
+    {
+      "hooks": [
+        {
+          "event": "sessionStart",
+          "script": "./log-session-start.sh"
+        },
+        {
+          "event": "userPromptSubmitted",
+          "script": "./log-prompt.sh"
+        },
+        {
+          "event": "sessionEnd",
+          "script": "./log-session-end.sh"
+        }
+      ]
+    }
+    ```
+
+    **When to use:** Audit trails, usage analytics, session debugging
+  </Tab>
+
+  <Tab title="Session Auto-Commit">
+    **Purpose:** Automatically commits changes when session ends
+
+    ```json
+    // hooks.json
+    {
+      "hooks": [
+        {
+          "event": "sessionEnd",
+          "script": "./auto-commit.sh"
+        }
+      ]
+    }
+    ```
+
+    ```bash
+    #!/bin/bash
+    # auto-commit.sh
+    if [[ -n $(git status -s) ]]; then
+      git add .
+      git commit -m "Auto-commit: CCA session $(date)"
+      git push origin $(git branch --show-current)
+      echo "Changes committed and pushed"
+    fi
+    ```
+
+    **When to use:** Ensuring all CCA changes are automatically saved
+  </Tab>
+
+  <Tab title="Governance Audit">
+    **Purpose:** Scans prompts for security and compliance
+
+    ```json
+    // hooks.json
+    {
+      "hooks": [
+        {
+          "event": "sessionStart",
+          "script": "./audit-session-start.sh"
+        },
+        {
+          "event": "userPromptSubmitted",
+          "script": "./audit-prompt.sh"
+        },
+        {
+          "event": "sessionEnd",
+          "script": "./audit-session-end.sh"
+        }
+      ]
+    }
+    ```
+
+    ```bash
+    #!/bin/bash
+    # audit-prompt.sh
+    PROMPT="$1"
+
+    # Check for threat signals
+    THREATS="bypass|override|ignore|disable|secret|password|token"
+    if echo "$PROMPT" | grep -iE "$THREATS"; then
+      echo "[ALERT] Potential security concern detected" >&2
+      # Log to governance system
+      logger -t copilot-governance "Alert: $PROMPT"
+    fi
+    ```
+
+    **When to use:** Enterprise governance, compliance requirements, security monitoring
+  </Tab>
+</Tabs>
+
+## Creating Your Own Hooks
+
+<Steps>
+  <Step title="Create hook folder">
+    ```bash
+    mkdir -p .github/hooks/my-hook
+    cd .github/hooks/my-hook
+    ```
+  </Step>
+
+  <Step title="Create README.md">
+    ```markdown
+    ---
+    name: My Custom Hook
+    description: 'Brief description of what this hook does'
+    tags: [category, purpose]
+    ---
+
+    # My Custom Hook
+
+    Detailed documentation...
+    ```
+  </Step>
+
+  <Step title="Create hooks.json">
+    ```json
+    {
+      "hooks": [
+        {
+          "event": "sessionEnd",
+          "script": "./my-script.sh"
+        }
+      ]
+    }
+    ```
+  </Step>
+
+  <Step title="Write hook script">
+    ```bash
+    #!/bin/bash
+    # my-script.sh
+
+    # Your automation logic here
+    echo "Hook executed: $(date)"
+    ```
+
+    Make it executable:
+    ```bash
+    chmod +x my-script.sh
+    ```
+  </Step>
+
+  <Step title="Test and commit">
+    ```bash
+    git add .github/hooks/my-hook
+    git commit -m "Add custom hook"
+    git push
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Accordion title="Keep Scripts Fast">
+  - Hooks should execute quickly to avoid blocking CCA sessions
+  - Use background processes for long-running tasks
+  - Implement timeouts to prevent hangs
+  - Log performance metrics
+
+  ```bash
+  #!/bin/bash
+  # Run task in background
+  ./long-running-task.sh &
+  echo "Task started in background"
+  ```
+</Accordion>
+
+<Accordion title="Handle Errors Gracefully">
+  - Use proper error handling in scripts
+  - Log errors for debugging
+  - Don't fail silently
+  - Return appropriate exit codes
+
+  ```bash
+  #!/bin/bash
+  set -e  # Exit on error
+
+  if ! command -v git &> /dev/null; then
+    echo "ERROR: git not found" >&2
+    exit 1
+  fi
+  ```
+</Accordion>
+
+<Accordion title="Secure Sensitive Data">
+  - Never hardcode secrets in hook scripts
+  - Use environment variables for credentials
+  - Store sensitive data in secure vaults
+  - Sanitize logs to remove secrets
+
+  ```bash
+  #!/bin/bash
+  # Use environment variable
+  API_KEY="${COPILOT_API_KEY:-}"
+  if [[ -z "$API_KEY" ]]; then
+    echo "ERROR: COPILOT_API_KEY not set" >&2
+    exit 1
+  fi
+  ```
+</Accordion>
+
+<Accordion title="Make Scripts Portable">
+  - Use POSIX-compliant shell syntax
+  - Handle different operating systems
+  - Check for required commands
+  - Use relative paths
+
+  ```bash
+  #!/bin/bash
+  # Check for required tools
+  for cmd in git jq curl; do
+    if ! command -v $cmd &> /dev/null; then
+      echo "ERROR: $cmd is required" >&2
+      exit 1
+    fi
+  done
+  ```
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="Hook not executing">
+  - Verify hook folder is in `.github/hooks/`
+  - Check scripts are executable (`chmod +x`)
+  - Ensure hooks.json is valid JSON
+  - Verify hook is committed to default branch
+  - Check CCA logs for error messages
+</Accordion>
+
+<Accordion title="Script errors">
+  - Check script syntax with shellcheck
+  - Verify all referenced commands exist
+  - Test scripts manually before committing
+  - Review CCA session logs for stderr output
+</Accordion>
+
+<Accordion title="Permission issues">
+  - Ensure scripts have execute permissions
+  - Check file system permissions on .github/hooks/
+  - Verify scripts run in the correct working directory
+</Accordion>
+
+## Security Considerations
+
+<Note>
+  **Important:** Hook scripts execute automatically during CCA sessions. Follow these security guidelines:
+</Note>
+
+- **Review all scripts** before installing hooks from external sources
+- **Limit permissions** - hooks should only have necessary access
+- **Validate inputs** - sanitize all parameters passed to scripts
+- **Use secure channels** - HTTPS for external API calls
+- **Audit regularly** - review hook execution logs
+- **Follow least privilege** - don't run hooks with elevated permissions
+
+See the [GitHub Copilot hooks specification](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks) for official security guidance.
+
+## Related Resources
+
+- [Browse All Hooks](https://github.com/github/awesome-copilot/tree/main/hooks)
+- [GitHub Copilot Hooks Specification](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks)
+- [Agentic Workflows](/usage/workflows) - GitHub Actions automation
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-hooks)

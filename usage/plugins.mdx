@@ -1,0 +1,479 @@
+---
+title: Using Plugins
+description: Install curated collections of agents and skills organized by theme and workflow
+---
+
+# Using Plugins
+
+Plugins are curated collections of related agents and skills organized around specific themes, workflows, or use cases. They make it easy to install comprehensive toolkits for particular scenarios with a single command.
+
+## What are Plugins?
+
+Plugins bundle related customizations into installable packages:
+
+- **Agents** - Specialized AI personas for the plugin's domain
+- **Skills** - Self-contained capabilities with bundled resources
+- **Commands** - Custom CLI commands (coming soon)
+- **Themes** - Organized by technology, workflow, or use case
+
+<Note>
+  Plugins are the easiest way to adopt complete toolkits for specific technologies or workflows without manually downloading individual files.
+</Note>
+
+## Plugin Structure
+
+Each plugin is a folder with metadata and references:
+
+```
+plugins/csharp-dotnet-development/
+├── README.md                    # Documentation
+└── .github/plugin/
+    └── plugin.json             # Plugin manifest
+```
+
+<Accordion title="plugin.json Structure">
+  ```json
+  {
+    "name": "csharp-dotnet-development",
+    "description": "Essential toolkit for C# and .NET development",
+    "version": "1.0.0",
+    "keywords": ["csharp", "dotnet", "aspnet", "testing"],
+    "agents": [
+      "../../agents/csharp-expert.agent.md",
+      "../../agents/debug.agent.md"
+    ],
+    "skills": [
+      "../../skills/csharp-async/",
+      "../../skills/ef-core/",
+      "../../skills/csharp-docs/"
+    ]
+  }
+  ```
+
+  **Fields:**
+  - **name**: Matches folder name (lowercase-with-hyphens)
+  - **description**: Brief plugin description
+  - **version**: Semantic version (e.g., "1.0.0")
+  - **keywords**: Tags for discovery
+  - **agents**: Paths to agent files (relative to plugin.json)
+  - **skills**: Paths to skill folders (relative to plugin.json)
+</Accordion>
+
+## Installing Plugins
+
+<Tabs>
+  <Tab title="GitHub Copilot CLI">
+    <Steps>
+      <Step title="Add marketplace">
+        ```bash
+        copilot plugin marketplace add github/awesome-copilot
+        ```
+      </Step>
+
+      <Step title="Browse plugins">
+        ```bash
+        # List available plugins
+        copilot plugin search
+
+        # Search by keyword
+        copilot plugin search azure
+        ```
+      </Step>
+
+      <Step title="Install plugin">
+        ```bash
+        # Install by name
+        copilot plugin install csharp-dotnet-development@awesome-copilot
+
+        # Install latest version
+        copilot plugin install azure-cloud-development@awesome-copilot
+        ```
+      </Step>
+
+      <Step title="Verify installation">
+        ```bash
+        copilot plugin list
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Interactive Mode">
+    Use the `/plugin` command in Copilot chat:
+
+    1. Open GitHub Copilot chat
+    2. Type `/plugin`
+    3. Browse available plugins interactively
+    4. Select and install with a click
+  </Tab>
+
+  <Tab title="Manual Installation">
+    <Steps>
+      <Step title="Browse catalog">
+        Visit the [plugins/ directory](https://github.com/github/awesome-copilot/tree/main/plugins) to explore available plugins.
+      </Step>
+
+      <Step title="Download files">
+        Download the agents and skills referenced in the plugin:
+
+        ```bash
+        # Example: C# .NET Development plugin
+        cp agents/csharp-expert.agent.md .github/copilot/
+        cp -r skills/csharp-async/ .github/skills/
+        cp -r skills/ef-core/ .github/skills/
+        ```
+      </Step>
+
+      <Step title="Verify structure">
+        Ensure all files are in the correct locations:
+        ```
+        .github/
+        ├── copilot/
+        │   └── csharp-expert.agent.md
+        └── skills/
+            ├── csharp-async/
+            └── ef-core/
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Featured Plugins
+
+Highlighted plugins that cover common scenarios:
+
+<Tabs>
+  <Tab title="Awesome Copilot">
+    **Meta skills for discovering and generating GitHub Copilot customizations**
+
+    ```bash
+    copilot plugin install awesome-copilot@awesome-copilot
+    ```
+
+    **Includes:**
+    - Agent discovery and creation
+    - Instruction generators
+    - Skill templates
+    - Prompt engineering guides
+
+    **Tags:** `github-copilot`, `discovery`, `meta`, `prompt-engineering`
+  </Tab>
+
+  <Tab title="Copilot SDK">
+    **Build applications with GitHub Copilot SDK across multiple languages**
+
+    ```bash
+    copilot plugin install copilot-sdk@awesome-copilot
+    ```
+
+    **Includes:**
+    - Comprehensive SDK instructions
+    - C#, Go, Node.js, TypeScript, Python support
+    - Agent creation patterns
+    - Integration examples
+
+    **Tags:** `copilot-sdk`, `sdk`, `ai`, `github-copilot`
+  </Tab>
+
+  <Tab title="Partners">
+    **Custom agents from GitHub partners**
+
+    ```bash
+    copilot plugin install partners@awesome-copilot
+    ```
+
+    **Includes:**
+    - DevOps integrations
+    - Security tools
+    - Database agents
+    - Cloud platform specialists
+
+    **Tags:** `devops`, `security`, `database`, `cloud`, `infrastructure`
+  </Tab>
+</Tabs>
+
+## Plugin Categories
+
+Plugins are organized by use case and technology:
+
+<Accordion title="Language & Framework Plugins">
+  - **csharp-dotnet-development** - C# and .NET toolkit
+  - **java-development** - Java, Spring Boot, Quarkus
+  - **python-mcp-development** - Python MCP servers
+  - **frontend-web-dev** - React, Angular, Vue, TypeScript
+  - **go-mcp-development** - Go MCP server development
+</Accordion>
+
+<Accordion title="Cloud & Infrastructure">
+  - **azure-cloud-development** - Azure IaC, serverless, architecture
+  - **context-engineering** - Context optimization for Copilot
+  - **database-data-management** - PostgreSQL, SQL Server, optimization
+  - **devops-oncall** - Incident response, triage, Azure resources
+</Accordion>
+
+<Accordion title="Testing & Quality">
+  - **testing-automation** - TDD, unit tests, integration tests
+  - **polyglot-test-agent** - Multi-language test generation
+  - **security-best-practices** - OWASP, accessibility, performance
+</Accordion>
+
+<Accordion title="Microsoft 365 & Power Platform">
+  - **mcp-m365-copilot** - Declarative agents with MCP
+  - **power-bi-development** - DAX, modeling, optimization
+  - **power-apps-code-apps** - Code-first Power Apps
+  - **dataverse** - Microsoft Dataverse integrations
+</Accordion>
+
+<Accordion title="Specialized Workflows">
+  - **project-planning** - Epics, features, implementation planning
+  - **technical-spike** - Assumption testing, validation
+  - **gem-team** - Multi-agent orchestration
+  - **noob-mode** - Plain-English translation for non-technical users
+</Accordion>
+
+## Plugin Details
+
+Each plugin provides:
+
+<CodeGroup>
+```json Metadata
+{
+  "name": "csharp-dotnet-development",
+  "description": "Essential toolkit for C# and .NET",
+  "version": "1.0.0",
+  "keywords": ["csharp", "dotnet", "aspnet"]
+}
+```
+
+```markdown Documentation
+# C# .NET Development Plugin
+
+## Included Agents
+- C# Expert - Comprehensive C# development guidance
+- Debug Mode - Systematic bug fixing
+
+## Included Skills
+- csharp-async - Async programming patterns
+- ef-core - Entity Framework Core best practices
+- csharp-docs - XML documentation standards
+```
+
+```bash Installation
+# Via CLI
+copilot plugin install csharp-dotnet-development@awesome-copilot
+
+# Via chat
+/plugin install csharp-dotnet-development
+```
+</CodeGroup>
+
+## Managing Plugins
+
+Common plugin management tasks:
+
+<CodeGroup>
+```bash List Installed
+# View all installed plugins
+copilot plugin list
+
+# Show plugin details
+copilot plugin show csharp-dotnet-development
+```
+
+```bash Update Plugins
+# Update specific plugin
+copilot plugin update csharp-dotnet-development@awesome-copilot
+
+# Update all plugins
+copilot plugin update --all
+```
+
+```bash Remove Plugins
+# Uninstall plugin
+copilot plugin uninstall csharp-dotnet-development
+
+# Remove marketplace
+copilot plugin marketplace remove github/awesome-copilot
+```
+
+```bash Search & Discover
+# Search by keyword
+copilot plugin search azure
+
+# Browse by tag
+copilot plugin search --tag devops
+```
+</CodeGroup>
+
+## Creating Your Own Plugins
+
+To create a custom plugin:
+
+<Steps>
+  <Step title="Create plugin folder">
+    ```bash
+    mkdir -p plugins/my-plugin/.github/plugin
+    cd plugins/my-plugin
+    ```
+  </Step>
+
+  <Step title="Create plugin.json">
+    ```json
+    {
+      "name": "my-plugin",
+      "description": "My custom plugin description",
+      "version": "1.0.0",
+      "keywords": ["custom", "team"],
+      "agents": [
+        "../../agents/my-agent.agent.md"
+      ],
+      "skills": [
+        "../../skills/my-skill/"
+      ]
+    }
+    ```
+  </Step>
+
+  <Step title="Create README.md">
+    ```markdown
+    # My Plugin
+
+    Description of what this plugin provides.
+
+    ## Included Agents
+    - My Agent - Description
+
+    ## Included Skills
+    - my-skill - Description
+
+    ## Installation
+    \`\`\`bash
+    copilot plugin install my-plugin@my-marketplace
+    \`\`\`
+    ```
+  </Step>
+
+  <Step title="Validate and test">
+    ```bash
+    # From repository root
+    npm run plugin:validate
+
+    # Generate marketplace.json
+    npm run plugin:generate-marketplace
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Accordion title="Keep Plugins Focused">
+  - Group related agents and skills by theme
+  - Don't mix unrelated technologies
+  - Use clear, descriptive names
+  - Tag appropriately for discoverability
+
+  **Good:** `react-development` (React-specific tools)  
+  **Bad:** `web-dev-everything` (too broad)
+</Accordion>
+
+<Accordion title="Version Plugins Properly">
+  - Use semantic versioning (MAJOR.MINOR.PATCH)
+  - Increment MAJOR for breaking changes
+  - Increment MINOR for new features
+  - Increment PATCH for bug fixes
+
+  ```json
+  {
+    "version": "2.1.3"
+    // 2 = major version
+    // 1 = minor version
+    // 3 = patch version
+  }
+  ```
+</Accordion>
+
+<Accordion title="Document Thoroughly">
+  - List all included agents and skills
+  - Explain what the plugin enables
+  - Provide usage examples
+  - Document prerequisites
+
+  ```markdown
+  ## Prerequisites
+  - GitHub Copilot subscription
+  - VS Code 1.85+
+  - .NET 8 SDK
+
+  ## What's Included
+  Detailed list of all resources...
+  ```
+</Accordion>
+
+<Accordion title="Test Before Publishing">
+  ```bash
+  # Validate structure
+  npm run plugin:validate
+
+  # Test installation locally
+  copilot plugin install ./plugins/my-plugin
+
+  # Verify all references resolve
+  npm run build
+  ```
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="Plugin not installing">
+  - Verify marketplace is added: `copilot plugin marketplace list`
+  - Check plugin name spelling
+  - Ensure you have internet connectivity
+  - Try updating the marketplace: `copilot plugin marketplace update`
+</Accordion>
+
+<Accordion title="Missing agents/skills after install">
+  - Verify plugin.json paths are correct
+  - Check files exist in the repository
+  - Reload VS Code window
+  - Re-install plugin: `copilot plugin uninstall X && copilot plugin install X`
+</Accordion>
+
+<Accordion title="Plugin validation errors">
+  - Check plugin.json is valid JSON
+  - Verify all paths are relative and correct
+  - Ensure name matches folder name
+  - Run `npm run plugin:validate` for detailed errors
+</Accordion>
+
+## Plugin Marketplace
+
+The plugin marketplace is generated from `plugin.json` files:
+
+```json
+// .github/plugin/marketplace.json
+{
+  "plugins": [
+    {
+      "name": "csharp-dotnet-development",
+      "description": "Essential toolkit for C# and .NET",
+      "version": "1.0.0",
+      "keywords": ["csharp", "dotnet"],
+      "items": 9
+    }
+  ]
+}
+```
+
+This file is:
+- **Auto-generated** by `npm run build`
+- **Discoverable** by GitHub Copilot CLI
+- **Searchable** by keywords and tags
+
+## Related Resources
+
+- [Browse All Plugins](https://github.com/github/awesome-copilot/tree/main/plugins)
+- [Marketplace JSON](https://github.com/github/awesome-copilot/blob/main/.github/plugin/marketplace.json)
+- [Custom Agents](/usage/agents) - Individual agent files
+- [Agent Skills](/usage/skills) - Self-contained capabilities
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-plugins)

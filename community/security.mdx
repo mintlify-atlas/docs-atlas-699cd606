@@ -1,0 +1,139 @@
+---
+title: Security Policy
+description: How to report security vulnerabilities in the Awesome GitHub Copilot project
+---
+
+GitHub takes the security of our software products and services seriously, including all of the open source code repositories managed through our GitHub organizations, such as [GitHub](https://github.com/GitHub).
+
+<Warning>
+Even though [open source repositories are outside of the scope of our bug bounty program](https://bounty.github.com/index.html#scope) and therefore not eligible for bounty rewards, we will ensure that your finding gets passed along to the appropriate maintainers for remediation.
+</Warning>
+
+## Reporting Security Issues
+
+If you believe you have found a security vulnerability in any GitHub-owned repository, please report it to us through coordinated disclosure.
+
+<Note>
+**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+</Note>
+
+### How to Report
+
+Instead of using public channels, please send an email to:
+
+**opensource-security@github.com**
+
+### What to Include
+
+Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+
+<Accordion title="Issue Details">
+  - **Type of issue**: e.g., buffer overflow, SQL injection, or cross-site scripting
+  - **Impact**: How an attacker might exploit the issue and what they could achieve
+</Accordion>
+
+<Accordion title="Source Code Information">
+  - **Full paths**: Paths of source file(s) related to the manifestation of the issue
+  - **Location**: The location of the affected source code (tag/branch/commit or direct URL)
+  - **Special configuration**: Any special configuration required to reproduce the issue
+</Accordion>
+
+<Accordion title="Reproduction Steps">
+  - **Step-by-step instructions**: Clear instructions to reproduce the issue
+  - **Proof-of-concept**: Proof-of-concept or exploit code (if possible)
+</Accordion>
+
+This information will help us triage your report more quickly.
+
+## Our Commitment
+
+<Steps>
+  <Step title="Acknowledgment">
+    We will acknowledge receipt of your vulnerability report and send you regular updates about our progress
+  </Step>
+  <Step title="Investigation">
+    We will investigate the issue and work with you to understand the scope and severity
+  </Step>
+  <Step title="Resolution">
+    We will work to remediate the vulnerability and notify you when a fix is available
+  </Step>
+  <Step title="Credit">
+    If you'd like, we will publicly credit you for the responsible disclosure (unless you prefer to remain anonymous)
+  </Step>
+</Steps>
+
+## Policy
+
+See [GitHub's Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms) for more information about our security research policies.
+
+<Note>
+We appreciate the security research community's efforts to help keep GitHub and our users safe. Thank you for your responsible disclosure.
+</Note>
+
+## Scope
+
+### What's Covered
+
+This security policy applies to:
+
+- The Awesome GitHub Copilot repository code and infrastructure
+- Build scripts and automation
+- Dependencies and third-party integrations
+- Documentation that could lead to security issues
+
+### What's Not Covered
+
+<Warning>
+This policy does **not** cover:
+
+- Individual instructions, agents, skills, or plugins contributed by the community (report these through GitHub issues)
+- General questions or feature requests (use GitHub issues for these)
+- GitHub Copilot itself (report to GitHub Support)
+- Third-party services or platforms
+</Warning>
+
+## Security Best Practices
+
+When contributing to this repository:
+
+- **Review code carefully**: Ensure contributed resources don't introduce security vulnerabilities
+- **Avoid secrets**: Never include API keys, passwords, or other sensitive data in contributions
+- **Follow guidelines**: Adhere to our [Contributing Guidelines](/community/contributing) which include security considerations
+- **Validate inputs**: If creating agents or skills that process user input, validate and sanitize properly
+- **Least privilege**: Workflows should use minimal permissions necessary
+
+### Workflow Security
+
+For Agentic Workflows specifically:
+
+- Use **least-privilege permissions** in workflow frontmatter
+- Prefer **safe-outputs** instead of direct write access
+- Avoid hardcoded secrets or credentials
+- Follow the [GitHub Agentic Workflows specification](https://github.github.com/gh-aw/reference/workflow-structure/)
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Support" icon="life-ring" href="/community/support">
+    Get help with non-security issues
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/community/contributing">
+    Learn how to contribute safely
+  </Card>
+  <Card title="Code of Conduct" icon="handshake" href="/community/code-of-conduct">
+    Community standards and expectations
+  </Card>
+  <Card title="FAQ" icon="question" href="/community/faq">
+    Frequently asked questions
+  </Card>
+</CardGroup>
+
+## Contact Information
+
+- **Security vulnerabilities**: opensource-security@github.com
+- **Code of Conduct violations**: opensource@github.com
+- **General questions**: [GitHub Issues](https://github.com/github/awesome-copilot/issues)
+
+<Note>
+Thank you for helping keep the Awesome GitHub Copilot project and our community safe.
+</Note>

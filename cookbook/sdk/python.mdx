@@ -1,0 +1,438 @@
+---
+title: Python SDK Cookbook
+description: Practical recipes for building with the GitHub Copilot SDK in Python
+---
+
+# Python SDK Cookbook
+
+Short, practical recipes for using the GitHub Copilot SDK with Python. Each recipe is concise, copy-pasteable, and points to complete runnable examples.
+
+## Setup
+
+Install the GitHub Copilot SDK:
+
+```bash
+pip install copilot-sdk
+```
+
+Import in your code:
+
+```python
+import asyncio
+from copilot import CopilotClient, SessionConfig, MessageOptions
+```
+
+## Error Handling
+
+Handle errors gracefully including connection failures, timeouts, and cleanup.
+
+### Basic try-except Pattern
+
+<CodeGroup>
+```python Basic Example
+import asyncio
+from copilot import CopilotClient, SessionConfig, MessageOptions
+
+async def main():
+    client = CopilotClient()
+
+    try:
+        await client.start()
+        session = await client.create_session(SessionConfig(model="gpt-5"))
+
+        response = await session.send_and_wait(MessageOptions(prompt="Hello!"))
+
+        if response:
+            print(response.data.content)
+
+        await session.destroy()
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        await client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+```python Specific Error Types
+try:
+    await client.start()
+except FileNotFoundError:
+    print("Copilot CLI not found. Please install it first.")
+except ConnectionError:
+    print("Could not connect to Copilot CLI server.")
+except Exception as e:
+    print(f"Unexpected error: {e}")
+```
+</CodeGroup>
+
+### Timeout Handling
+
+```python
+session = await client.create_session(SessionConfig(model="gpt-5"))
+
+try:
+    # send_and_wait accepts an optional timeout in seconds
+    response = await session.send_and_wait(
+        MessageOptions(prompt="Complex question..."),
+        timeout=30.0
+    )
+    print("Response received")
+except TimeoutError:
+    print("Request timed out")
+```
+
+### Aborting Requests
+
+```python
+session = await client.create_session(SessionConfig(model="gpt-5"))
+
+# Start a request (non-blocking send)
+await session.send(MessageOptions(prompt="Write a very long story..."))
+
+# Abort it after some condition
+await asyncio.sleep(5)
+await session.abort()
+print("Request aborted")
+```
+
+### Graceful Shutdown
+
+```python
+import signal
+import sys
+
+def signal_handler(sig, frame):
+    print("\nShutting down...")
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(client.stop())
+    except RuntimeError:
+        asyncio.run(client.stop())
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+```
+
+<Tip>
+Always use try-finally to ensure `await client.stop()` is called. This prevents the Copilot CLI process from becoming orphaned.
+</Tip>
+
+## Multiple Sessions
+
+Manage multiple independent conversations simultaneously.
+
+```python
+import asyncio
+from copilot import CopilotClient, SessionConfig, MessageOptions
+
+async def main():
+    client = CopilotClient()
+    await client.start()
+
+    # Create multiple independent sessions
+    session1 = await client.create_session(SessionConfig(model="gpt-5"))
+    session2 = await client.create_session(SessionConfig(model="gpt-5"))
+    session3 = await client.create_session(SessionConfig(model="claude-sonnet-4.5"))
+
+    print("Created 3 independent sessions")
+
+    # Each session maintains its own conversation history
+    await session1.send(MessageOptions(prompt="You are helping with a Python project"))
+    await session2.send(MessageOptions(prompt="You are helping with a TypeScript project"))
+    await session3.send(MessageOptions(prompt="You are helping with a Go project"))
+
+    print("Sent initial context to all sessions")
+
+    # Follow-up messages stay in their respective contexts
+    await session1.send(MessageOptions(prompt="How do I create a virtual environment?"))
+    await session2.send(MessageOptions(prompt="How do I set up tsconfig?"))
+    await session3.send(MessageOptions(prompt="How do I initialize a module?"))
+
+    print("Sent follow-up questions to each session")
+
+    # Clean up all sessions
+    await session1.destroy()
+    await session2.destroy()
+    await session3.destroy()
+    await client.stop()
+
+    print("All sessions destroyed successfully")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Custom Session IDs
+
+```python
+session = await client.create_session(SessionConfig(
+    session_id="user-123-chat",
+    model="gpt-5"
+))
+
+print(f"Session ID: {session.session_id}")
+```
+
+### Use Cases
+
+<CardGroup cols={3}>
+  <Card title="Multi-User Apps" icon="users">
+    One session per user in web applications
+  </Card>
+  <Card title="Parallel Tasks" icon="layer-group">
+    Run multiple AI tasks concurrently with asyncio
+  </Card>
+  <Card title="Model Comparison" icon="code-compare">
+    Compare responses from different models
+  </Card>
+</CardGroup>
+
+## Session Persistence
+
+Save and resume sessions across application restarts.
+
+```python
+import asyncio
+import json
+from copilot import CopilotClient, SessionConfig, MessageOptions
+
+async def save_session():
+    client = CopilotClient()
+    await client.start()
+
+    session = await client.create_session(SessionConfig(model="gpt-5"))
+    await session.send_and_wait(MessageOptions(prompt="Remember: my name is Alice"))
+
+    # Save session state
+    session_state = session.get_state()
+    with open("session.json", "w") as f:
+        json.dump(session_state, f, indent=2)
+
+    await session.destroy()
+    await client.stop()
+    print("Session saved")
+
+async def restore_session():
+    # Later: restore session state
+    client = CopilotClient()
+    await client.start()
+
+    with open("session.json", "r") as f:
+        state = json.load(f)
+
+    restored_session = await client.create_session(SessionConfig(
+        model="gpt-5",
+        state=state
+    ))
+
+    # Session remembers previous context
+    response = await restored_session.send_and_wait(
+        MessageOptions(prompt="What's my name?")
+    )
+    print(response.data.content)  # "Your name is Alice"
+
+    await restored_session.destroy()
+    await client.stop()
+
+if __name__ == "__main__":
+    # First run: save session
+    asyncio.run(save_session())
+    
+    # Later run: restore session
+    asyncio.run(restore_session())
+```
+
+<Note>
+Session persistence allows you to maintain conversation context across restarts, perfect for long-running workflows or user session management.
+</Note>
+
+## Managing Local Files
+
+Use AI to organize and categorize files.
+
+```python
+import asyncio
+from copilot import CopilotClient, SessionConfig, MessageOptions
+
+async def organize_files():
+    client = CopilotClient()
+    await client.start()
+
+    session = await client.create_session(SessionConfig(model="gpt-5"))
+
+    response = await session.send_and_wait(MessageOptions(prompt="""
+        I have these files in a directory:
+        - report.pdf
+        - meeting-notes.txt
+        - photo.jpg
+        - invoice.xlsx
+        - presentation.pptx
+        
+        Please organize them into folders by type.
+        Return JSON with the folder structure.
+    """))
+
+    print(response.data.content)
+
+    # Parse the AI response and execute file operations
+    # import json
+    # organization = json.loads(response.data.content)
+    # ...
+
+    await session.destroy()
+    await client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(organize_files())
+```
+
+## Working with asyncio
+
+The Python SDK is fully async. Here are some useful patterns:
+
+### Running Multiple Sessions Concurrently
+
+```python
+import asyncio
+from copilot import CopilotClient, SessionConfig, MessageOptions
+
+async def process_with_session(client, prompt, model="gpt-5"):
+    session = await client.create_session(SessionConfig(model=model))
+    response = await session.send_and_wait(MessageOptions(prompt=prompt))
+    await session.destroy()
+    return response.data.content
+
+async def main():
+    client = CopilotClient()
+    await client.start()
+
+    # Run multiple prompts concurrently
+    results = await asyncio.gather(
+        process_with_session(client, "Explain Python async/await"),
+        process_with_session(client, "What are Python decorators?"),
+        process_with_session(client, "How does the GIL work?"),
+    )
+
+    for i, result in enumerate(results, 1):
+        print(f"\nResult {i}:")
+        print(result)
+
+    await client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Using Context Managers (Python 3.7+)
+
+```python
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def copilot_session(model="gpt-5"):
+    client = CopilotClient()
+    await client.start()
+    session = await client.create_session(SessionConfig(model=model))
+    try:
+        yield session
+    finally:
+        await session.destroy()
+        await client.stop()
+
+async def main():
+    async with copilot_session() as session:
+        response = await session.send_and_wait(
+            MessageOptions(prompt="Hello!")
+        )
+        print(response.data.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Running Examples
+
+All complete, runnable examples are available in the [cookbook/copilot-sdk/python/recipe](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/python/recipe) directory.
+
+<Steps>
+  <Step title="Navigate to the recipe directory">
+    ```bash
+    cd cookbook/copilot-sdk/python/recipe
+    ```
+  </Step>
+  
+  <Step title="Install dependencies">
+    ```bash
+    pip install -r requirements.txt
+    ```
+  </Step>
+  
+  <Step title="Run any example">
+    ```bash
+    python error_handling.py
+    python multiple_sessions.py
+    python persisting_sessions.py
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always Clean Up Resources">
+    Use try-finally to ensure `await client.stop()` is called.
+    
+    ```python
+    try:
+        await client.start()
+        # ... work ...
+    finally:
+        await client.stop()
+    ```
+  </Accordion>
+  
+  <Accordion title="Handle Connection Errors">
+    Check for FileNotFoundError and ConnectionError when starting the client.
+    
+    ```python
+    except FileNotFoundError:
+        print("Please install GitHub Copilot CLI")
+    ```
+  </Accordion>
+  
+  <Accordion title="Use Timeouts">
+    Always provide a timeout parameter to `send_and_wait()` for long requests.
+    
+    ```python
+    response = await session.send_and_wait(options, timeout=30.0)
+    ```
+  </Accordion>
+  
+  <Accordion title="Leverage asyncio for Concurrency">
+    Use `asyncio.gather()` to run multiple sessions or requests concurrently.
+    
+    ```python
+    results = await asyncio.gather(
+        session1.send_and_wait(prompt1),
+        session2.send_and_wait(prompt2),
+    )
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Additional Recipes
+
+Explore more advanced recipes in the source repository:
+
+- **[Ralph Loop](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/python/ralph-loop.md)** - Autonomous AI coding loops
+- **[PR Visualization](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/python/pr-visualization.md)** - Generate interactive PR charts
+- **[Accessibility Report](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/python/accessibility-report.md)** - WCAG accessibility reports
+- **[Managing Local Files](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/python/managing-local-files.md)** - AI-powered file organization
+
+## Resources
+
+- [GitHub Copilot SDK Repository](https://github.com/github/copilot-sdk)
+- [Python SDK Documentation](https://github.com/github/copilot-sdk/tree/main/python)
+- [Complete Recipe Collection](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/python)

@@ -1,0 +1,874 @@
+---
+title: "Agent Catalog"
+description: "Browse and install custom agents for GitHub Copilot"
+---
+
+## Featured Agents
+
+Explore over 170+ custom agents for GitHub Copilot, organized by category. Each agent extends Copilot's capabilities for specific tasks, languages, or workflows.
+
+<CardGroup cols={3}>
+  <Card
+    title="174 Agents"
+    icon="robot"
+  >
+    Ready-to-use agents
+  </Card>
+  
+  <Card
+    title="50+ MCP Integrations"
+    icon="plug"
+  >
+    Connected to external services
+  </Card>
+  
+  <Card
+    title="One-Click Install"
+    icon="download"
+  >
+    Direct VS Code installation
+  </Card>
+</CardGroup>
+
+## Language-Specific Agents
+
+Specialized agents for programming languages and frameworks.
+
+<AccordionGroup>
+  <Accordion title="C# / .NET" icon="code">
+    <CardGroup cols={2}>
+      <Card title="C# Expert" icon="code">
+        An agent designed to assist with software development tasks for .NET projects.
+        
+        **Features**:
+        - Modern C# patterns
+        - ASP.NET Core guidance
+        - Entity Framework best practices
+        - Testing and debugging
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2FCSharpExpert.agent.md)
+      </Card>
+      
+      <Card title=".NET Upgrade" icon="arrow-up">
+        Perform janitorial tasks on C#/.NET code including cleanup, modernization, and tech debt remediation.
+        
+        **Features**:
+        - Framework version detection
+        - Upgrade planning and sequencing
+        - Breaking change analysis
+        - Migration automation
+        
+        **Tools**: `codebase`, `edit/editFiles`, `search`, `runCommands`
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdotnet-upgrade.agent.md)
+      </Card>
+      
+      <Card title="C# MCP Server Expert" icon="server">
+        Expert assistant for developing Model Context Protocol (MCP) servers in C#.
+        
+        **Features**:
+        - MCP protocol implementation
+        - Server scaffolding
+        - Tool and resource definition
+        - Testing and debugging
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcsharp-mcp-expert.agent.md)
+      </Card>
+      
+      <Card title="MAUI Expert" icon="mobile">
+        Support development of .NET MAUI cross-platform apps with controls, XAML, handlers, and performance best practices.
+        
+        **Features**:
+        - Cross-platform UI development
+        - XAML best practices
+        - Platform-specific handlers
+        - Performance optimization
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdotnet-maui.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="JavaScript / TypeScript" icon="js">
+    <CardGroup cols={2}>
+      <Card title="Expert React Frontend Engineer" icon="react">
+        Expert React 19.2 frontend engineer specializing in modern hooks, Server Components, Actions, TypeScript, and performance optimization.
+        
+        **Features**:
+        - React 19+ patterns
+        - Server Components
+        - TypeScript integration
+        - Performance optimization
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fexpert-react-frontend-engineer.agent.md)
+      </Card>
+      
+      <Card title="Expert Vue.js Frontend Engineer" icon="vuejs">
+        Expert Vue.js frontend engineer specializing in Vue 3 Composition API, reactivity, state management, testing, and performance with TypeScript.
+        
+        **Features**:
+        - Vue 3 Composition API
+        - Reactivity system
+        - Pinia state management
+        - Testing with Vitest
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fvuejs-expert.agent.md)
+      </Card>
+      
+      <Card title="Expert Nuxt Developer" icon="n">
+        Expert Nuxt developer specializing in Nuxt 3, Nitro, server routes, data fetching strategies, and performance optimization with Vue 3 and TypeScript.
+        
+        **Features**:
+        - Nuxt 3 architecture
+        - Nitro server engine
+        - Data fetching patterns
+        - SSR/SSG optimization
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fnuxt-expert.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Go" icon="golang">
+    <CardGroup cols={2}>
+      <Card title="Go MCP Server Development Expert" icon="server">
+        Expert assistant for building Model Context Protocol (MCP) servers in Go using the official SDK.
+        
+        **Features**:
+        - Official Go SDK integration
+        - Server implementation patterns
+        - Tool and resource handlers
+        - Production-ready examples
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgo-mcp-expert.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Java / Kotlin" icon="java">
+    <CardGroup cols={2}>
+      <Card title="Java MCP Expert" icon="mug-hot">
+        Expert assistance for building Model Context Protocol servers in Java using reactive streams, the official MCP Java SDK, and Spring Boot integration.
+        
+        **Features**:
+        - Reactive programming patterns
+        - Spring Boot integration
+        - Official Java SDK
+        - Production deployment
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fjava-mcp-expert.agent.md)
+      </Card>
+      
+      <Card title="Kotlin MCP Server Development Expert" icon="k">
+        Expert assistant for building Model Context Protocol (MCP) servers in Kotlin using the official SDK.
+        
+        **Features**:
+        - Kotlin coroutines
+        - Official SDK patterns
+        - Type-safe builders
+        - Android integration
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fkotlin-mcp-expert.agent.md)
+      </Card>
+      
+      <Card title="DiffblueCover" icon="vial">
+        Expert agent for creating unit tests for Java applications using Diffblue Cover.
+        
+        **Features**:
+        - Automated unit test generation
+        - Code coverage analysis
+        - MCP server integration
+        - CI/CD integration
+        
+        **MCP Server**: `DiffblueCover`
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdiffblue-cover.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Python" icon="python">
+    <CardGroup cols={2}>
+      <Card title="Microsoft Agent Framework Python" icon="robot">
+        Create, update, refactor, explain or work with code using the Python version of Microsoft Agent Framework.
+        
+        **Features**:
+        - Agent framework patterns
+        - Multi-agent orchestration
+        - Tool integration
+        - Production deployment
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fmicrosoft-agent-framework-python.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="PHP" icon="php">
+    <CardGroup cols={2}>
+      <Card title="Laravel Expert Agent" icon="laravel">
+        Expert Laravel development assistant specializing in modern Laravel 12+ applications with Eloquent, Artisan, testing, and best practices.
+        
+        **Features**:
+        - Laravel 12+ patterns
+        - Eloquent ORM mastery
+        - Artisan commands
+        - Testing and CI/CD
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Flaravel-expert-agent.agent.md)
+      </Card>
+      
+      <Card title="Drupal Expert" icon="drupal">
+        Expert assistant for Drupal development, architecture, and best practices using PHP 8.3+ and modern Drupal patterns.
+        
+        **Features**:
+        - Drupal 10+ development
+        - Custom module creation
+        - Theme development
+        - Performance optimization
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdrupal-expert.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Other Languages" icon="ellipsis">
+    <CardGroup cols={2}>
+      <Card title="C++ Expert" icon="c">
+        Provide expert C++ software engineering guidance using modern C++ and industry best practices.
+        
+        **Features**:
+        - Modern C++ (C++17/20/23)
+        - Memory management
+        - Performance optimization
+        - STL and Boost
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fexpert-cpp-software-engineer.agent.md)
+      </Card>
+      
+      <Card title="Clojure Interactive Programming" icon="code">
+        Expert Clojure pair programmer with REPL-first methodology, architectural oversight, and interactive problem-solving.
+        
+        **Features**:
+        - REPL-driven development
+        - Functional programming patterns
+        - ClojureScript support
+        - Interactive debugging
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fclojure-interactive-programming.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+</AccordionGroup>
+
+## Cloud & Infrastructure
+
+Agents for cloud platforms, infrastructure as code, and DevOps.
+
+<AccordionGroup>
+  <Accordion title="Azure" icon="microsoft">
+    <CardGroup cols={2}>
+      <Card title="Azure Principal Architect" icon="drafting-compass">
+        Provide expert Azure Principal Architect guidance using Azure Well-Architected Framework principles and Microsoft best practices.
+        
+        **Features**:
+        - Well-Architected Framework
+        - Architecture reviews
+        - Best practices guidance
+        - Migration strategies
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fazure-principal-architect.agent.md)
+      </Card>
+      
+      <Card title="Azure SaaS Architect" icon="building">
+        Provide expert Azure SaaS Architect guidance focusing on multitenant applications using Azure Well-Architected SaaS principles.
+        
+        **Features**:
+        - Multi-tenancy patterns
+        - SaaS architecture
+        - Scaling strategies
+        - Security and compliance
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fazure-saas-architect.agent.md)
+      </Card>
+      
+      <Card title="Bicep Specialist" icon="code">
+        Act as an Azure Bicep Infrastructure as Code coding specialist that creates Bicep templates.
+        
+        **Features**:
+        - Bicep syntax and patterns
+        - Module development
+        - Resource deployment
+        - Best practices
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fbicep-implement.agent.md)
+      </Card>
+      
+      <Card title="Azure Terraform Implementation" icon="code">
+        Act as an Azure Terraform Infrastructure as Code coding specialist that creates and reviews Terraform for Azure resources.
+        
+        **Features**:
+        - Terraform best practices
+        - Azure provider expertise
+        - Module development
+        - State management
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fterraform-azure-implement.agent.md)
+      </Card>
+      
+      <Card title="Azure IaC Generator" icon="file-code">
+        Central hub for generating Infrastructure as Code (Bicep, ARM, Terraform, Pulumi) with format-specific validation and best practices.
+        
+        **Features**:
+        - Multi-format support
+        - Template generation
+        - Validation and linting
+        - Migration assistance
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fazure-iac-generator.agent.md)
+      </Card>
+      
+      <Card title="Azure Logic Apps Expert" icon="diagram-project">
+        Expert guidance for Azure Logic Apps development focusing on workflow design, integration patterns, and JSON-based Workflow Definition Language.
+        
+        **Features**:
+        - Workflow design patterns
+        - Connector integration
+        - Expression language
+        - Error handling
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fazure-logic-apps-expert.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Cloud Migration" icon="cloud-arrow-up">
+    <CardGroup cols={2}>
+      <Card title="Arm Migration Agent" icon="microchip">
+        Accelerates moving x86 workloads to Arm infrastructure. Scans for architecture assumptions, portability issues, and container incompatibilities.
+        
+        **Features**:
+        - Architecture compatibility scanning
+        - Multi-arch container builds
+        - Performance validation
+        - Migration guidance
+        
+        **MCP Server**: `custom-mcp` (Docker)
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Farm-migration.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Linux Systems" icon="linux">
+    <CardGroup cols={2}>
+      <Card title="Arch Linux Expert" icon="a">
+        Arch Linux specialist focused on pacman, rolling-release maintenance, and Arch-centric system administration workflows.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Farch-linux-expert.agent.md)
+      </Card>
+      
+      <Card title="Debian Linux Expert" icon="d">
+        Debian Linux specialist focused on stable system administration, apt-based package management, and Debian policy-aligned practices.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdebian-linux-expert.agent.md)
+      </Card>
+      
+      <Card title="Fedora Linux Expert" icon="f">
+        Fedora (Red Hat family) Linux specialist focused on dnf, SELinux, and modern systemd-based workflows.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Ffedora-linux-expert.agent.md)
+      </Card>
+      
+      <Card title="CentOS Linux Expert" icon="c">
+        CentOS (Stream/Legacy) Linux specialist focused on RHEL-compatible administration, yum/dnf workflows, and enterprise hardening.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcentos-linux-expert.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+</AccordionGroup>
+
+## Architecture & Design
+
+Agents that help with software architecture, planning, and design decisions.
+
+<CardGroup cols={2}>
+  <Card title="API Architect" icon="diagram-project">
+    Your role is that of an API architect. Help mentor the engineer by providing guidance, support, and working code.
+    
+    **Features**:
+    - REST API design patterns
+    - DTOs and request/response modeling
+    - Circuit breakers and resilience
+    - Multi-layer architecture
+    - Test case generation
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fapi-architect.agent.md)
+  </Card>
+  
+  <Card title="ADR Generator" icon="book">
+    Expert agent for creating comprehensive Architectural Decision Records (ADRs) with structured formatting.
+    
+    **Features**:
+    - Structured ADR templates
+    - Decision context capture
+    - Consequence analysis
+    - AI-optimized formatting
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fadr-generator.agent.md)
+  </Card>
+  
+  <Card title="Context Architect" icon="sitemap">
+    An agent that helps plan and execute multi-file changes by identifying relevant context and dependencies.
+    
+    **Features**:
+    - Dependency analysis
+    - Multi-file planning
+    - Impact assessment
+    - Change orchestration
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcontext-architect.agent.md)
+  </Card>
+  
+  <Card title="Blueprint Mode" icon="blueprint">
+    Executes structured workflows (Debug, Express, Main, Loop) with strict correctness and maintainability.
+    
+    **Features**:
+    - Structured problem-solving
+    - Self-correction mechanisms
+    - Edge-case handling
+    - Reproducible solutions
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fblueprint-mode.agent.md)
+  </Card>
+</CardGroup>
+
+## Integration & Services
+
+Agents that integrate with external services and APIs via MCP servers.
+
+<CardGroup cols={2}>
+  <Card title="Apify Integration Expert" icon="spider">
+    Expert agent for integrating Apify Actors into codebases. Handles Actor selection, workflow design, and production-ready deployment.
+    
+    **Features**:
+    - Actor discovery and selection
+    - JavaScript/TypeScript & Python support
+    - Production deployment patterns
+    - Testing and validation
+    
+    **MCP Server**: `apify` (HTTP)
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fapify-integration-expert.agent.md)
+  </Card>
+  
+  <Card title="Context7 Expert" icon="book-open">
+    Expert in latest library versions, best practices, and correct syntax using up-to-date documentation.
+    
+    **Features**:
+    - Live documentation access
+    - Version-specific guidance
+    - Best practice recommendations
+    - Breaking change detection
+    
+    **MCP Server**: `context7` (HTTP)
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcontext7.agent.md)
+  </Card>
+  
+  <Card title="Comet Opik" icon="chart-line">
+    Unified Comet Opik agent for instrumenting LLM apps, managing prompts/projects, auditing prompts, and investigating traces/metrics.
+    
+    **Features**:
+    - LLM observability
+    - Prompt versioning
+    - Trace analysis
+    - Metrics tracking
+    
+    **MCP Server**: `opik` (Local)
+    
+    **Tools**: `read`, `search`, `edit`, `shell`, `opik/*`
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcomet-opik.agent.md)
+  </Card>
+  
+  <Card title="CAST Imaging Impact Analysis" icon="chart-network">
+    Specialized agent for comprehensive change impact assessment and risk analysis in software systems using CAST Imaging.
+    
+    **Features**:
+    - Change impact analysis
+    - Risk assessment
+    - Dependency mapping
+    - Quality metrics
+    
+    **MCP Server**: `imaging-impact-analysis` (HTTP)
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcast-imaging-impact-analysis.agent.md)
+  </Card>
+  
+  <Card title="Dynatrace Expert" icon="chart-mixed">
+    Integrates observability and security capabilities directly into GitHub workflows for incident investigation and deployment validation.
+    
+    **Features**:
+    - Incident investigation
+    - Deployment validation
+    - Performance regression detection
+    - Security vulnerability management
+    
+    **MCP Server**: `dynatrace` (HTTP)
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdynatrace-expert.agent.md)
+  </Card>
+  
+  <Card title="Elasticsearch Agent" icon="magnifying-glass">
+    Expert AI assistant for debugging code (O11y), optimizing vector search (RAG), and remediating security threats using live Elastic data.
+    
+    **Features**:
+    - Log analysis
+    - Vector search optimization
+    - Security threat detection
+    - Performance monitoring
+    
+    **MCP Server**: `elastic-mcp` (Local via npx)
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Felasticsearch-observability.agent.md)
+  </Card>
+</CardGroup>
+
+## DevOps & CI/CD
+
+Agents focused on automation, deployment, and continuous integration.
+
+<CardGroup cols={2}>
+  <Card title="DevOps Expert" icon="infinity">
+    DevOps specialist following the infinity loop principle (Plan → Code → Build → Test → Release → Deploy → Operate → Monitor).
+    
+    **Features**:
+    - Full SDLC automation
+    - CI/CD best practices
+    - Infrastructure as Code
+    - Monitoring and observability
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdevops-expert.agent.md)
+  </Card>
+  
+  <Card title="GitHub Actions Expert" icon="github">
+    GitHub Actions specialist focused on secure CI/CD workflows, action pinning, OIDC authentication, and supply-chain security.
+    
+    **Features**:
+    - Secure workflow design
+    - Action pinning strategies
+    - OIDC authentication
+    - Least privilege permissions
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgithub-actions-expert.agent.md)
+  </Card>
+</CardGroup>
+
+## Specialized Workflows
+
+Agents for specific development workflows and methodologies.
+
+<AccordionGroup>
+  <Accordion title="Multi-Agent Teams (GEM)" icon="users">
+    The GEM (Guided Execution Model) team provides specialized agents for orchestrated workflows:
+    
+    <CardGroup cols={2}>
+      <Card title="Gem Orchestrator" icon="sitemap">
+        Coordinates multi-agent workflows, delegates tasks, synthesizes results via runSubagent.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-orchestrator.agent.md)
+      </Card>
+      
+      <Card title="Gem Researcher" icon="magnifying-glass">
+        Research specialist: gathers codebase context, identifies relevant files/patterns, returns structured findings.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-researcher.agent.md)
+      </Card>
+      
+      <Card title="Gem Planner" icon="list-check">
+        Creates DAG-based plans with pre-mortem analysis and task decomposition from research findings.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-planner.agent.md)
+      </Card>
+      
+      <Card title="Gem Implementer" icon="code">
+        Executes TDD code changes, ensures verification, maintains quality.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-implementer.agent.md)
+      </Card>
+      
+      <Card title="Gem Reviewer" icon="shield">
+        Security gatekeeper for critical tasks—OWASP, secrets, compliance.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-reviewer.agent.md)
+      </Card>
+      
+      <Card title="Gem DevOps" icon="gears">
+        Manages containers, CI/CD pipelines, and infrastructure deployment.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fgem-devops.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Thinking & Analysis" icon="brain">
+    <CardGroup cols={2}>
+      <Card title="Critical Thinking Mode" icon="brain">
+        Challenge assumptions and encourage critical thinking to ensure the best possible solution and outcomes.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcritical-thinking.agent.md)
+      </Card>
+      
+      <Card title="Devil's Advocate" icon="scales-balanced">
+        Play the devil's advocate to challenge and stress-test your ideas by finding flaws, risks, and edge cases.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdevils-advocate.agent.md)
+      </Card>
+      
+      <Card title="Demonstrate Understanding" icon="graduation-cap">
+        Validate user understanding of code, design patterns, and implementation details through guided questioning.
+        
+        [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdemonstrate-understanding.agent.md)
+      </Card>
+    </CardGroup>
+  </Accordion>
+</AccordionGroup>
+
+## Database & Data Management
+
+Agents for working with databases and data systems.
+
+<CardGroup cols={2}>
+  <Card title="MS SQL Database Administrator" icon="database">
+    Work with Microsoft SQL Server databases using the MS SQL extension.
+    
+    **Features**:
+    - Query optimization
+    - Schema design
+    - Performance tuning
+    - Backup and recovery
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fms-sql-dba.agent.md)
+  </Card>
+  
+  <Card title="MongoDB Performance Advisor" icon="leaf">
+    Analyze MongoDB database performance, offer query and index optimization insights and provide actionable recommendations.
+    
+    **Features**:
+    - Query analysis
+    - Index optimization
+    - Performance monitoring
+    - Aggregation pipeline tuning
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fmongodb-performance-advisor.agent.md)
+  </Card>
+  
+  <Card title="Kusto Assistant" icon="chart-line">
+    Expert KQL assistant for live Azure Data Explorer analysis via Azure MCP server.
+    
+    **Features**:
+    - KQL query writing
+    - Log analytics
+    - Time-series analysis
+    - Dashboard creation
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fkusto-assistant.agent.md)
+  </Card>
+</CardGroup>
+
+## Quality & Testing
+
+Agents focused on code quality, testing, and accessibility.
+
+<CardGroup cols={2}>
+  <Card title="Accessibility Expert" icon="universal-access">
+    Expert assistant for web accessibility (WCAG 2.1/2.2), inclusive UX, and a11y testing.
+    
+    **Features**:
+    - WCAG compliance checking
+    - ARIA best practices
+    - Screen reader testing
+    - Keyboard navigation
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Faccessibility.agent.md)
+  </Card>
+  
+  <Card title="Agent Governance Reviewer" icon="shield-check">
+    AI agent governance expert that reviews code for safety issues, missing governance controls, and policy enforcement.
+    
+    **Features**:
+    - Safety issue detection
+    - Policy enforcement
+    - Trust scoring
+    - Audit trail implementation
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fagent-governance-reviewer.agent.md)
+  </Card>
+  
+  <Card title="JFrog Security Agent" icon="lock">
+    The dedicated Application Security agent for automated security remediation using JFrog security intelligence.
+    
+    **Features**:
+    - Vulnerability scanning
+    - Package compliance checking
+    - Security fix suggestions
+    - Dependency analysis
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fjfrog-sec.agent.md)
+  </Card>
+</CardGroup>
+
+## Documentation & Communication
+
+Agents that help with writing, documentation, and communication.
+
+<CardGroup cols={2}>
+  <Card title="Microsoft Learn Contributor" icon="book-open-reader">
+    Microsoft Learn Contributor chatmode for editing and writing Microsoft Learn documentation following Microsoft Writing Style Guide.
+    
+    **Features**:
+    - Style guide adherence
+    - Markdown formatting
+    - Code sample creation
+    - Authoring best practices
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fmicrosoft_learn_contributor.agent.md)
+  </Card>
+  
+  <Card title="Markdown Accessibility Assistant" icon="markdown">
+    Improves the accessibility of markdown files using five GitHub best practices.
+    
+    **Features**:
+    - Link text optimization
+    - Alt text generation
+    - Heading structure
+    - Table accessibility
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fmarkdown-accessibility-assistant.agent.md)
+  </Card>
+  
+  <Card title="Create PRD Chat Mode" icon="file-contract">
+    Generate a comprehensive Product Requirements Document (PRD) in Markdown with user stories, acceptance criteria, and metrics.
+    
+    **Features**:
+    - User story generation
+    - Acceptance criteria
+    - Technical considerations
+    - Success metrics
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fprd.agent.md)
+  </Card>
+</CardGroup>
+
+## Utility Agents
+
+General-purpose agents for various development tasks.
+
+<CardGroup cols={2}>
+  <Card title="Mentor Mode" icon="user-tie">
+    Help mentor the engineer by providing guidance and support.
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fmentor.agent.md)
+  </Card>
+  
+  <Card title="Debug Mode" icon="bug">
+    Debug your application to find and fix a bug.
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fdebug.agent.md)
+  </Card>
+  
+  <Card title="Idea Generator" icon="lightbulb">
+    Brainstorm and develop new application ideas through fun, interactive questioning until ready for specification creation.
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fsimple-app-idea-generator.agent.md)
+  </Card>
+  
+  <Card title="Custom Agent Foundry" icon="wand-magic-sparkles">
+    Expert at designing and creating VS Code custom agents with optimal configurations.
+    
+    [Install in VS Code](https://aka.ms/awesome-copilot/install/agent?url=vscode%3Achat-agent%2Finstall%3Furl%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgithub%2Fawesome-copilot%2Fmain%2Fagents%2Fcustom-agent-foundry.agent.md)
+  </Card>
+</CardGroup>
+
+## Installation Guide
+
+### Quick Install
+
+Each agent has a one-click install button that works with VS Code and VS Code Insiders:
+
+1. Click the **Install in VS Code** link for any agent
+2. Confirm the installation when prompted
+3. Restart GitHub Copilot to load the agent
+4. Start using the agent via `@agent-name` in chat
+
+### MCP Server Requirements
+
+Some agents require MCP (Model Context Protocol) servers to be configured:
+
+<Steps>
+  <Step title="Check MCP requirements">
+    Agents that require MCP servers will show an **MCP Server** badge
+  </Step>
+  <Step title="Install the MCP server">
+    Click the MCP server install button to configure it
+  </Step>
+  <Step title="Configure credentials">
+    Set up any required API keys or environment variables
+  </Step>
+  <Step title="Verify connection">
+    Test the agent to ensure the MCP server is connected
+  </Step>
+</Steps>
+
+<Note>
+  MCP servers enable agents to access external services like documentation APIs, cloud platforms, and observability tools.
+</Note>
+
+## Contributing Agents
+
+Want to share your custom agents with the community?
+
+<Card
+  title="Contributing Guide"
+  icon="code-pull-request"
+  href="/community/contributing"
+>
+  Learn how to contribute your agents to the Awesome GitHub Copilot repository
+</Card>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Learn About Agents"
+    icon="book"
+    href="/resources/agents/overview"
+  >
+    Understand how agents work and how to create your own
+  </Card>
+  
+  <Card
+    title="Explore Instructions"
+    icon="file-lines"
+    href="/resources/instructions/overview"
+  >
+    Discover coding standards and file-specific patterns
+  </Card>
+  
+  <Card
+    title="Browse Skills"
+    icon="wand-magic-sparkles"
+    href="/resources/skills/overview"
+  >
+    Self-contained task bundles with bundled resources
+  </Card>
+  
+  <Card
+    title="View Plugins"
+    icon="puzzle-piece"
+    href="/resources/plugins/overview"
+  >
+    Pre-packaged collections of related agents
+  </Card>
+</CardGroup>

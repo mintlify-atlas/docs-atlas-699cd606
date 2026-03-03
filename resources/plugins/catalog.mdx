@@ -1,0 +1,478 @@
+---
+title: Plugin Catalog
+description: Browse and install featured GitHub Copilot plugins for various development workflows
+---
+
+# Plugin Catalog
+
+Explore curated plugins that bundle agents, skills, and commands around specific themes and workflows. Each plugin provides a comprehensive toolkit for particular development scenarios.
+
+## Featured Plugins
+
+These plugins are highlighted for their comprehensive coverage and community value.
+
+### Awesome Copilot
+
+Meta prompts that help you discover and generate curated GitHub Copilot agents, instructions, prompts, and skills.
+
+**Installation:**
+```bash
+copilot plugin install awesome-copilot@awesome-copilot
+```
+
+**What's Included:**
+- **5 Skills/Commands** - Slash commands for discovering resources
+  - `/awesome-copilot:suggest-awesome-github-copilot-agents`
+  - `/awesome-copilot:suggest-awesome-github-copilot-skills`
+  - `/awesome-copilot:suggest-awesome-github-copilot-instructions`
+  - `/awesome-copilot:suggest-awesome-github-copilot-prompts`
+  - `/awesome-copilot:suggest-awesome-github-copilot-collections`
+- **1 Agent** - `meta-agentic-project-scaffold` for project creation
+
+**Tags:** `github-copilot`, `discovery`, `meta`, `prompt-engineering`, `agents`
+
+---
+
+### Copilot SDK
+
+Build applications with the GitHub Copilot SDK across multiple programming languages.
+
+**Installation:**
+```bash
+copilot plugin install copilot-sdk@awesome-copilot
+```
+
+**What's Included:**
+- **1 Comprehensive Skill** - Multi-language SDK guidance
+  - Instructions for C#, Go, Node.js/TypeScript, and Python
+  - Best practices for building AI-powered applications
+  - SDK integration patterns and examples
+
+**Tags:** `copilot-sdk`, `sdk`, `csharp`, `go`, `nodejs`, `typescript`, `python`, `ai`
+
+---
+
+### Partners
+
+Custom agents created by GitHub partners for specialized workflows.
+
+**Installation:**
+```bash
+copilot plugin install partners@awesome-copilot
+```
+
+**What's Included:**
+- **Multiple Partner Agents** - Industry-specific specialized agents
+  - DevOps automation agents
+  - Security scanning and compliance agents
+  - Database optimization agents
+  - Cloud infrastructure agents
+  - Observability and monitoring agents
+
+**Tags:** `devops`, `security`, `database`, `cloud`, `infrastructure`, `observability`, `feature-flags`, `cicd`, `migration`, `performance`
+
+## Development Workflow Plugins
+
+### Project Planning
+
+Comprehensive tools for software project planning, feature breakdown, and implementation planning.
+
+**Installation:**
+```bash
+copilot plugin install project-planning@awesome-copilot
+```
+
+<CardGroup cols={2}>
+  <Card title="9 Skills/Commands" icon="terminal">
+    - Breakdown feature implementation
+    - Create PRDs and epics
+    - Generate implementation plans
+    - Create GitHub issues from plans
+    - Technical spike management
+  </Card>
+  
+  <Card title="7 Agents" icon="robot">
+    - Task Planner
+    - Task Researcher
+    - PRD Generator
+    - Implementation Plan
+    - Technical Spike Researcher
+  </Card>
+</CardGroup>
+
+**Tags:** `planning`, `project-management`, `epic`, `feature`, `implementation`, `task`, `architecture`
+
+---
+
+### Testing Automation
+
+Comprehensive collection for writing tests, test automation, and test-driven development.
+
+**Installation:**
+```bash
+copilot plugin install testing-automation@awesome-copilot
+```
+
+**What's Included:**
+- **6 Skills** - Test generation for multiple frameworks
+  - Playwright test generation and exploration
+  - Java JUnit testing
+  - C# NUnit testing
+  - AI prompt safety review
+- **4 Agents** - TDD workflow agents
+  - TDD Red (write failing tests)
+  - TDD Green (implement features)
+  - TDD Refactor (improve code)
+  - Playwright Tester
+
+**Tags:** `testing`, `tdd`, `automation`, `unit-tests`, `integration`, `playwright`, `jest`, `nunit`
+
+---
+
+### Context Engineering
+
+Tools and techniques for maximizing GitHub Copilot effectiveness through better context management.
+
+**Installation:**
+```bash
+copilot plugin install context-engineering@awesome-copilot
+```
+
+**What's Included:**
+- **4 items** - Guidelines and agents for context optimization
+  - Code structuring guidelines
+  - Context Architect agent for multi-file planning
+  - Context-aware development prompts
+
+**Tags:** `context`, `productivity`, `refactoring`, `best-practices`, `architecture`
+
+## Language-Specific Plugins
+
+### C# and .NET Development
+
+Essential tools for C# and .NET development including testing, documentation, and best practices.
+
+**Installation:**
+```bash
+copilot plugin install csharp-dotnet-development@awesome-copilot
+```
+
+**What's Included:**
+- **9 items** - Instructions and agents for .NET development
+  - ASP.NET Core patterns
+  - Testing strategies
+  - Documentation generation
+  - Best practices enforcement
+
+**Tags:** `csharp`, `dotnet`, `aspnet`, `testing`
+
+---
+
+### Java Development
+
+Comprehensive collection for Java development with Spring Boot, Quarkus, and testing.
+
+**Installation:**
+```bash
+copilot plugin install java-development@awesome-copilot
+```
+
+**What's Included:**
+- **4 items** - Java development resources
+  - Spring Boot patterns
+  - Quarkus integration
+  - JPA best practices
+  - JUnit testing and JavaDoc
+
+**Tags:** `java`, `springboot`, `quarkus`, `jpa`, `junit`, `javadoc`
+
+---
+
+### Frontend Web Development
+
+Modern frontend development tools for React, Angular, Vue, TypeScript, and CSS frameworks.
+
+**Installation:**
+```bash
+copilot plugin install frontend-web-dev@awesome-copilot
+```
+
+**What's Included:**
+- **3 items** - Frontend development essentials
+  - React, Angular, Vue patterns
+  - TypeScript best practices
+  - CSS framework integration
+
+**Tags:** `frontend`, `web`, `react`, `typescript`, `javascript`, `css`, `html`, `angular`, `vue`
+
+## MCP Development Plugins
+
+Plugins for building Model Context Protocol (MCP) servers in various programming languages.
+
+<CardGroup cols={3}>
+  <Card title="TypeScript MCP" icon="js">
+    ```bash
+    copilot plugin install \
+      typescript-mcp-development@awesome-copilot
+    ```
+    Official SDK, best practices, server generation
+  </Card>
+  
+  <Card title="Python MCP" icon="python">
+    ```bash
+    copilot plugin install \
+      python-mcp-development@awesome-copilot
+    ```
+    FastMCP integration, async patterns
+  </Card>
+  
+  <Card title="C# MCP" icon="code">
+    ```bash
+    copilot plugin install \
+      csharp-mcp-development@awesome-copilot
+    ```
+    Official C# SDK, .NET integration
+  </Card>
+  
+  <Card title="Go MCP" icon="golang">
+    ```bash
+    copilot plugin install \
+      go-mcp-development@awesome-copilot
+    ```
+    Official go-sdk, concurrency patterns
+  </Card>
+  
+  <Card title="Rust MCP" icon="rust">
+    ```bash
+    copilot plugin install \
+      rust-mcp-development@awesome-copilot
+    ```
+    rmcp SDK, async/await, macros
+  </Card>
+  
+  <Card title="Java MCP" icon="java">
+    ```bash
+    copilot plugin install \
+      java-mcp-development@awesome-copilot
+    ```
+    Reactive streams, Spring Boot
+  </Card>
+</CardGroup>
+
+**Each MCP plugin includes:**
+- Expert agent for MCP development guidance
+- Server generator skill for scaffolding new projects
+- Language-specific best practices and patterns
+
+**Available for:** TypeScript, Python, C#, Go, Rust, Java, Kotlin, Ruby, Swift, PHP
+
+## Cloud & Infrastructure Plugins
+
+### Azure Cloud Development
+
+Comprehensive Azure cloud development tools including IaC, serverless, and architecture patterns.
+
+**Installation:**
+```bash
+copilot plugin install azure-cloud-development@awesome-copilot
+```
+
+**What's Included:**
+- **4 items** - Azure development resources
+  - Bicep and Terraform templates
+  - Azure Functions serverless patterns
+  - Architecture best practices
+  - Cost optimization strategies
+
+**Tags:** `azure`, `cloud`, `infrastructure`, `bicep`, `terraform`, `serverless`, `architecture`, `devops`
+
+---
+
+### Database & Data Management
+
+Database administration, SQL optimization, and data management for PostgreSQL and SQL Server.
+
+**Installation:**
+```bash
+copilot plugin install database-data-management@awesome-copilot
+```
+
+**What's Included:**
+- **5 items** - Database development tools
+  - PostgreSQL optimization
+  - SQL Server best practices
+  - Query optimization
+  - Data modeling patterns
+
+**Tags:** `database`, `sql`, `postgresql`, `sql-server`, `dba`, `optimization`, `queries`
+
+## Specialized Plugins
+
+### OpenAPI to Application Generators
+
+Generate production-ready applications from OpenAPI specifications in multiple languages.
+
+<CodeGroup>
+```bash C# / .NET
+copilot plugin install openapi-to-application-csharp-dotnet@awesome-copilot
+```
+
+```bash Go
+copilot plugin install openapi-to-application-go@awesome-copilot
+```
+
+```bash Java / Spring Boot
+copilot plugin install openapi-to-application-java-spring-boot@awesome-copilot
+```
+
+```bash Node.js / NestJS
+copilot plugin install openapi-to-application-nodejs-nestjs@awesome-copilot
+```
+
+```bash Python / FastAPI
+copilot plugin install openapi-to-application-python-fastapi@awesome-copilot
+```
+</CodeGroup>
+
+**Each OpenAPI plugin includes:**
+- Project scaffolding from OpenAPI specs
+- Controller/handler generation
+- Service layer organization
+- Framework-specific best practices
+
+---
+
+### Power Platform Plugins
+
+Plugins for Microsoft Power Platform development.
+
+**Power BI Development:**
+```bash
+copilot plugin install power-bi-development@awesome-copilot
+```
+- DAX optimization
+- Data modeling
+- Performance tuning
+- Visualization design
+
+**Power Apps Code Apps:**
+```bash
+copilot plugin install power-apps-code-apps@awesome-copilot
+```
+- Code-first app development
+- Power Platform integration
+- Dataverse connectors
+
+**PCF Development:**
+```bash
+copilot plugin install pcf-development@awesome-copilot
+```
+- Power Apps Component Framework
+- Custom component development
+
+---
+
+### Multi-Agent Workflows
+
+Advanced plugins for orchestrated, multi-agent development workflows.
+
+**GEM Team:**
+```bash
+copilot plugin install gem-team@awesome-copilot
+```
+- DAG-based planning
+- Parallel execution
+- TDD verification
+- Automated testing
+
+**Software Engineering Team:**
+```bash
+copilot plugin install software-engineering-team@awesome-copilot
+```
+- 7 specialized agents
+- Full SDLC coverage
+- UX, Architecture, Security, DevOps
+
+**Polyglot Test Agent:**
+```bash
+copilot plugin install polyglot-test-agent@awesome-copilot
+```
+- Multi-language test generation
+- Research, planning, implementation phases
+- Comprehensive unit tests
+
+## Security & Best Practices
+
+### Security Best Practices
+
+Security frameworks, accessibility, performance optimization, and code quality.
+
+**Installation:**
+```bash
+copilot plugin install security-best-practices@awesome-copilot
+```
+
+**What's Included:**
+- OWASP security frameworks
+- A11y accessibility guidelines
+- Performance optimization patterns
+- Code quality best practices
+
+**Tags:** `security`, `accessibility`, `performance`, `code-quality`, `owasp`, `a11y`, `optimization`
+
+## Discovery & Installation
+
+Plugins are discoverable through the marketplace.json file:
+
+<Steps>
+  <Step title="Browse Marketplace">
+    The `marketplace.json` file lists all available plugins with metadata:
+    - Plugin name and description
+    - Version information
+    - Source location
+    - Keywords for search
+  </Step>
+  
+  <Step title="Install Plugin">
+    Use the Copilot CLI to install:
+    ```bash
+    copilot plugin install <plugin-name>@awesome-copilot
+    ```
+  </Step>
+  
+  <Step title="Access Resources">
+    Once installed:
+    - Agents appear in VS Code Chat interface
+    - Skills become slash commands
+    - Bundled resources are available locally
+  </Step>
+</Steps>
+
+## Contributing
+
+Want to create your own plugin?
+
+<CardGroup cols={2}>
+  <Card title="Plugin Creation Guide" icon="hammer" href="https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-plugins">
+    Learn how to scaffold and publish plugins
+  </Card>
+  
+  <Card title="Plugin System Overview" icon="book" href="/resources/plugins/overview">
+    Understand plugin structure and components
+  </Card>
+</CardGroup>
+
+## Complete Plugin List
+
+View all 40+ available plugins in the [README.plugins.md](https://github.com/github/awesome-copilot/blob/main/docs/README.plugins.md) file, including:
+
+- TypeSpec M365 Copilot
+- Dataverse SDK for Python
+- DevOps OnCall
+- Technical Spike
+- Structured Autonomy
+- Clojure Interactive Programming
+- CAST Imaging
+- And many more...
+
+Each plugin includes detailed descriptions, installation commands, and content listings.

@@ -1,0 +1,446 @@
+---
+title: Using Agent Skills
+description: Learn how to use self-contained agent skills with bundled resources for specialized tasks
+---
+
+# Using Agent Skills
+
+Agent Skills are self-contained folders with instructions and bundled resources that enhance AI capabilities for specialized tasks. Based on the [Agent Skills specification](https://agentskills.io/specification), each skill contains a `SKILL.md` file with detailed instructions that agents load on-demand.
+
+## What are Agent Skills?
+
+Skills differ from agents and instructions by supporting **bundled assets** (scripts, code samples, reference data) that agents can utilize when performing specialized tasks.
+
+<Note>
+  **Key Differences:**
+  - **Agents** define AI personas with specific tools and behaviors
+  - **Instructions** provide coding standards that apply to file patterns  
+  - **Skills** are self-contained folders with instructions + bundled resources
+</Note>
+
+Skills provide **progressive disclosure** - they're loaded only when needed for specific tasks, keeping context focused and efficient.
+
+## Skill Structure
+
+Each skill is a folder containing:
+
+```
+skills/aspire/
+├── SKILL.md              # Main instruction file
+├── references/          # Reference documentation
+│   ├── cli-reference.md
+│   ├── deployment.md
+│   └── testing.md
+├── scripts/             # Helper scripts
+│   └── setup.sh
+└── templates/           # Code templates
+    └── apphost-template.cs
+```
+
+<Accordion title="SKILL.md Frontmatter Requirements">
+  ```markdown
+  ---
+  name: skill-name
+  description: 'Brief description of what the skill does'
+  ---
+  ```
+
+  - **name** (required): Lowercase with hyphens, matching folder name, max 64 characters
+  - **description** (required): Wrapped in single quotes, 10-1024 characters
+  - **Folder name**: Must match the `name` field exactly
+</Accordion>
+
+## Installing Skills
+
+<Tabs>
+  <Tab title="Copy Skill Folder">
+    <Steps>
+      <Step title="Browse skills catalog">
+        Navigate to the [skills/ directory](https://github.com/github/awesome-copilot/tree/main/skills) in the repository.
+      </Step>
+
+      <Step title="Download entire folder">
+        Copy the entire skill folder (not just SKILL.md) to your local skills directory.
+      </Step>
+
+      <Step title="Place in skills directory">
+        Install to one of these locations:
+        - Project: `.github/skills/skill-name/`
+        - User: `~/.config/github-copilot/skills/skill-name/`
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Via Plugin">
+    Many skills are bundled in [plugins](/usage/plugins):
+
+    ```bash
+    # Add marketplace
+    copilot plugin marketplace add github/awesome-copilot
+
+    # Install plugin (includes skills)
+    copilot plugin install azure-cloud-development@awesome-copilot
+    ```
+  </Tab>
+
+  <Tab title="Generate with npm">
+    If you've cloned the awesome-copilot repository:
+
+    ```bash
+    # Create new skill scaffold
+    npm run skill:create -- --name my-skill
+
+    # Validate skill structure
+    npm run skill:validate
+    ```
+  </Tab>
+</Tabs>
+
+## How Skills Work
+
+Skills use **progressive disclosure** to load resources on-demand:
+
+<Steps>
+  <Step title="Skill Discovery">
+    Agents discover skills through:
+    - Explicit user request ("use the aspire skill")
+    - Automatic detection based on task context
+    - Skill catalog lookup
+  </Step>
+
+  <Step title="Instruction Loading">
+    The agent loads the `SKILL.md` file, which contains:
+    - Overview of skill capabilities
+    - When to use the skill
+    - References to bundled assets
+    - Step-by-step workflows
+  </Step>
+
+  <Step title="Asset Utilization">
+    As needed, the agent:
+    - Reads reference documentation
+    - Executes helper scripts
+    - Applies code templates
+    - Uses sample data
+  </Step>
+</Steps>
+
+## Skill Examples
+
+Here are popular skills from the repository:
+
+<Tabs>
+  <Tab title="Aspire Skill">
+    **Purpose:** Aspire distributed-app orchestration  
+    **Assets:** CLI reference, deployment guides, integration catalog
+
+    ```markdown
+    ---
+    name: aspire
+    description: 'Aspire skill covering CLI, AppHost orchestration,
+      service discovery, integrations, and deployment.'
+    ---
+
+    # Aspire Skill
+
+    Aspire is a code-first, polyglot toolchain for building
+    observable, production-ready distributed applications.
+
+    ## References
+    - [CLI Reference](references/cli-reference.md)
+    - [Deployment](references/deployment.md)
+    - [Testing](references/testing.md)
+    ```
+
+    **When to use:** Creating, running, debugging, configuring, or deploying Aspire applications.
+  </Tab>
+
+  <Tab title="Azure Resource Visualizer">
+    **Purpose:** Generate Mermaid diagrams of Azure resources  
+    **Assets:** Diagram templates, architecture patterns
+
+    ```markdown
+    ---
+    name: azure-resource-visualizer
+    description: 'Analyze Azure resource groups and generate
+      detailed Mermaid architecture diagrams.'
+    ---
+
+    # Azure Resource Visualizer
+
+    Use this skill when the user asks for a diagram of their
+    Azure resources or help understanding how resources relate.
+
+    ## Templates
+    - [Architecture Template](assets/template-architecture.md)
+    ```
+
+    **When to use:** Asking for Azure architecture diagrams or resource relationships.
+  </Tab>
+
+  <Tab title="Dataverse Python Production">
+    **Purpose:** Generate production-ready Dataverse SDK code  
+    **Assets:** Code patterns, examples, best practices
+
+    ```markdown
+    ---
+    name: dataverse-python-production-code
+    description: 'Generate production-ready Python code using
+      Dataverse SDK with error handling and optimization.'
+    ---
+
+    # Dataverse Python Production Code
+
+    Use when generating Dataverse SDK code with:
+    - Comprehensive error handling
+    - Performance optimization
+    - Production-ready patterns
+    ```
+
+    **When to use:** Building Python integrations with Microsoft Dataverse.
+  </Tab>
+
+  <Tab title="MCP Server Generator">
+    **Purpose:** Generate Model Context Protocol servers  
+    **Assets:** Project templates, SDK references
+
+    ```markdown
+    ---
+    name: python-mcp-server-generator
+    description: 'Generate complete MCP server project in Python
+      with tools, resources, and proper configuration.'
+    ---
+
+    # Python MCP Server Generator
+
+    Creates a complete MCP server using the official Python SDK
+    with FastMCP support.
+    ```
+
+    **When to use:** Creating new MCP servers in Python, C#, Go, Java, or other languages.
+  </Tab>
+</Tabs>
+
+## Bundled Assets
+
+Skills can include various types of assets:
+
+<CodeGroup>
+```bash Helper Scripts
+scripts/
+├── setup.sh          # Environment setup
+├── validate.py       # Validation utilities
+└── deploy.ps1        # Deployment automation
+```
+
+```markdown Reference Docs
+references/
+├── API.md            # API documentation
+├── SETUP.md          # Setup instructions
+├── TROUBLESHOOTING.md # Common issues
+└── EXAMPLES.md       # Usage examples
+```
+
+```markdown Templates
+templates/
+├── component.tsx     # React component
+├── service.cs        # C# service class
+└── Dockerfile        # Container config
+```
+
+```json Sample Data
+assets/
+├── sample-config.json
+├── test-data.csv
+└── schema.yaml
+```
+</CodeGroup>
+
+<Note>
+  Asset files should be reasonably sized (under 5MB per file) and referenced in SKILL.md instructions.
+</Note>
+
+## When to Use Skills vs Instructions
+
+<Accordion title="Use Skills When...">
+  - You need **bundled resources** (scripts, templates, data)
+  - The task is **complex and repeatable**
+  - You want **on-demand loading** to save context
+  - Multiple **reference documents** are needed
+  - The workflow requires **helper utilities**
+
+  **Examples:**
+  - Generating MCP servers (needs templates + SDK docs)
+  - Azure resource visualization (needs diagram templates)
+  - Dataverse integration (needs code patterns + examples)
+</Accordion>
+
+<Accordion title="Use Instructions When...">
+  - Applying **coding standards** to file patterns
+  - Enforcing **team conventions**
+  - No bundled assets needed
+  - Simple, always-on guidance
+
+  **Examples:**
+  - C# naming conventions
+  - React component patterns
+  - Security best practices
+</Accordion>
+
+## Creating Your Own Skills
+
+To create a skill for your team:
+
+<Steps>
+  <Step title="Scaffold the skill">
+    ```bash
+    # In awesome-copilot repo
+    npm run skill:create -- --name my-skill
+    ```
+
+    Or manually create the folder structure:
+    ```
+    skills/my-skill/
+    ├── SKILL.md
+    ├── references/
+    ├── scripts/
+    └── templates/
+    ```
+  </Step>
+
+  <Step title="Write SKILL.md">
+    ```markdown
+    ---
+    name: my-skill
+    description: 'Brief description (10-1024 chars)'
+    ---
+
+    # My Skill
+
+    ## Overview
+    What this skill does...
+
+    ## When to Use
+    Use when the user asks to...
+
+    ## References
+    - [Setup Guide](references/setup.md)
+    - [Examples](references/examples.md)
+    ```
+  </Step>
+
+  <Step title="Add bundled assets">
+    - Reference docs in `references/`
+    - Helper scripts in `scripts/`
+    - Code templates in `templates/`
+    - Sample data in `assets/`
+  </Step>
+
+  <Step title="Validate and test">
+    ```bash
+    npm run skill:validate
+    ```
+
+    Test with GitHub Copilot by referencing the skill explicitly.
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Accordion title="Structure for Progressive Disclosure">
+  - **SKILL.md** should be concise (1-2 pages)
+  - Move detailed content to `references/`
+  - Load references on-demand, not all at once
+  - Use clear file names (e.g., `API-REFERENCE.md`, not `ref1.md`)
+</Accordion>
+
+<Accordion title="Keep Assets Focused">
+  - Each reference should cover one topic
+  - Scripts should do one thing well
+  - Templates should be minimal but complete
+  - Avoid duplicating external documentation
+</Accordion>
+
+<Accordion title="Document When to Use">
+  Include clear triggers in SKILL.md:
+
+  ```markdown
+  ## When to Use
+  Use this skill when the user:
+  - Asks to "create an MCP server"
+  - Mentions "Model Context Protocol"
+  - Wants to "build a custom tool provider"
+  ```
+</Accordion>
+
+<Accordion title="Follow the Specification">
+  Skills follow [agentskills.io/specification](https://agentskills.io/specification):
+
+  - Folder name matches `name` field
+  - Name is lowercase with hyphens
+  - Description is 10-1024 characters
+  - Assets under 5MB each
+  - Executable scripts have proper permissions
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="Skill not loading">
+  - Verify folder name matches `name` in frontmatter
+  - Check SKILL.md has valid frontmatter
+  - Ensure folder is in `.github/skills/`
+  - Try explicit skill invocation: "use the X skill"
+</Accordion>
+
+<Accordion title="Assets not accessible">
+  - Verify asset paths are relative to SKILL.md
+  - Check file exists in the skill folder
+  - Make scripts executable: `chmod +x script.sh`
+  - Review file size (must be under 5MB)
+</Accordion>
+
+<Accordion title="Skill conflicts">
+  - Use unique skill names across your workspace
+  - More specific skill names take precedence
+  - Check for duplicate folder names
+</Accordion>
+
+## Popular Skills by Category
+
+<Tabs>
+  <Tab title="Code Generation">
+    - `openapi-to-application-code` - Generate apps from OpenAPI specs
+    - `csharp-mcp-server-generator` - Generate C# MCP servers
+    - `python-mcp-server-generator` - Generate Python MCP servers
+    - `multi-stage-dockerfile` - Create optimized Dockerfiles
+  </Tab>
+
+  <Tab title="Azure & Cloud">
+    - `aspire` - Aspire distributed apps
+    - `azure-resource-visualizer` - Azure architecture diagrams
+    - `az-cost-optimize` - Azure cost optimization
+    - `azure-deployment-preflight` - Bicep deployment validation
+  </Tab>
+
+  <Tab title="Documentation">
+    - `create-specification` - Technical specifications
+    - `create-readme` - README generation
+    - `documentation-writer` - Diátaxis framework docs
+    - `create-architectural-decision-record` - ADR documents
+  </Tab>
+
+  <Tab title="Testing">
+    - `polyglot-test-agent` - Multi-language test generation
+    - `playwright-generate-test` - Playwright tests
+    - `pytest-coverage` - Python test coverage
+    - `javascript-typescript-jest` - Jest testing patterns
+  </Tab>
+</Tabs>
+
+## Related Resources
+
+- [Browse All Skills](https://github.com/github/awesome-copilot/tree/main/skills)
+- [Agent Skills Specification](https://agentskills.io/specification)
+- [Custom Agents](/usage/agents) - Specialized AI personas
+- [Custom Instructions](/usage/instructions) - Coding standards
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-skills)

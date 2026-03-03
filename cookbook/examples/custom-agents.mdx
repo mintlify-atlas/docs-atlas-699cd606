@@ -1,0 +1,467 @@
+---
+title: Creating Custom Agents
+description: Learn how to create specialized GitHub Copilot agents with targeted expertise and custom tools
+---
+
+# Creating Custom Agents
+
+Custom agents are specialized GitHub Copilot agents with tailored expertise, tools, and instructions for specific tasks. This guide shows you how to create effective custom agents using real examples from the community.
+
+## What are Custom Agents?
+
+Custom agents are markdown files with YAML frontmatter that define:
+
+- **Agent identity and expertise** - What the agent specializes in
+- **Available tools** - Which operations the agent can perform
+- **Instructions** - How the agent should work and respond
+- **Model selection** - Which AI model powers the agent
+
+<Note>
+Custom agents live in `.github/agents/` (repository-level) or `agents/` (organization/enterprise-level).
+</Note>
+
+## Anatomy of a Custom Agent
+
+Here's the basic structure:
+
+```markdown
+---
+description: 'Brief description of agent purpose and capabilities'
+name: 'Agent Display Name'
+tools: ['read', 'edit', 'search']
+model: 'Claude Sonnet 4.5'
+---
+
+# Agent Name
+
+Detailed instructions for how the agent should behave...
+```
+
+## Quick Start: Your First Agent
+
+Let's create a simple code review agent:
+
+<Steps>
+  <Step title="Create the agent file">
+    Create `.github/agents/code-reviewer.agent.md`:
+    
+    ```markdown
+    ---
+    description: 'Review code for quality, security, and best practices'
+    name: 'Code Reviewer'
+    tools: ['read', 'search']
+    model: 'Claude Sonnet 4.5'
+    ---
+    
+    # Code Review Agent
+    
+    You are a code review specialist. Your task is to:
+    
+    1. Check code quality and maintainability
+    2. Identify security issues and vulnerabilities
+    3. Verify adherence to project standards
+    4. Suggest improvements
+    
+    Provide constructive feedback on the implementation.
+    ```
+  </Step>
+  
+  <Step title="Test the agent">
+    1. Reload VS Code or refresh GitHub.com
+    2. Select "Code Reviewer" from the Copilot Chat dropdown
+    3. Ask it to review a file or code snippet
+  </Step>
+  
+  <Step title="Iterate and refine">
+    Based on the agent's responses, adjust the instructions and tools to improve performance
+  </Step>
+</Steps>
+
+## Real-World Example: PR Comment Addresser
+
+Here's a production agent from the Awesome Copilot repository:
+
+```markdown
+---
+description: "Address PR comments"
+name: 'Universal PR Comment Addresser'
+tools:
+  [
+    "changes",
+    "codebase",
+    "editFiles",
+    "extensions",
+    "fetch",
+    "findTestFiles",
+    "githubRepo",
+    "new",
+    "openSimpleBrowser",
+    "problems",
+    "runCommands",
+    "runTasks",
+    "runTests",
+    "search",
+    "searchResults",
+    "terminalLastCommand",
+    "terminalSelection",
+    "testFailure",
+    "usages",
+    "vscodeAPI",
+    "microsoft.docs.mcp",
+    "github",
+  ]
+---
+
+# Universal PR Comment Addresser
+
+Your job is to address comments on your pull request.
+
+## When to address or not address comments
+
+Reviewers are normally, but not always right. If a comment does not make sense to you,
+ask for more clarification. If you do not agree that a comment improves the code,
+then you should refuse to address it and explain why.
+
+## Addressing Comments
+
+- You should only address the comment provided not make unrelated changes
+- Make your changes as simple as possible and avoid adding excessive code
+- You should always change all instances of the same issue
+- Always add test coverage for your changes if not already present
+
+## After Fixing a comment
+
+### Run tests
+
+If you do not know how, ask the user.
+
+### Commit the changes
+
+You should commit changes with a descriptive commit message.
+
+### Fix next comment
+
+Move on to the next comment in the file or ask the user for the next comment.
+```
+
+<Tip>
+This agent uses comprehensive tool access because it needs to read code, make edits, run tests, and commit changes. Always grant the minimum tools needed for the agent's purpose.
+</Tip>
+
+## Frontmatter Properties
+
+### Required Properties
+
+<ParamField path="description" type="string" required>
+  Brief, single-quoted description of the agent's purpose (50-150 characters)
+  
+  ```yaml
+  description: 'Focuses on test coverage, quality, and testing best practices'
+  ```
+</ParamField>
+
+### Optional Properties
+
+<ParamField path="name" type="string">
+  Display name for the agent in the UI (defaults to filename if omitted)
+  
+  ```yaml
+  name: 'Testing Specialist'
+  ```
+</ParamField>
+
+<ParamField path="tools" type="array">
+  List of tools the agent can use. If omitted, agent has access to all tools.
+  
+  ```yaml
+  tools: ['read', 'edit', 'search', 'execute']
+  ```
+</ParamField>
+
+<ParamField path="model" type="string">
+  AI model to use (strongly recommended)
+  
+  ```yaml
+  model: 'Claude Sonnet 4.5'
+  model: 'gpt-4o'
+  ```
+</ParamField>
+
+<ParamField path="infer" type="boolean" default="true">
+  Whether Copilot can automatically use this agent based on context
+  
+  ```yaml
+  infer: false  # Require manual selection
+  ```
+</ParamField>
+
+## Tool Configuration
+
+### Standard Tool Aliases
+
+All tool names are case-insensitive:
+
+<Tabs>
+  <Tab title="File Operations">
+    - `read` - Read file contents
+    - `edit` - Edit and modify files
+    - `search` - Search for files or text in files (Grep, Glob)
+  </Tab>
+  
+  <Tab title="Execution">
+    - `execute` - Execute shell commands (Bash, PowerShell)
+  </Tab>
+  
+  <Tab title="Web & External">
+    - `web` - Fetch web content and search (WebSearch, WebFetch)
+    - `github/*` - GitHub MCP server tools
+    - `playwright/*` - Browser automation tools
+  </Tab>
+  
+  <Tab title="Agents">
+    - `agent` - Invoke other custom agents (Task)
+    - `todo` - Create and manage task lists (VS Code only)
+  </Tab>
+</Tabs>
+
+### Tool Selection Examples
+
+<CodeGroup>
+```yaml All Tools (Default)
+# Omit tools property entirely
+tools: ['*']
+```
+
+```yaml Specific Tools
+tools: ['read', 'edit', 'search', 'execute']
+```
+
+```yaml MCP Server Tools
+tools: ['read', 'edit', 'github/*', 'playwright/navigate']
+```
+
+```yaml No Tools
+tools: []
+```
+</CodeGroup>
+
+## Agent Instructions
+
+The markdown content below the frontmatter defines agent behavior:
+
+### Structure Template
+
+```markdown
+# Agent Name
+
+## Role
+
+[Who the agent is and its primary responsibility]
+
+## Objectives
+
+1. [What the agent should accomplish]
+2. [Key goals and outcomes]
+
+## Approach
+
+- [How the agent should work]
+- [Methodology and process]
+
+## Guidelines
+
+- [What to do and avoid]
+- [Quality standards]
+- [Constraints and boundaries]
+
+## Output Format
+
+[Expected output structure and format]
+```
+
+### Best Practices
+
+<AccordionGroup>
+  <Accordion title="Be Specific and Direct">
+    Use imperative mood ("Analyze", "Generate") and avoid vague terms.
+    
+    **Good**: "Analyze code for security vulnerabilities using OWASP Top 10"
+    
+    **Avoid**: "Help with security"
+  </Accordion>
+  
+  <Accordion title="Define Clear Boundaries">
+    Explicitly state what the agent should and shouldn't do.
+    
+    ```markdown
+    ## Guidelines
+    
+    - Focus ONLY on security issues
+    - Do NOT refactor code
+    - Do NOT modify functionality
+    ```
+  </Accordion>
+  
+  <Accordion title="Include Examples">
+    Show the agent what good output looks like.
+    
+    ```markdown
+    ## Example Output
+    
+    **Security Issue**: SQL Injection vulnerability
+    **Location**: `user_controller.py:42`
+    **Severity**: High
+    **Fix**: Use parameterized queries
+    ```
+  </Accordion>
+  
+  <Accordion title="Keep It Focused">
+    One agent should do one thing well. Create multiple agents rather than one that does everything.
+  </Accordion>
+</AccordionGroup>
+
+## Common Agent Patterns
+
+<CardGroup cols={2}>
+  <Card title="Testing Specialist" icon="vial">
+    **Tools**: All tools for comprehensive test creation
+    
+    **Focus**: Analyze code, identify gaps, write tests, avoid production changes
+  </Card>
+  
+  <Card title="Code Reviewer" icon="magnifying-glass">
+    **Tools**: `read`, `search` only
+    
+    **Focus**: Analyze and suggest improvements, no direct modifications
+  </Card>
+  
+  <Card title="Refactoring Specialist" icon="arrow-rotate-right">
+    **Tools**: `read`, `search`, `edit`
+    
+    **Focus**: Improve code structure while maintaining behavior
+  </Card>
+  
+  <Card title="Security Auditor" icon="shield">
+    **Tools**: `read`, `search`, `web`
+    
+    **Focus**: Identify vulnerabilities, check against OWASP, report findings
+  </Card>
+</CardGroup>
+
+## Advanced: Agent Handoffs
+
+Create guided sequential workflows that transition between agents:
+
+```yaml
+---
+description: 'Generate an implementation plan'
+name: 'Planner'
+tools: ['search', 'read']
+handoffs:
+  - label: Implement Plan
+    agent: implementer
+    prompt: 'Implement the plan outlined above.'
+    send: false
+---
+
+# Planner Agent
+
+You are a planning specialist. Your task is to:
+1. Analyze requirements
+2. Break down work into steps
+3. Generate detailed implementation plan
+4. Identify testing requirements
+
+Do not write any code - focus only on planning.
+```
+
+When the planner completes, users see a button "Implement Plan" that switches to the implementer agent.
+
+<Note>
+Handoffs are currently supported in VS Code 1.106+ only.
+</Note>
+
+## File Organization
+
+### Repository-Level Agents
+
+```
+.github/agents/
+  ├── code-reviewer.agent.md
+  ├── test-specialist.agent.md
+  └── security-auditor.agent.md
+```
+
+Available only in this repository.
+
+### Organization-Level Agents
+
+```
+agents/
+  ├── company-standards.agent.md
+  ├── compliance-checker.agent.md
+  └── architecture-reviewer.agent.md
+```
+
+Available across all repositories in the organization.
+
+## Testing Your Agent
+
+<Steps>
+  <Step title="Manual Testing">
+    1. Create the agent file with proper frontmatter
+    2. Reload VS Code or refresh GitHub.com
+    3. Select the agent from Copilot Chat dropdown
+    4. Test with representative queries
+    5. Verify tool access works as expected
+  </Step>
+  
+  <Step title="Refinement">
+    Based on agent responses:
+    - Adjust instructions for clarity
+    - Add or remove tools as needed
+    - Refine output format expectations
+  </Step>
+  
+  <Step title="Production">
+    - Document any special configuration
+    - Get peer review for complex agents
+    - Test with real use cases
+  </Step>
+</Steps>
+
+## Common Mistakes to Avoid
+
+<Warning>
+**Missing Description**: Every agent MUST have a `description` field wrapped in single quotes.
+</Warning>
+
+<Warning>
+**Too Many Tools**: Don't grant `execute` access unless the agent genuinely needs to run commands. Use principle of least privilege.
+</Warning>
+
+<Warning>
+**Vague Instructions**: "Help with testing" is too vague. Be specific: "Write unit tests using Jest with 80% coverage".
+</Warning>
+
+<Warning>
+**Wrong File Location**: Repository agents go in `.github/agents/`, not `agents/`.
+</Warning>
+
+## Example Agents from the Community
+
+Explore real production agents:
+
+- **[Address Comments](https://github.com/github/awesome-copilot/blob/main/agents/address-comments.agent.md)** - Automatically address PR review comments
+- **[Accessibility Expert](https://github.com/github/awesome-copilot/blob/main/agents/accessibility.agent.md)** - WCAG compliance and a11y best practices
+- **[Test Specialist](https://github.com/github/awesome-copilot/blob/main/agents/test-specialist.agent.md)** - Comprehensive test coverage analysis
+- **[Security Reviewer](https://github.com/github/awesome-copilot/blob/main/agents/security-auditor.agent.md)** - Security vulnerability detection
+
+Browse [all community agents →](https://github.com/github/awesome-copilot/tree/main/agents)
+
+## Resources
+
+- [Official Custom Agents Documentation](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents)
+- [Custom Agents Configuration Reference](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
+- [VS Code Custom Agents Guide](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
+- [Awesome Copilot Agents Collection](https://github.com/github/awesome-copilot/tree/main/agents)

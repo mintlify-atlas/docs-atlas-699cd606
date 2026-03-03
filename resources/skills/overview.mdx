@@ -1,0 +1,399 @@
+---
+title: "Skills Overview"
+description: "Learn about Agent Skills and how to enhance GitHub Copilot with specialized capabilities"
+---
+
+## What are Agent Skills?
+
+Agent Skills are self-contained folders containing a `SKILL.md` instruction file and optional bundled resources (scripts, templates, reference data) that enhance AI capabilities for specialized tasks. Based on the [Agent Skills specification](https://agentskills.io/specification), skills provide progressive disclosure—loaded only when needed for specific tasks.
+
+<Card
+  title="Browse the Skills Catalog"
+  icon="grid"
+  href="/resources/skills/catalog"
+>
+  Explore 200+ ready-to-use skills for different technologies, frameworks, and workflows.
+</Card>
+
+## How Skills Differ from Other Resources
+
+Skills are unique in the GitHub Copilot ecosystem because they can bundle assets alongside instructions:
+
+<CardGroup cols={2}>
+  <Card title="Agents" icon="robot">
+    Specialized Copilot configurations with instructions and tool access. Pure behavior, no bundled files.
+  </Card>
+  
+  <Card title="Skills" icon="folder" color="#0969DA">
+    Instructions PLUS bundled resources (scripts, templates, data). Self-contained capabilities.
+  </Card>
+  
+  <Card title="Instructions" icon="file-code">
+    Coding standards applied to file patterns. For consistent style and best practices.
+  </Card>
+  
+  <Card title="Plugins" icon="plug">
+    Curated packages that bundle agents, skills, and commands into installable themes.
+  </Card>
+</CardGroup>
+
+## Skill Structure
+
+Each skill is a folder containing a `SKILL.md` file with YAML frontmatter:
+
+```
+skills/appinsights-instrumentation/
+├── SKILL.md                    # Required: Instructions with frontmatter
+├── scripts/                    # Optional: Helper scripts
+│   └── appinsights.ps1
+├── references/                 # Optional: Reference documentation
+│   ├── ASPNETCORE.md
+│   ├── NODEJS.md
+│   └── PYTHON.md
+└── examples/                   # Optional: Code examples
+    └── appinsights.bicep
+```
+
+### SKILL.md Frontmatter
+
+Every skill requires YAML frontmatter with `name` and `description`:
+
+```markdown
+---
+name: appinsights-instrumentation
+description: 'Instrument a webapp to send useful telemetry data to Azure App Insights'
+---
+
+# AppInsights instrumentation
+
+This skill enables sending telemetry data...
+```
+
+## Frontmatter Fields
+
+<ParamField path="name" type="string" required>
+  Skill identifier matching the folder name (lowercase with hyphens, 1-64 characters)
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Brief description of what the skill does AND when to use it (10-1024 characters). Must be wrapped in single quotes.
+</ParamField>
+
+## Bundled Assets
+
+Skills can include various types of bundled resources:
+
+### Scripts
+
+Executable helper scripts that automate tasks:
+
+<Accordion title="Example: Copilot Usage Metrics Scripts">
+  The `copilot-usage-metrics` skill includes 4 shell scripts:
+  
+  ```bash
+  copilot-usage-metrics/
+  ├── SKILL.md
+  ├── get-org-metrics.sh
+  ├── get-org-user-metrics.sh
+  ├── get-enterprise-metrics.sh
+  └── get-enterprise-user-metrics.sh
+  ```
+  
+  These scripts retrieve GitHub Copilot usage data via GitHub CLI and REST API.
+</Accordion>
+
+### Templates
+
+Reusable code templates or diagram templates:
+
+<Accordion title="Example: Excalidraw Templates">
+  The `excalidraw-diagram-generator` skill includes 8 diagram templates:
+  
+  ```bash
+  excalidraw-diagram-generator/
+  ├── SKILL.md
+  ├── templates/
+  │   ├── flowchart-template.excalidraw
+  │   ├── mindmap-template.excalidraw
+  │   ├── sequence-diagram-template.excalidraw
+  │   ├── class-diagram-template.excalidraw
+  │   ├── er-diagram-template.excalidraw
+  │   ├── data-flow-diagram-template.excalidraw
+  │   ├── business-flow-swimlane-template.excalidraw
+  │   └── relationship-template.excalidraw
+  └── references/
+      ├── element-types.md
+      └── excalidraw-schema.md
+  ```
+  
+  Templates provide starting points for different diagram types.
+</Accordion>
+
+### References
+
+Detailed reference documentation loaded on-demand:
+
+<Accordion title="Example: Aspire References">
+  The `aspire` skill includes 9 reference documents:
+  
+  ```bash
+  aspire/
+  ├── SKILL.md
+  └── references/
+      ├── architecture.md
+      ├── cli-reference.md
+      ├── dashboard.md
+      ├── deployment.md
+      ├── integrations-catalog.md
+      ├── mcp-server.md
+      ├── polyglot-apis.md
+      ├── testing.md
+      └── troubleshooting.md
+  ```
+  
+  The SKILL.md tells agents when to load specific reference files.
+</Accordion>
+
+### Assets & Examples
+
+Code samples, configuration files, or other data:
+
+<Accordion title="Example: Create Web Form References">
+  The `create-web-form` skill includes 24 reference files:
+  
+  ```bash
+  create-web-form/
+  ├── SKILL.md
+  └── references/
+      ├── form-basics.md
+      ├── html-form-elements.md
+      ├── css-styling.md
+      ├── javascript.md
+      ├── accessibility.md
+      ├── security.md
+      ├── php-forms.md
+      ├── python-flask.md
+      └── ... (16 more)
+  ```
+  
+  Comprehensive coverage of web form development across multiple technologies.
+</Accordion>
+
+## When to Use Skills
+
+<CardGroup cols={2}>
+  <Card title="Use Skills When" icon="check" color="#2DA44E">
+    - You need bundled scripts or utilities
+    - Templates or code samples are required
+    - Reference data enhances the workflow
+    - The task is complex and repeatable
+    - Progressive disclosure is valuable
+  </Card>
+  
+  <Card title="Use Instructions When" icon="file-code" color="#8250DF">
+    - Enforcing coding standards
+    - Applying best practices to file patterns
+    - No bundled resources needed
+    - Simple, pattern-based guidance
+  </Card>
+  
+  <Card title="Use Agents When" icon="robot" color="#0969DA">
+    - Need MCP server integrations
+    - Specialized tool access required
+    - Specific AI model preferences
+    - Custom behavior without files
+  </Card>
+  
+  <Card title="Use Plugins When" icon="plug" color="#BF3989">
+    - Installing related resources as a bundle
+    - Curating themed toolkits
+    - Sharing comprehensive workflows
+  </Card>
+</CardGroup>
+
+## Real-World Skill Examples
+
+### Azure & Cloud
+
+<CodeGroup>
+```bash Azure Deployment Preflight
+appinsights-instrumentation/
+├── SKILL.md
+├── scripts/appinsights.ps1
+├── examples/appinsights.bicep
+└── references/
+    ├── ASPNETCORE.md
+    ├── NODEJS.md
+    ├── PYTHON.md
+    └── AUTO.md
+```
+
+```bash Azure DevOps CLI
+azure-devops-cli/
+├── SKILL.md
+└── references/
+    ├── pipelines-and-builds.md
+    ├── repos-and-prs.md
+    ├── boards-and-iterations.md
+    ├── org-and-security.md
+    ├── variables-and-agents.md
+    ├── workflows-and-patterns.md
+    └── advanced-usage.md
+```
+</CodeGroup>
+
+### Documentation & Diagrams
+
+<CodeGroup>
+```bash Game Engine Assets
+game-engine/
+├── SKILL.md
+├── assets/
+│   ├── 2d-maze-game.md
+│   ├── 2d-platform-game.md
+│   ├── paddle-game-template.md
+│   ├── simple-2d-engine.md
+│   └── gameBase-template-repo.md
+└── references/
+    ├── game-engine-core-principles.md
+    ├── techniques.md
+    ├── algorithms.md
+    └── ... (6 more)
+```
+
+```bash Legacy Circuit Mockups
+legacy-circuit-mockups/
+├── SKILL.md
+└── references/
+    ├── 6502.md
+    ├── 555.md
+    ├── breadboard.md
+    ├── basic-electronic-components.md
+    ├── emulator-6502.md
+    └── ... (15 more)
+```
+</CodeGroup>
+
+### Testing & Data Analysis
+
+<CodeGroup>
+```bash Data Analysis Scripts
+datanalysis-credit-risk/
+├── SKILL.md
+├── scripts/example.py
+└── references/
+    ├── analysis.py
+    └── func.py
+```
+
+```bash Playwright Testing
+playwright-generate-test/
+└── SKILL.md
+
+playwright-explore-website/
+└── SKILL.md
+
+playwright-automation-fill-in-form/
+└── SKILL.md
+```
+</CodeGroup>
+
+## Progressive Disclosure Pattern
+
+Skills implement progressive disclosure—detailed references are loaded only when needed:
+
+<Steps>
+  <Step title="Initial Load">
+    The SKILL.md provides an overview and decision tree
+  </Step>
+  
+  <Step title="Contextual Reference">
+    The skill instructs the agent to load specific reference files based on the user's context
+  </Step>
+  
+  <Step title="Execute Scripts">
+    Bundled scripts are run when the workflow requires them
+  </Step>
+  
+  <Step title="Use Templates">
+    Templates are copied and customized for the specific use case
+  </Step>
+</Steps>
+
+**Example from the `appinsights-instrumentation` skill:**
+
+```markdown
+## Guidelines
+
+### Collect context information
+Find out the (programming language, application framework, hosting) tuple...
+
+### Prefer auto-instrument if possible
+If the app is a C# ASP.NET Core app hosted in Azure App Service, 
+use [AUTO guide](references/AUTO.md)...
+
+### Manually instrument
+- If the app is an ASP.NET Core app, see [ASPNETCORE guide](references/ASPNETCORE.md)
+- If the app is a Node.js app, see [NODEJS guide](references/NODEJS.md)
+- If the app is a Python app, see [PYTHON guide](references/PYTHON.md)
+```
+
+The agent reads the main SKILL.md, determines context, then loads only the relevant reference file.
+
+## Creating Your Own Skills
+
+<Card
+  title="Contributing Skills"
+  icon="code"
+  href="https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-skills"
+>
+  Learn how to create and contribute new skills to the community
+</Card>
+
+### Skill Creation Checklist
+
+<AccordionGroup>
+  <Accordion title="Structure">
+    - [ ] Create folder with lowercase-hyphenated name
+    - [ ] Add SKILL.md with required frontmatter
+    - [ ] Organize bundled assets in `scripts/`, `references/`, `templates/`, or `assets/`
+    - [ ] Keep individual files under 5MB
+  </Accordion>
+  
+  <Accordion title="Frontmatter">
+    - [ ] `name` matches folder name (1-64 chars)
+    - [ ] `description` explains WHAT and WHEN (10-1024 chars)
+    - [ ] Description wrapped in single quotes
+  </Accordion>
+  
+  <Accordion title="Instructions">
+    - [ ] Clear "When to use this skill" section
+    - [ ] Step-by-step workflow
+    - [ ] References to bundled assets with relative paths
+    - [ ] Progressive disclosure (load references on-demand)
+  </Accordion>
+  
+  <Accordion title="Assets">
+    - [ ] Scripts are executable and documented
+    - [ ] Templates are tested and complete
+    - [ ] References are comprehensive but modular
+    - [ ] All assets referenced in SKILL.md
+  </Accordion>
+</AccordionGroup>
+
+## Agent Skills Specification
+
+Skills in this repository follow the [agentskills.io specification](https://agentskills.io/specification) for maximum compatibility across AI platforms:
+
+- **Portable**: Skills work across different AI assistants and platforms
+- **Self-contained**: All dependencies bundled in the skill folder
+- **Progressive**: Detailed content loaded only when needed
+- **Discoverable**: Rich metadata enables automatic skill discovery
+
+<Card
+  title="Read the Full Specification"
+  icon="book"
+  href="https://agentskills.io/specification"
+>
+  Learn about the complete Agent Skills specification
+</Card>

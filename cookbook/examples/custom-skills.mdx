@@ -1,0 +1,249 @@
+---
+title: Creating Custom Skills
+description: Build reusable skills with bundled resources for specialized tasks
+---
+
+# Creating Custom Skills
+
+Custom skills are self-contained folders with instructions and optional bundled resources (scripts, templates, data files) that provide specialized capabilities to GitHub Copilot. Skills are reusable, shareable, and perfect for complex workflows.
+
+## What are Custom Skills?
+
+Skills are folders containing three key components: a SKILL.md file with instructions and YAML frontmatter, bundled assets like scripts and templates, and supporting resources the skill needs to operate.
+
+<Note>
+Skills live in the skills directory and follow the Agent Skills specification at agentskills.io
+</Note>
+
+## Why Use Skills Instead of Agents?
+
+<CardGroup cols={2}>
+  <Card title="Skills" icon="wand-magic-sparkles">
+    Bundle resources with instructions, reusable across projects, can include scripts and templates and data files, self-contained and portable
+  </Card>
+  
+  <Card title="Agents" icon="robot">
+    Just instructions with no bundled files, project or org specific, lighter weight, simpler to create
+  </Card>
+</CardGroup>
+
+## Anatomy of a Skill
+
+A typical skill folder contains SKILL.md (required), plus optional files like script.py, template.txt, and config.json. The skill folder name should match the name in the frontmatter.
+
+The SKILL.md file starts with YAML frontmatter containing name and description fields, followed by markdown content with detailed instructions for what the skill does and how to use it. Bundled assets are available in the same directory as the SKILL file.
+
+## Quick Start: Your First Skill
+
+<Steps>
+  <Step title="Create the skill directory">
+    Create a new directory under skills with your skill name. Navigate into that directory to add the required files.
+  </Step>
+  
+  <Step title="Create SKILL.md">
+    Create a SKILL.md file with YAML frontmatter at the top. Include the name field matching your folder name, and a description field explaining what the skill does.
+    
+    Add a heading with your skill name, then write detailed instructions. For an educational comments skill, you might include sections like Role, Objectives, and Guidelines.
+    
+    The Role section could explain that you are an expert educator and technical writer. The Objectives section could list goals like transforming files by adding educational comments, maintaining file structure and correctness, and increasing line count by 125 percent using comments only.
+    
+    Guidelines might include explaining the why behind syntax and design choices, adapting tone to match user knowledge level, using only standard keyboard characters, and preserving original indentation and formatting.
+  </Step>
+  
+  <Step title="Test the skill">
+    Use the skill tool in GitHub Copilot. Reference the skill by asking to use the skill on a specific file. Verify it performs the expected behavior.
+  </Step>
+</Steps>
+
+## Real-World Example: Agent Governance Skill
+
+The agent-governance skill from the Awesome Copilot repository demonstrates a production-quality skill. Its frontmatter includes a multi-line description using YAML pipe syntax, listing specific use cases like building AI agents that call external tools, implementing policy-based access controls, adding semantic intent classification, creating trust scoring systems, and building audit trails.
+
+The skill provides patterns for adding safety, trust, and policy enforcement to AI agent systems. It includes detailed documentation on governance patterns that ensure AI agents operate within defined boundaries, controlling which tools they can call, what content they can process, how much they can do, and maintaining accountability through audit trails.
+
+The skill demonstrates Pattern 1 for Governance Policy, which defines what an agent is allowed to do as a composable, serializable policy object. It includes extensive examples showing governance patterns that can be copy-pasted into projects.
+
+## Frontmatter Properties
+
+### Required Properties
+
+<ParamField path="name" type="string" required>
+  Lowercase with hyphens, matching folder name (max 64 characters). Example: add-educational-comments
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Single-quoted description (10-1024 characters). Can be multi-line using YAML pipe syntax. Example: description should be quoted and explain what the skill does clearly and concisely.
+</ParamField>
+
+## Bundling Resources
+
+Skills can include any supporting files. Common resource types include scripts, templates, configuration files, and data files.
+
+### Scripts
+
+Bundle executable scripts alongside your SKILL.md file. For example, a data-processor skill might include process.py, transform.py, and validate.sh.
+
+Reference bundled scripts in your SKILL.md by documenting how to run them. Include the command to execute along with required arguments.
+
+### Templates
+
+Include template files that users can copy and customize. For an api-generator skill, you might create a templates directory containing controller.template, service.template, and model.template.
+
+Document each template in your SKILL.md explaining its purpose. List templates with descriptions like controller.template for REST controllers, service.template for business logic, and model.template for data models.
+
+### Configuration
+
+Bundle configuration files that users can copy to their projects. A linter-setup skill might include .eslintrc.json, .prettierrc.json, and tsconfig.json.
+
+In your SKILL.md, list each configuration file and explain where it should be copied. Note which files go in the project root versus other locations.
+
+### Data Files
+
+Include reference data that your skill needs. An api-tester skill might bundle a test-data directory containing valid-requests.json, invalid-requests.json, and expected-responses.json.
+
+### Asset Size Limits
+
+<Warning>
+Keep bundled assets under 5MB per file. Skills should be lightweight and fast to load.
+</Warning>
+
+## Skill Instructions Best Practices
+
+A well-structured SKILL.md includes the skill name as a heading, followed by a one-sentence overview. Then add sections for When to Use, How It Works, Usage Examples, Configuration Options, Bundled Resources, and Troubleshooting.
+
+The When to Use section lists specific use cases as bullet points. The How It Works section provides numbered steps. Usage Examples should include both basic and advanced scenarios. Document any configuration options if applicable. List all bundled resources with descriptions of what each file does. Include common issues and solutions in Troubleshooting.
+
+### Best Practices
+
+<AccordionGroup>
+  <Accordion title="Document All Bundled Assets">
+    List every bundled file and explain its purpose in a Bundled Resources section. For each file, include the filename and a clear description of what it does. For example, process.py might be the main data processing script, validate.sh could be an input validation helper, and config.yaml would be the default configuration.
+  </Accordion>
+  
+  <Accordion title="Provide Usage Examples">
+    Show concrete examples of how to use the skill. Include command examples with inputs and expected outputs. Demonstrate the skill in action with realistic scenarios that users can copy and adapt.
+  </Accordion>
+  
+  <Accordion title="Make Scripts Executable">
+    Ensure bundled scripts have proper permissions using chmod plus x. Include appropriate shebang lines at the top of scripts, such as the shebang for bash or python.
+  </Accordion>
+  
+  <Accordion title="Version Your Templates">
+    Include version information in templates as comments. For example, add a comment noting which skill generated the file, which version, and which template was used.
+  </Accordion>
+</AccordionGroup>
+
+## Creating Skills with CLI
+
+Use the built-in skill creation tool for convenience.
+
+<Steps>
+  <Step title="Run the create command">
+    Run the npm skill creation command with the name flag to specify your skill name.
+  </Step>
+  
+  <Step title="Edit generated SKILL.md">
+    Customize the generated template with your instructions
+  </Step>
+  
+  <Step title="Add bundled assets">
+    Add any scripts, templates, or data files to the skill folder
+  </Step>
+  
+  <Step title="Validate the skill">
+    Run the npm skill validation command to check for errors.
+  </Step>
+</Steps>
+
+## Skill Use Cases
+
+<CardGroup cols={2}>
+  <Card title="Code Generation" icon="code">
+    **Project scaffolding skill**
+    
+    Bundle templates for project structure, configuration files, boilerplate code, and CI/CD pipelines
+  </Card>
+  
+  <Card title="Data Processing" icon="database">
+    **Data transformation skill**
+    
+    Bundle scripts for CSV/JSON conversion, data validation, schema migration, and report generation
+  </Card>
+  
+  <Card title="Documentation" icon="book">
+    **Documentation generator skill**
+    
+    Bundle tools for API documentation, changelog generation, README templates, and architecture diagrams
+  </Card>
+  
+  <Card title="Testing" icon="vial">
+    **Test generation skill**
+    
+    Bundle resources for test templates, mock data, test utilities, and coverage reports
+  </Card>
+</CardGroup>
+
+## Advanced Example: Multi-Script Skill
+
+A complex skill like api-scaffold can bundle multiple scripts organized in subdirectories. The skill folder might contain a scripts directory with generate-controller.py, generate-service.py, generate-tests.py, and validate-spec.py. It might also include a templates directory with controller.j2, service.j2, and test.j2. Configuration could live in a config directory containing defaults.yaml.
+
+The SKILL.md for such a skill would document each bundled script, explaining that generate-controller.py creates API controllers, generate-service.py creates business logic services, generate-tests.py creates integration tests, and validate-spec.py validates OpenAPI specifications.
+
+Usage instructions would explain the workflow: first validate your OpenAPI spec, then generate the complete API scaffold. Run the controller generator with your spec file and output directory, followed by the service generator and test generator.
+
+The skill could document how to customize generation by editing Jinja2 templates, listing each template with its purpose. Configuration documentation would note default settings like framework, test framework, and code style preferences.
+
+## File Organization
+
+Skills are organized in a skills directory at the root of your project. Each skill gets its own subdirectory. Simple skills like add-educational-comments might just contain SKILL.md. More complex skills like agent-governance might also have just SKILL.md but with more extensive documentation. Advanced skills like api-scaffold can have nested directories for scripts, templates, and config. A data-processor skill might include SKILL.md alongside process.py in the same directory.
+
+## Validation and Testing
+
+<Steps>
+  <Step title="Validate skill structure">
+    Run the skill validation command to check several requirements. The validator ensures SKILL.md exists and has valid frontmatter, verifies the name matches the folder name, confirms the description is between 10 and 1024 characters, and checks that all referenced files exist.
+  </Step>
+  
+  <Step title="Test bundled scripts">
+    Ensure all scripts run correctly by navigating to the skill directory and running each script with the help flag to verify it executes properly.
+  </Step>
+  
+  <Step title="Check file sizes">
+    Verify no files exceed 5MB by using find to locate any files larger than the limit.
+  </Step>
+</Steps>
+
+## Common Mistakes to Avoid
+
+<Warning>
+**Name Mismatch**: Skill name in frontmatter MUST match folder name exactly.
+</Warning>
+
+<Warning>
+**Missing Shebang**: Bundled scripts should include proper shebang lines for the interpreter.
+</Warning>
+
+<Warning>
+**Broken References**: Do not reference files in SKILL.md that are not bundled in the folder.
+</Warning>
+
+<Warning>
+**Large Assets**: Keep bundled files under 5MB. Use external references for large datasets.
+</Warning>
+
+## Example Skills from the Community
+
+Explore real production skills from the Awesome Copilot repository:
+
+- **Add Educational Comments** - Add learning comments to code files
+- **Agent Governance** - AI agent safety patterns and governance controls
+- **Architecture Blueprint** - Generate architecture documentation
+- **Azure Cost Optimizer** - Azure cost analysis and optimization
+
+Browse the Awesome Copilot skills collection on GitHub for more examples.
+
+## Resources
+
+- Agent Skills Specification at agentskills.io
+- Awesome Copilot Skills Collection on GitHub
+- Creating Skills Documentation in GitHub Copilot docs

@@ -1,0 +1,494 @@
+---
+title: 'Workflows Catalog'
+description: 'AI-powered repository automation workflows for GitHub Actions'
+---
+
+# Workflows Catalog
+
+Browse and install Agentic Workflows to automate your repository maintenance, reporting, and governance.
+
+## Available Workflows
+
+<CardGroup cols={3}>
+  <Card title="Daily Issues Report" icon="calendar-day" href="#daily-issues-report">
+    Daily summary of open issues and activity
+  </Card>
+  <Card title="Relevance Check" icon="magnifying-glass" href="#relevance-check">
+    Slash command to check issue/PR relevance
+  </Card>
+  <Card title="OSPO Reports" icon="chart-line" href="#ospo-workflows">
+    Organization health and contributor metrics
+  </Card>
+</CardGroup>
+
+---
+
+## Daily Issues Report
+
+<Note>
+  **Triggers:** Schedule (daily on weekdays)
+</Note>
+
+Generates a daily summary of open issues and recent activity as a GitHub issue.
+
+### Overview
+
+This workflow creates a daily report for your team with:
+- New issues opened in the last 24 hours
+- Issues closed or resolved
+- Stale issues that need attention
+
+### Installation
+
+<Steps>
+  <Step title="Copy Workflow">
+    ```bash
+    cp workflows/daily-issues-report.md .github/workflows/
+    ```
+  </Step>
+  
+  <Step title="Compile">
+    ```bash
+    gh aw compile --validate
+    ```
+  </Step>
+  
+  <Step title="Commit">
+    ```bash
+    git add .github/workflows/daily-issues-report.*
+    git commit -m "Add daily issues report workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+### Configuration
+
+<CodeGroup>
+```markdown daily-issues-report.md
+---
+name: "Daily Issues Report"
+description: "Generates a daily summary of open issues and recent activity as a GitHub issue"
+on:
+  schedule: daily on weekdays
+permissions:
+  contents: read
+  issues: read
+safe-outputs:
+  create-issue:
+    title-prefix: "[daily-report] "
+    labels: [report]
+---
+
+## Daily Issues Report
+
+Create a daily summary of open issues for the team.
+
+## What to Include
+
+- New issues opened in the last 24 hours
+- Issues closed or resolved
+- Stale issues that need attention
+```
+</CodeGroup>
+
+### Permissions
+
+| Permission | Level | Purpose |
+|------------|-------|----------|
+| `contents` | read | Read repository files |
+| `issues` | read | Query issue data |
+
+### Safe Outputs
+
+- Creates maximum 1 issue per run
+- Issues prefixed with `[daily-report]`
+- Automatically labeled with `report`
+
+---
+
+## Relevance Check
+
+<Note>
+  **Triggers:** Slash command (`/relevance-check`), manual dispatch
+</Note>
+
+Slash command to evaluate whether an issue or pull request is still relevant to the project.
+
+### Overview
+
+Maintainers can invoke `/relevance-check` on any issue or PR to get an AI analysis of whether it's still:
+- Applicable to the current codebase
+- Already resolved in other PRs
+- Superseded by newer issues
+- Actionable with current information
+
+### Installation
+
+<Steps>
+  <Step title="Copy Workflow">
+    ```bash
+    cp workflows/relevance-check.md .github/workflows/
+    ```
+  </Step>
+  
+  <Step title="Compile">
+    ```bash
+    gh aw compile --validate
+    ```
+  </Step>
+  
+  <Step title="Commit">
+    ```bash
+    git add .github/workflows/relevance-check.*
+    git commit -m "Add relevance check workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+### Configuration
+
+<CodeGroup>
+```markdown relevance-check.md
+---
+name: Relevance Check
+description: "Slash command to evaluate whether an issue or pull request is still relevant to the project"
+on:
+  slash_command:
+    name: relevance-check
+  roles: [admin, maintainer, write]
+engine:
+  id: copilot
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+tools:
+  github:
+    toolsets: [default]
+safe-outputs:
+  add-comment:
+    max: 1
+---
+
+# Relevance Check Agent
+
+You are a relevance evaluator for the **${{ github.repository }}** repository.
+
+## Instructions
+
+### 1. Gather Information
+
+- Read the full issue or pull request details
+- Check if mentioned files, classes, or packages still exist
+- Review recent commits and pull requests
+- Check for duplicate or related issues
+
+### 2. Evaluate Relevance
+
+Consider these factors:
+
+- **Still applicable?** Does the bug/feature still apply?
+- **Already resolved?** Has it been fixed elsewhere?
+- **Superseded?** Has a newer issue replaced this one?
+- **Stale context?** Are referenced APIs still in use?
+- **Actionability?** Is there enough information to act?
+
+### 3. Provide Your Analysis
+
+Post a single comment with:
+
+**Relevance Assessment: [Still Relevant | Likely Outdated | Needs Discussion]**
+
+- **Summary**: A 1-2 sentence verdict
+- **Evidence**: Concrete findings with references
+- **Recommendation**: Keep open, close, or needs maintainer input
+```
+</CodeGroup>
+
+### Usage
+
+Comment `/relevance-check` on any issue or pull request:
+
+```
+/relevance-check
+```
+
+The agent will:
+1. Read the issue/PR and all comments
+2. Check the current codebase state
+3. Review related commits and PRs
+4. Post a detailed analysis comment
+
+### Permissions
+
+| Permission | Level | Purpose |
+|------------|-------|----------|
+| `contents` | read | Read codebase files |
+| `issues` | read | Query issue data |
+| `pull-requests` | read | Query PR data |
+
+### Safe Outputs
+
+- Maximum 1 comment per invocation
+- Read-only access to repository
+- No modifications to issues or code
+
+---
+
+## OSPO Workflows
+
+<Note>
+  **Triggers:** Schedule (monthly/weekly), manual dispatch
+</Note>
+
+A collection of workflows for Open Source Program Offices (OSPO) to monitor organization health and activity.
+
+### Contributors Report
+
+<AccordionGroup>
+  <Accordion title="Overview">
+    Monthly contributor activity metrics across an organization's repositories.
+    
+    **Features:**
+    - Total contributors count
+    - New vs returning contributors
+    - Per-contributor commit counts
+    - Optional GitHub Sponsors information
+    - Customizable date ranges
+  </Accordion>
+  
+  <Accordion title="Installation">
+    ```bash
+    cp workflows/ospo-contributors-report.md .github/workflows/
+    gh aw compile --validate
+    git add .github/workflows/ospo-contributors-report.*
+    git commit -m "Add OSPO contributors report"
+    git push
+    ```
+  </Accordion>
+  
+  <Accordion title="Configuration">
+    ```yaml
+    on:
+      schedule:
+        - cron: "3 2 1 * *"  # Monthly on 1st at 2:03 AM
+      workflow_dispatch:
+        inputs:
+          organization:
+            description: "GitHub organization to analyze"
+            type: string
+          start_date:
+            description: "Start date (YYYY-MM-DD)"
+            type: string
+          sponsor_info:
+            description: "Include GitHub Sponsors info"
+            type: boolean
+            default: false
+    ```
+  </Accordion>
+  
+  <Accordion title="Manual Run">
+    ```bash
+    gh aw run ospo-contributors-report \
+      --organization github \
+      --start_date 2026-02-01 \
+      --end_date 2026-02-28 \
+      --sponsor_info true
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Organization Health Report
+
+<AccordionGroup>
+  <Accordion title="Overview">
+    Comprehensive weekly health report for a GitHub organization.
+    
+    **Features:**
+    - Stale issues and PRs identification
+    - Merge time analysis
+    - Contributor leaderboards
+    - Actionable items needing attention
+  </Accordion>
+  
+  <Accordion title="Installation">
+    ```bash
+    cp workflows/ospo-org-health.md .github/workflows/
+    gh aw compile --validate
+    git add .github/workflows/ospo-org-health.*
+    git commit -m "Add OSPO org health report"
+    git push
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Stale Repository Report
+
+<AccordionGroup>
+  <Accordion title="Overview">
+    Identifies inactive repositories in your organization and generates an archival recommendation report.
+    
+    **Features:**
+    - Last commit date tracking
+    - Activity metrics
+    - Archival recommendations
+    - Configurable inactivity thresholds
+  </Accordion>
+  
+  <Accordion title="Installation">
+    ```bash
+    cp workflows/ospo-stale-repos.md .github/workflows/
+    gh aw compile --validate
+    git add .github/workflows/ospo-stale-repos.*
+    git commit -m "Add stale repository report"
+    git push
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Release Compliance Checker
+
+<AccordionGroup>
+  <Accordion title="Overview">
+    Analyzes a target repository against open source release requirements and posts a detailed compliance report.
+    
+    **Features:**
+    - License file validation
+    - README and documentation checks
+    - Security policy verification
+    - Contributing guidelines review
+    - Code of conduct presence
+  </Accordion>
+  
+  <Accordion title="Installation">
+    ```bash
+    cp workflows/ospo-release-compliance-checker.md .github/workflows/
+    gh aw compile --validate
+    git add .github/workflows/ospo-release-compliance-checker.*
+    git commit -m "Add release compliance checker"
+    git push
+    ```
+  </Accordion>
+  
+  <Accordion title="Usage">
+    Trigger via issue comment or workflow dispatch to check compliance of any repository.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Advanced Workflows
+
+### Relevance Summary
+
+<Note>
+  **Triggers:** Manual dispatch
+</Note>
+
+Summarizes all open issues and PRs with a `/relevance-check` response into a single issue.
+
+**Installation:**
+```bash
+cp workflows/relevance-summary.md .github/workflows/
+gh aw compile --validate
+git add .github/workflows/relevance-summary.*
+git commit -m "Add relevance summary workflow"
+git push
+```
+
+**Usage:**
+```bash
+gh aw run relevance-summary
+```
+
+---
+
+## Creating Custom Workflows
+
+Want to create your own Agentic Workflow? Follow these steps:
+
+<Steps>
+  <Step title="Create Markdown File">
+    Create a new `.md` file with frontmatter and instructions:
+    
+    ```markdown
+    ---
+    name: "My Custom Workflow"
+    description: "Does something awesome"
+    on:
+      schedule: daily
+    permissions:
+      contents: read
+    safe-outputs:
+      create-issue:
+        max: 1
+    ---
+    
+    ## Instructions
+    
+    Write clear, step-by-step instructions for the AI agent...
+    ```
+  </Step>
+  
+  <Step title="Add to .github/workflows/">
+    Place the file in `.github/workflows/` directory.
+  </Step>
+  
+  <Step title="Compile & Validate">
+    ```bash
+    gh aw compile --validate
+    ```
+  </Step>
+  
+  <Step title="Test with Manual Dispatch">
+    Add `workflow_dispatch` trigger for testing:
+    
+    ```yaml
+    on:
+      workflow_dispatch:
+      schedule: daily
+    ```
+  </Step>
+  
+  <Step title="Deploy">
+    Commit both `.md` and `.lock.yml` files:
+    
+    ```bash
+    git add .github/workflows/my-workflow.*
+    git commit -m "Add custom workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Clear Instructions" icon="list-check">
+    Write specific, numbered steps for the AI agent to follow
+  </Card>
+  <Card title="Validate Inputs" icon="filter">
+    Always validate and sanitize user inputs from slash commands
+  </Card>
+  <Card title="Constrain Outputs" icon="shield">
+    Use safe-outputs with max limits and prefixes
+  </Card>
+  <Card title="Least Privilege" icon="lock">
+    Request minimum permissions needed
+  </Card>
+</CardGroup>
+
+## Contributing
+
+Want to add a workflow to this catalog? See the [Contributing Guide](/CONTRIBUTING) for guidelines on:
+
+- Creating new workflows
+- Writing workflow documentation
+- Testing with `gh aw compile --validate`
+- Submission process
+
+<Card title="View All Workflows on GitHub" icon="github" href="https://github.com/copilot-extensions/awesome-github-copilot/tree/main/workflows">
+  Browse the complete collection of workflows in the repository
+</Card>

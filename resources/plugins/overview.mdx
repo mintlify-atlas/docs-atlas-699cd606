@@ -1,0 +1,263 @@
+---
+title: Plugin System Overview
+description: Learn how GitHub Copilot plugins bundle agents, skills, and commands into installable packages
+---
+
+# Plugin System Overview
+
+Plugins are curated packages of related agents, skills, and commands organized around specific themes, workflows, or use cases. They make it easy to install comprehensive toolkits for particular development scenarios.
+
+## What is a Plugin?
+
+A plugin is a declarative package that bundles multiple GitHub Copilot resources:
+
+- **Agents** - Specialized GitHub Copilot agents with custom behaviors
+- **Skills** - Self-contained folders with instructions and bundled resources
+- **Commands** - Slash commands that trigger specific workflows (mapped from skills)
+
+Plugins provide a convenient way to discover and adopt related customizations that work together for specific use cases.
+
+<CardGroup cols={2}>
+  <Card title="Browse Plugins" icon="grid" href="/resources/plugins/catalog">
+    Explore available plugins in the catalog
+  </Card>
+  <Card title="Create Plugin" icon="code" href="https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-plugins">
+    Learn how to create your own plugin
+  </Card>
+</CardGroup>
+
+## Plugin Structure
+
+Each plugin is defined by a `plugin.json` manifest file located at `.github/plugin/plugin.json` within the plugin directory:
+
+```json
+{
+  "name": "project-planning",
+  "description": "Tools and guidance for software project planning, feature breakdown, epic management, implementation planning, and task organization for development teams.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Awesome Copilot Community"
+  },
+  "repository": "https://github.com/github/awesome-copilot",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "project-management",
+    "epic",
+    "feature",
+    "implementation"
+  ],
+  "agents": [
+    "./agents"
+  ],
+  "skills": [
+    "./skills/breakdown-feature-implementation",
+    "./skills/create-implementation-plan",
+    "./skills/create-github-issues-feature-from-implementation-plan"
+  ]
+}
+```
+
+### Required Fields
+
+<ParamField path="name" type="string" required>
+  Plugin identifier matching the directory name (lowercase with hyphens)
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Clear description of the plugin's purpose and capabilities
+</ParamField>
+
+<ParamField path="version" type="string" required>
+  Semantic version (e.g., "1.0.0")
+</ParamField>
+
+### Optional Fields
+
+<ParamField path="author" type="object">
+  Plugin author information with `name` field
+</ParamField>
+
+<ParamField path="repository" type="string">
+  URL to the source repository
+</ParamField>
+
+<ParamField path="license" type="string">
+  License identifier (e.g., "MIT")
+</ParamField>
+
+<ParamField path="keywords" type="array">
+  Array of lowercase, hyphenated keywords for discoverability
+</ParamField>
+
+<ParamField path="agents" type="array">
+  Relative paths to agent files or directories containing agents
+</ParamField>
+
+<ParamField path="skills" type="array">
+  Relative paths to skill folders (each contains SKILL.md + bundled assets)
+</ParamField>
+
+## Plugin Contents
+
+### Agents
+
+Agents are custom GitHub Copilot agents defined in `.agent.md` files with markdown frontmatter:
+
+```markdown
+---
+name: Task Planner
+description: 'Task planner for creating actionable implementation plans'
+model: gpt-4o
+tools:
+  - read_file
+  - search_files
+---
+
+You are an expert task planner specializing in breaking down complex features...
+```
+
+When referenced in `plugin.json`, agents can be:
+- A directory path (e.g., `"./agents"`) - includes all `.agent.md` files in that directory
+- Individual file paths for selective inclusion
+
+### Skills
+
+Skills are self-contained folders with a `SKILL.md` file and optional bundled resources:
+
+```
+skills/
+  typescript-mcp-server-generator/
+    SKILL.md              # Skill instructions with frontmatter
+    template/             # Bundled templates
+      package.json
+      tsconfig.json
+    docs/                 # Reference documentation
+      mcp-spec.md
+```
+
+Skills appear as **slash commands** in the GitHub Copilot interface:
+- Skill folder name becomes the command name
+- Command format: `/plugin-name:skill-name`
+- Example: `/typescript-mcp-development:typescript-mcp-server-generator`
+
+### Commands
+
+Commands are automatically generated from skills. Each skill becomes a callable slash command that users can invoke in the chat interface.
+
+## Installation
+
+Plugins are installed using the GitHub Copilot CLI:
+
+<Steps>
+  <Step title="Install via CLI">
+    Use the `copilot plugin install` command with the plugin name and source:
+    
+    ```bash
+    copilot plugin install <plugin-name>@awesome-copilot
+    ```
+    
+    Example:
+    ```bash
+    copilot plugin install project-planning@awesome-copilot
+    ```
+  </Step>
+  
+  <Step title="Verify Installation">
+    Installed plugins appear in your GitHub Copilot configuration and their agents/commands become available in VS Code.
+  </Step>
+  
+  <Step title="Use Plugin Resources">
+    - Access agents through the VS Code Chat interface
+    - Use slash commands from skills (e.g., `/project-planning:create-implementation-plan`)
+    - Skills can bundle templates, scripts, and reference materials
+  </Step>
+</Steps>
+
+### Manual Installation
+
+You can also manually copy plugin resources:
+
+1. Browse to individual agent or skill files in the repository
+2. Download the `.agent.md` files or skill folders
+3. Add them to your local `.github/` directory
+
+## Marketplace Discovery
+
+Plugins are discoverable through the `marketplace.json` file, which is automatically generated during the build process:
+
+```json
+{
+  "name": "awesome-copilot",
+  "metadata": {
+    "description": "Community-driven collection of GitHub Copilot plugins",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "project-planning",
+      "source": "project-planning",
+      "description": "Tools and guidance for software project planning...",
+      "version": "1.0.0"
+    }
+  ]
+}
+```
+
+The marketplace file:
+- Lives at `.github/plugin/marketplace.json`
+- Is generated by running `npm run build`
+- Aggregates all plugin manifests from the `plugins/` directory
+- Enables plugin discovery and installation via CLI
+
+## Building Plugins
+
+<CodeGroup>
+```bash Validate Plugin
+# Validate plugin manifest structure
+npm run plugin:validate
+```
+
+```bash Create New Plugin
+# Scaffold a new plugin with template
+npm run plugin:create -- --name <plugin-name>
+```
+
+```bash Generate Marketplace
+# Build marketplace.json from all plugins
+npm run build
+```
+</CodeGroup>
+
+## Plugin Benefits
+
+<CardGroup cols={2}>
+  <Card title="Themed Collections" icon="layer-group">
+    Group related agents and skills around specific workflows or technologies
+  </Card>
+  
+  <Card title="Easy Discovery" icon="magnifying-glass">
+    Featured plugins help users find comprehensive toolkits quickly
+  </Card>
+  
+  <Card title="One-Command Install" icon="download">
+    Install entire capability sets with a single CLI command
+  </Card>
+  
+  <Card title="Version Management" icon="code-branch">
+    Semantic versioning enables tracking and updating plugin capabilities
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Plugin Catalog" icon="books" href="/resources/plugins/catalog">
+    Explore available plugins and featured collections
+  </Card>
+  
+  <Card title="Contributing Guide" icon="code-pull-request" href="https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md">
+    Learn how to contribute plugins to the repository
+  </Card>
+</CardGroup>

@@ -1,0 +1,345 @@
+---
+title: C# SDK Cookbook
+description: Practical recipes for building with the GitHub Copilot SDK in C# and .NET
+---
+
+# C# SDK Cookbook
+
+Short, practical recipes for using the GitHub Copilot SDK with .NET and C#. Each recipe is concise, copy-pasteable, and points to complete runnable examples.
+
+## Setup
+
+All C# examples use the `GitHub.Copilot.SDK` NuGet package:
+
+<CodeGroup>
+```bash Package Reference
+dotnet add package GitHub.Copilot.SDK
+```
+
+```xml .csproj
+<PackageReference Include="GitHub.Copilot.SDK" Version="*" />
+```
+</CodeGroup>
+
+## Error Handling
+
+Handle errors gracefully including connection failures, timeouts, and cleanup.
+
+### Basic try-catch Pattern
+
+<CodeGroup>
+```csharp Basic Example
+using GitHub.Copilot.SDK;
+
+var client = new CopilotClient();
+
+try
+{
+    await client.StartAsync();
+    var session = await client.CreateSessionAsync(new SessionConfig
+    {
+        Model = "gpt-5"
+    });
+
+    var done = new TaskCompletionSource<string>();
+    session.On(evt =>
+    {
+        if (evt is AssistantMessageEvent msg)
+        {
+            done.SetResult(msg.Data.Content);
+        }
+    });
+
+    await session.SendAsync(new MessageOptions { Prompt = "Hello!" });
+    var response = await done.Task;
+    Console.WriteLine(response);
+
+    await session.DisposeAsync();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+finally
+{
+    await client.StopAsync();
+}
+```
+
+```csharp Specific Error Types
+try
+{
+    await client.StartAsync();
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine("Copilot CLI not found. Please install it first.");
+}
+catch (HttpRequestException ex) when (ex.Message.Contains("connection"))
+{
+    Console.WriteLine("Could not connect to Copilot CLI server.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Unexpected error: {ex.Message}");
+}
+```
+</CodeGroup>
+
+### Timeout Handling
+
+```csharp
+var session = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+
+try
+{
+    var done = new TaskCompletionSource<string>();
+    session.On(evt =>
+    {
+        if (evt is AssistantMessageEvent msg)
+        {
+            done.SetResult(msg.Data.Content);
+        }
+    });
+
+    await session.SendAsync(new MessageOptions { Prompt = "Complex question..." });
+
+    // Wait with timeout (30 seconds)
+    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+    var response = await done.Task.WaitAsync(cts.Token);
+
+    Console.WriteLine(response);
+}
+catch (OperationCanceledException)
+{
+    Console.WriteLine("Request timed out");
+}
+```
+
+### Automatic Disposal Pattern
+
+```csharp
+await using var client = new CopilotClient();
+await client.StartAsync();
+
+var session = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+
+// ... do work ...
+
+// client.StopAsync() is automatically called when exiting scope
+```
+
+<Tip>
+Use the `await using` pattern for automatic cleanup. This ensures `StopAsync()` is called even if exceptions occur.
+</Tip>
+
+## Multiple Sessions
+
+Manage multiple independent conversations simultaneously.
+
+```csharp
+using GitHub.Copilot.SDK;
+
+var client = new CopilotClient();
+await client.StartAsync();
+
+// Create multiple independent sessions
+var session1 = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+var session2 = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+var session3 = await client.CreateSessionAsync(new SessionConfig { Model = "claude-sonnet-4.5" });
+
+// Each session maintains its own conversation history
+await session1.SendAsync(new MessageOptions { Prompt = "You are helping with a Python project" });
+await session2.SendAsync(new MessageOptions { Prompt = "You are helping with a TypeScript project" });
+await session3.SendAsync(new MessageOptions { Prompt = "You are helping with a Go project" });
+
+// Follow-up messages stay in their respective contexts
+await session1.SendAsync(new MessageOptions { Prompt = "How do I create a virtual environment?" });
+await session2.SendAsync(new MessageOptions { Prompt = "How do I set up tsconfig?" });
+await session3.SendAsync(new MessageOptions { Prompt = "How do I initialize a module?" });
+
+// Clean up
+await session1.DisposeAsync();
+await session2.DisposeAsync();
+await session3.DisposeAsync();
+await client.StopAsync();
+```
+
+### Use Cases
+
+<CardGroup cols={3}>
+  <Card title="Multi-User Apps" icon="users">
+    One session per user in web applications
+  </Card>
+  <Card title="Multi-Task Workflows" icon="list-check">
+    Separate sessions for different tasks
+  </Card>
+  <Card title="A/B Testing" icon="flask">
+    Compare responses from different models
+  </Card>
+</CardGroup>
+
+## Session Persistence
+
+Save and resume sessions across application restarts.
+
+```csharp
+using GitHub.Copilot.SDK;
+using System.Text.Json;
+
+// Save session state
+var client = new CopilotClient();
+await client.StartAsync();
+
+var session = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+await session.SendAsync(new MessageOptions { Prompt = "Remember: my name is Alice" });
+
+var sessionState = session.GetState();
+await File.WriteAllTextAsync("session.json", JsonSerializer.Serialize(sessionState));
+
+await session.DisposeAsync();
+await client.StopAsync();
+
+// Later: restore session state
+var client2 = new CopilotClient();
+await client2.StartAsync();
+
+var savedState = await File.ReadAllTextAsync("session.json");
+var state = JsonSerializer.Deserialize<SessionState>(savedState);
+
+var restoredSession = await client2.CreateSessionAsync(new SessionConfig 
+{ 
+    Model = "gpt-5",
+    State = state 
+});
+
+// Session remembers previous context
+await restoredSession.SendAsync(new MessageOptions { Prompt = "What's my name?" });
+// Response: "Your name is Alice"
+```
+
+<Note>
+Session persistence allows you to maintain conversation context across application restarts, perfect for long-running projects or user sessions.
+</Note>
+
+## Managing Local Files
+
+Organize files by metadata using AI-powered grouping strategies.
+
+```csharp
+using GitHub.Copilot.SDK;
+
+var client = new CopilotClient();
+await client.StartAsync();
+
+var session = await client.CreateSessionAsync(new SessionConfig { Model = "gpt-5" });
+
+// Ask AI to organize files
+var done = new TaskCompletionSource<string>();
+session.On(evt =>
+{
+    if (evt is AssistantMessageEvent msg)
+    {
+        done.SetResult(msg.Data.Content);
+    }
+});
+
+await session.SendAsync(new MessageOptions 
+{ 
+    Prompt = @"
+        I have these files in a directory:
+        - report.pdf
+        - meeting-notes.txt
+        - photo.jpg
+        - invoice.xlsx
+        - presentation.pptx
+        
+        Please organize them into folders by type.
+        Return JSON with the structure.
+    "
+});
+
+var organizationPlan = await done.Task;
+Console.WriteLine(organizationPlan);
+
+// Parse and execute the organization plan
+// ...
+```
+
+## Running Examples
+
+All complete, runnable examples are available in the [cookbook/copilot-sdk/dotnet/recipe](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/dotnet/recipe) directory.
+
+<Steps>
+  <Step title="Navigate to the recipe directory">
+    ```bash
+    cd cookbook/copilot-sdk/dotnet/recipe
+    ```
+  </Step>
+  
+  <Step title="Run any example">
+    ```bash
+    dotnet run error-handling.cs
+    dotnet run multiple-sessions.cs
+    dotnet run persisting-sessions.cs
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always Clean Up Resources">
+    Use `try-finally` or `await using` to ensure `StopAsync()` is called, even when exceptions occur.
+    
+    ```csharp
+    await using var client = new CopilotClient();
+    // Resources automatically cleaned up
+    ```
+  </Accordion>
+  
+  <Accordion title="Handle Connection Errors">
+    The Copilot CLI might not be installed or running. Always catch and handle connection exceptions.
+    
+    ```csharp
+    catch (FileNotFoundException)
+    {
+        Console.WriteLine("Please install GitHub Copilot CLI");
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Set Appropriate Timeouts">
+    Use `CancellationToken` for long-running requests to prevent indefinite waits.
+    
+    ```csharp
+    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+    await task.WaitAsync(cts.Token);
+    ```
+  </Accordion>
+  
+  <Accordion title="Log Errors for Debugging">
+    Capture error details to help diagnose issues in production.
+    
+    ```csharp
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Copilot request failed");
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Additional Recipes
+
+Explore more advanced recipes in the source repository:
+
+- **[Ralph Loop](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/dotnet/ralph-loop.md)** - Autonomous AI coding loops
+- **[PR Visualization](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/dotnet/pr-visualization.md)** - Generate interactive PR charts
+- **[Accessibility Report](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/dotnet/accessibility-report.md)** - WCAG accessibility reports
+
+## Resources
+
+- [GitHub Copilot SDK Repository](https://github.com/github/copilot-sdk)
+- [.NET SDK Documentation](https://github.com/github/copilot-sdk/tree/main/dotnet)
+- [Complete Recipe Collection](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/dotnet)

@@ -1,0 +1,195 @@
+---
+title: 'MCP Server Installation'
+description: 'Install the Awesome GitHub Copilot MCP Server to search and install agents, instructions, and skills directly from your editor'
+icon: 'docker'
+---
+
+The Awesome GitHub Copilot MCP Server provides functionality for searching and installing instructions, agents, and skills directly from this repository into your editor. The server runs in Docker and integrates with VS Code, VS Code Insiders, and Visual Studio.
+
+## Prerequisites
+
+<Warning>
+You must have Docker installed and running to use the MCP server.
+</Warning>
+
+- Docker Desktop or Docker Engine installed and running
+- One of the following editors:
+  - Visual Studio Code
+  - Visual Studio Code Insiders
+  - Visual Studio
+
+## Quick Install
+
+Click the install button for your editor to automatically configure the MCP server:
+
+<CardGroup cols={3}>
+  <Card title="VS Code" icon="vscode" href="https://aka.ms/awesome-copilot/mcp/vscode">
+    Install in Visual Studio Code
+  </Card>
+  <Card title="VS Code Insiders" icon="vscode" href="https://aka.ms/awesome-copilot/mcp/vscode-insiders">
+    Install in VS Code Insiders
+  </Card>
+  <Card title="Visual Studio" icon="microsoft" href="https://aka.ms/awesome-copilot/mcp/vs">
+    Install in Visual Studio
+  </Card>
+</CardGroup>
+
+## Manual Configuration
+
+If you prefer to configure the MCP server manually, add the following configuration to your editor's MCP settings:
+
+<Steps>
+  <Step title="Create MCP configuration file">
+    Create or edit the MCP configuration file for your editor:
+    
+    - **VS Code/VS Code Insiders**: `.vscode/mcp.json` in your workspace
+    - **Visual Studio**: Configure through the MCP settings panel
+  </Step>
+  
+  <Step title="Add server configuration">
+    Add the Awesome Copilot server configuration:
+    
+    <CodeGroup>
+    ```json VS Code / VS Code Insiders
+    {
+      "servers": {
+        "awesome-copilot": {
+          "type": "stdio",
+          "command": "docker",
+          "args": [
+            "run",
+            "-i",
+            "--rm",
+            "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+          ]
+        }
+      }
+    }
+    ```
+    
+    ```json Visual Studio
+    {
+      "servers": {
+        "awesome-copilot": {
+          "type": "stdio",
+          "command": "docker",
+          "args": [
+            "run",
+            "-i",
+            "--rm",
+            "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+          ]
+        }
+      }
+    }
+    ```
+    </CodeGroup>
+  </Step>
+  
+  <Step title="Verify Docker is running">
+    Ensure Docker is running before starting your editor:
+    
+    ```bash
+    docker ps
+    ```
+    
+    If Docker is not running, start Docker Desktop or your Docker service.
+  </Step>
+  
+  <Step title="Restart your editor">
+    Restart your editor to load the MCP server configuration. The server will start automatically when GitHub Copilot needs it.
+  </Step>
+</Steps>
+
+## Using the MCP Server
+
+Once installed, the MCP server provides tools for discovering and installing customizations:
+
+### Search for Resources
+
+Use GitHub Copilot Chat to search for agents, instructions, or skills:
+
+```
+@github find an agent for Python development
+```
+
+```
+@github search for React instructions
+```
+
+### Install Resources
+
+The MCP server can help you install resources directly:
+
+```
+@github install the Python expert agent
+```
+
+```
+@github add TypeScript coding standards
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Server fails to start">
+    **Check Docker status:**
+    ```bash
+    docker ps
+    ```
+    
+    Ensure Docker is running and you can execute Docker commands.
+    
+    **Verify image availability:**
+    ```bash
+    docker pull ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest
+    ```
+    
+    If the pull fails, check your internet connection and Docker Hub authentication.
+  </Accordion>
+  
+  <Accordion title="MCP server not responding">
+    The MCP server runs as a Docker container that starts on demand. If it's not responding:
+    
+    1. Check Docker container logs:
+       ```bash
+       docker logs $(docker ps -q --filter ancestor=ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest)
+       ```
+    
+    2. Restart your editor to reinitialize the MCP server
+    
+    3. Verify the MCP configuration syntax is valid JSON
+  </Accordion>
+  
+  <Accordion title="Tools not available in Copilot">
+    If the MCP tools don't appear in GitHub Copilot:
+    
+    1. Verify the MCP server is configured in `.vscode/mcp.json`
+    2. Check that the configuration follows the exact JSON format shown above
+    3. Restart VS Code completely (not just reload window)
+    4. Open the Output panel and select "GitHub Copilot" to check for MCP-related errors
+  </Accordion>
+</AccordionGroup>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Manual Installation" icon="folder-open" href="/installation/manual-install">
+    Learn how to manually install agents, instructions, and skills
+  </Card>
+  <Card title="Using Agents" icon="robot" href="/usage/agents">
+    Start using custom agents in your workflow
+  </Card>
+  <Card title="Browse Catalog" icon="books" href="/resources/agents/catalog">
+    Explore available agents, instructions, and skills
+  </Card>
+  <Card title="Understanding MCP" icon="server" href="https://spec.modelcontextprotocol.io/">
+    Learn more about the Model Context Protocol
+  </Card>
+</CardGroup>
+
+## Additional Resources
+
+- [MCP Server Announcement](https://developer.microsoft.com/blog/announcing-awesome-copilot-mcp-server)
+- [Model Context Protocol Specification](https://spec.modelcontextprotocol.io/)
+- [GitHub Copilot Documentation](https://docs.github.com/copilot)

@@ -1,0 +1,456 @@
+---
+title: 'Hooks Catalog'
+description: 'Available GitHub Copilot hooks for automated workflows'
+---
+
+# Hooks Catalog
+
+Browse and install hooks to automate your GitHub Copilot coding agent workflows.
+
+## Available Hooks
+
+<CardGroup cols={3}>
+  <Card title="Session Logger" icon="file-lines" href="#session-logger">
+    Log session activity for audit and analysis
+  </Card>
+  <Card title="Session Auto-Commit" icon="floppy-disk" href="#session-auto-commit">
+    Auto-commit changes when sessions end
+  </Card>
+  <Card title="Governance Audit" icon="shield" href="#governance-audit">
+    Scan prompts for security threats
+  </Card>
+</CardGroup>
+
+---
+
+## Session Logger
+
+<Note>
+  **Tags:** logging, audit, analytics
+</Note>
+
+Comprehensive logging for GitHub Copilot coding agent sessions, tracking session starts, ends, and user prompts for audit trails and usage analytics.
+
+### Features
+
+- **Session Tracking**: Log session start and end events
+- **Prompt Logging**: Record when user prompts are submitted
+- **Structured Logging**: JSON format for easy parsing
+- **Privacy Aware**: Configurable to disable logging entirely
+
+### Installation
+
+<Steps>
+  <Step title="Copy Hook">
+    ```bash
+    cp -r hooks/session-logger .github/hooks/
+    ```
+  </Step>
+  
+  <Step title="Create Logs Directory">
+    ```bash
+    mkdir -p logs/copilot
+    ```
+  </Step>
+  
+  <Step title="Make Scripts Executable">
+    ```bash
+    chmod +x .github/hooks/session-logger/*.sh
+    ```
+  </Step>
+  
+  <Step title="Commit to Repository">
+    ```bash
+    git add .github/hooks/session-logger
+    git commit -m "Add session logger hook"
+    git push
+    ```
+  </Step>
+</Steps>
+
+### Configuration
+
+<CodeGroup>
+```json hooks.json
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-session-start.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-session-end.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-logger/log-prompt.sh",
+        "cwd": ".",
+        "env": {
+          "LOG_LEVEL": "INFO"
+        },
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
+```
+
+```json Log Format
+{"timestamp":"2024-01-15T10:30:00Z","event":"sessionStart","cwd":"/workspace/project"}
+{"timestamp":"2024-01-15T10:35:00Z","event":"sessionEnd"}
+```
+</CodeGroup>
+
+### Privacy & Security
+
+<Warning>
+  Add `logs/` to `.gitignore` to avoid committing session data to your repository.
+</Warning>
+
+- Use `LOG_LEVEL=ERROR` to only log errors
+- Set `SKIP_LOGGING=true` environment variable to disable
+- Logs are stored locally only
+- No sensitive data is logged
+
+---
+
+## Session Auto-Commit
+
+<Note>
+  **Tags:** automation, git, productivity
+</Note>
+
+Automatically commits and pushes changes when a GitHub Copilot coding agent session ends, ensuring your work is always saved and backed up.
+
+### Features
+
+- **Automatic Backup**: Never lose work from a Copilot session
+- **Timestamped Commits**: Each auto-commit includes the session end time
+- **Safe Execution**: Only commits when there are actual changes
+- **Error Handling**: Gracefully handles push failures
+
+### Installation
+
+<Steps>
+  <Step title="Copy Hook">
+    ```bash
+    cp -r hooks/session-auto-commit .github/hooks/
+    ```
+  </Step>
+  
+  <Step title="Make Script Executable">
+    ```bash
+    chmod +x .github/hooks/session-auto-commit/auto-commit.sh
+    ```
+  </Step>
+  
+  <Step title="Commit to Repository">
+    ```bash
+    git add .github/hooks/session-auto-commit
+    git commit -m "Add session auto-commit hook"
+    git push
+    ```
+  </Step>
+</Steps>
+
+### Configuration
+
+<CodeGroup>
+```json hooks.json
+{
+  "version": 1,
+  "hooks": {
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/session-auto-commit/auto-commit.sh",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
+```
+
+```bash auto-commit.sh
+#!/bin/bash
+
+set -euo pipefail
+
+# Check if SKIP_AUTO_COMMIT is set
+if [[ "${SKIP_AUTO_COMMIT:-}" == "true" ]]; then
+  echo "⏭️  Auto-commit skipped (SKIP_AUTO_COMMIT=true)"
+  exit 0
+fi
+
+# Check if we're in a git repository
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "⚠️  Not in a git repository"
+  exit 0
+fi
+
+# Check for uncommitted changes
+if [[ -z "$(git status --porcelain)" ]]; then
+  echo "✨ No changes to commit"
+  exit 0
+fi
+
+echo "📦 Auto-committing changes from Copilot session..."
+
+# Stage all changes
+git add -A
+
+# Create timestamped commit
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+git commit -m "auto-commit: $TIMESTAMP" --no-verify 2>/dev/null || {
+  echo "⚠️  Commit failed"
+  exit 0
+}
+
+# Attempt to push
+if git push 2>/dev/null; then
+  echo "✅ Changes committed and pushed successfully"
+else
+  echo "⚠️  Push failed - changes committed locally"
+fi
+
+exit 0
+```
+</CodeGroup>
+
+### How It Works
+
+<Steps>
+  <Step title="Session Ends">
+    When a Copilot coding agent session ends, the hook executes
+  </Step>
+  
+  <Step title="Check for Changes">
+    Detects uncommitted changes using `git status`
+  </Step>
+  
+  <Step title="Stage & Commit">
+    Stages all changes and creates a timestamped commit
+  </Step>
+  
+  <Step title="Push to Remote">
+    Attempts to push to remote repository
+  </Step>
+</Steps>
+
+### Customization
+
+You can customize the hook by modifying `auto-commit.sh`:
+
+- **Commit Message Format**: Change the timestamp format or message prefix
+- **Selective Staging**: Use specific git add patterns instead of `-A`
+- **Branch Selection**: Push to specific branches only
+- **Notifications**: Add desktop notifications or Slack messages
+
+### Disabling
+
+To temporarily disable auto-commits:
+
+```bash
+export SKIP_AUTO_COMMIT=true
+```
+
+---
+
+## Governance Audit
+
+<Note>
+  **Tags:** security, governance, audit, safety
+</Note>
+
+Real-time threat detection and audit logging for GitHub Copilot coding agent sessions. Scans user prompts for dangerous patterns before the agent processes them.
+
+### Features
+
+- **Threat Detection**: Scans prompts for data exfiltration, privilege escalation, system destruction, prompt injection, and credential exposure
+- **Governance Levels**: Open, standard, strict, locked — from audit-only to full blocking
+- **Audit Trail**: Append-only JSON log of all governance events
+- **Session Summary**: Reports threat counts at session end
+
+### Threat Categories
+
+<AccordionGroup>
+  <Accordion title="Data Exfiltration (Severity: 0.7-0.95)">
+    Detects attempts to send sensitive data to external endpoints.
+    
+    **Examples:**
+    - "send all records to external API"
+    - "curl data to my server"
+    - "upload database to S3"
+  </Accordion>
+  
+  <Accordion title="Privilege Escalation (Severity: 0.8-0.95)">
+    Detects attempts to gain elevated system privileges.
+    
+    **Examples:**
+    - "sudo rm -rf"
+    - "chmod 777"
+    - "add to sudoers"
+  </Accordion>
+  
+  <Accordion title="System Destruction (Severity: 0.9-0.95)">
+    Detects commands that could destroy data or systems.
+    
+    **Examples:**
+    - "rm -rf /"
+    - "drop database"
+    - "format disk"
+  </Accordion>
+  
+  <Accordion title="Prompt Injection (Severity: 0.6-0.9)">
+    Detects attempts to manipulate the AI agent's behavior.
+    
+    **Examples:**
+    - "ignore previous instructions"
+    - "you are now in developer mode"
+    - "disregard safety guidelines"
+  </Accordion>
+  
+  <Accordion title="Credential Exposure (Severity: 0.9-0.95)">
+    Detects hardcoded secrets and credentials.
+    
+    **Examples:**
+    - Hardcoded API keys
+    - AWS access keys
+    - Private tokens in code
+  </Accordion>
+</AccordionGroup>
+
+### Governance Levels
+
+| Level | Behavior |
+|-------|----------|
+| `open` | Log threats only, never block |
+| `standard` | Log threats, block only if `BLOCK_ON_THREAT=true` |
+| `strict` | Log and block all detected threats |
+| `locked` | Log and block all detected threats |
+
+### Installation
+
+<Steps>
+  <Step title="Copy Hook">
+    ```bash
+    cp -r hooks/governance-audit .github/hooks/
+    ```
+  </Step>
+  
+  <Step title="Make Scripts Executable">
+    ```bash
+    chmod +x .github/hooks/governance-audit/*.sh
+    ```
+  </Step>
+  
+  <Step title="Create Logs Directory">
+    ```bash
+    mkdir -p logs/copilot/governance
+    echo "logs/" >> .gitignore
+    ```
+  </Step>
+  
+  <Step title="Commit to Repository">
+    ```bash
+    git add .github/hooks/governance-audit
+    git commit -m "Add governance audit hook"
+    git push
+    ```
+  </Step>
+</Steps>
+
+### Configuration
+
+<CodeGroup>
+```json hooks.json
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/governance-audit/audit-session-start.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/governance-audit/audit-session-end.sh",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": ".github/hooks/governance-audit/audit-prompt.sh",
+        "cwd": ".",
+        "env": {
+          "GOVERNANCE_LEVEL": "standard",
+          "BLOCK_ON_THREAT": "false"
+        },
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
+```
+
+```json Log Format
+{"timestamp":"2026-01-15T10:30:00Z","event":"session_start","governance_level":"standard","cwd":"/workspace/project"}
+{"timestamp":"2026-01-15T10:31:00Z","event":"prompt_scanned","governance_level":"standard","status":"clean"}
+{"timestamp":"2026-01-15T10:32:00Z","event":"threat_detected","governance_level":"standard","threat_count":1,"threats":[{"category":"privilege_escalation","severity":0.8,"description":"Elevated privileges","evidence":"sudo"}]}
+{"timestamp":"2026-01-15T10:45:00Z","event":"session_end","total_events":12,"threats_detected":1}
+```
+</CodeGroup>
+
+### Environment Variables
+
+| Variable | Values | Default | Description |
+|----------|--------|---------|-------------|
+| `GOVERNANCE_LEVEL` | `open`, `standard`, `strict`, `locked` | `standard` | Controls blocking behavior |
+| `BLOCK_ON_THREAT` | `true`, `false` | `false` | Block prompts with threats (standard level) |
+| `SKIP_GOVERNANCE_AUDIT` | `true` | unset | Disable governance audit entirely |
+
+### Requirements
+
+- `jq` for JSON processing (pre-installed on most CI environments and macOS)
+- `grep` with `-E` (extended regex) support
+- `bc` for floating-point comparison (optional, gracefully degrades)
+
+### Privacy & Security
+
+<Warning>
+  Full prompts are **never** logged — only matched threat patterns (minimal evidence snippets) and metadata are recorded.
+</Warning>
+
+- Add `logs/` to `.gitignore` to keep audit data local
+- Set `SKIP_GOVERNANCE_AUDIT=true` to disable entirely
+- All data stays local — no external network calls
+
+## Contributing
+
+Want to add a hook to this catalog? See the [Contributing Guide](/CONTRIBUTING) for guidelines on:
+
+- Creating new hooks
+- Writing hook documentation
+- Testing and validation
+- Submission process
+
+<Card title="View All Hooks on GitHub" icon="github" href="https://github.com/copilot-extensions/awesome-github-copilot/tree/main/hooks">
+  Browse the complete collection of hooks in the repository
+</Card>

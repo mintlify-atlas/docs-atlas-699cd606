@@ -1,0 +1,407 @@
+---
+title: 'Agentic Workflows Overview'
+description: 'AI-powered repository automation with GitHub Actions'
+---
+
+# Agentic Workflows Overview
+
+[Agentic Workflows](https://github.github.com/gh-aw) are AI-powered repository automations that run coding agents in GitHub Actions. Defined in markdown with natural language instructions, they enable event-triggered and scheduled automation with built-in guardrails and security-first design.
+
+## What Are Agentic Workflows?
+
+Agentic Workflows combine the power of AI coding agents with GitHub Actions to automate repository tasks. Unlike traditional GitHub Actions workflows written in YAML, Agentic Workflows use natural language instructions and compile to secure, locked GitHub Actions files.
+
+<CardGroup cols={2}>
+  <Card title="Natural Language" icon="comment-dots">
+    Write workflows in markdown with plain English instructions
+  </Card>
+  <Card title="AI-Powered" icon="brain">
+    GitHub Copilot agents execute tasks autonomously
+  </Card>
+  <Card title="Security-First" icon="lock">
+    Built-in guardrails and least-privilege permissions
+  </Card>
+  <Card title="Event-Driven" icon="bolt">
+    Trigger on schedules, GitHub events, or slash commands
+  </Card>
+</CardGroup>
+
+## How They Work
+
+<Steps>
+  <Step title="Write Instructions">
+    Create a `.md` file with YAML frontmatter and natural language instructions describing what the workflow should do.
+  </Step>
+  
+  <Step title="Compile to Actions">
+    Use `gh aw compile` to generate a secure `.lock.yml` GitHub Actions file.
+  </Step>
+  
+  <Step title="Commit & Deploy">
+    Commit both the `.md` source and `.lock.yml` file to `.github/workflows/`.
+  </Step>
+  
+  <Step title="Automated Execution">
+    The workflow runs automatically based on configured triggers.
+  </Step>
+</Steps>
+
+## Workflow Structure
+
+An Agentic Workflow consists of markdown frontmatter and natural language instructions:
+
+```markdown daily-report.md
+---
+name: "Daily Issues Report"
+description: "Generates a daily summary of open issues and recent activity"
+on:
+  schedule: daily on weekdays
+permissions:
+  contents: read
+  issues: read
+safe-outputs:
+  create-issue:
+    title-prefix: "[daily-report] "
+    labels: [report]
+---
+
+## Daily Issues Report
+
+Create a daily summary of open issues for the team.
+
+## What to Include
+
+- New issues opened in the last 24 hours
+- Issues closed or resolved
+- Stale issues that need attention
+```
+
+### Frontmatter Fields
+
+<AccordionGroup>
+  <Accordion title="name (required)">
+    Human-readable name for the workflow.
+    
+    ```yaml
+    name: "Daily Issues Report"
+    ```
+  </Accordion>
+  
+  <Accordion title="description (required)">
+    Brief description of what the workflow does.
+    
+    ```yaml
+    description: "Generates a daily summary of open issues"
+    ```
+  </Accordion>
+  
+  <Accordion title="on (required)">
+    Triggers that start the workflow. Supports schedules, GitHub events, slash commands, and manual dispatch.
+    
+    ```yaml
+    # Schedule trigger
+    on:
+      schedule: daily on weekdays
+    
+    # Event trigger
+    on:
+      issues:
+        types: [opened, labeled]
+    
+    # Slash command trigger
+    on:
+      slash_command:
+        name: relevance-check
+      roles: [admin, maintainer, write]
+    
+    # Manual trigger with inputs
+    on:
+      workflow_dispatch:
+        inputs:
+          organization:
+            description: "GitHub organization to analyze"
+            required: false
+            type: string
+    ```
+  </Accordion>
+  
+  <Accordion title="permissions (required)">
+    GitHub token permissions required by the workflow. Use least-privilege principle.
+    
+    ```yaml
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    ```
+  </Accordion>
+  
+  <Accordion title="safe-outputs (recommended)">
+    Guardrails that constrain what the AI agent can do. Prevents unintended actions.
+    
+    ```yaml
+    safe-outputs:
+      create-issue:
+        max: 1
+        title-prefix: "[report] "
+        labels: [automated]
+      add-comment:
+        max: 1
+    ```
+  </Accordion>
+  
+  <Accordion title="engine (optional)">
+    AI engine to use. Defaults to `copilot`.
+    
+    ```yaml
+    engine: copilot
+    ```
+  </Accordion>
+  
+  <Accordion title="tools (optional)">
+    Tools available to the AI agent.
+    
+    ```yaml
+    tools:
+      github:
+        toolsets: [default]
+      bash: true
+    ```
+  </Accordion>
+  
+  <Accordion title="timeout-minutes (optional)">
+    Maximum workflow execution time.
+    
+    ```yaml
+    timeout-minutes: 60
+    ```
+  </Accordion>
+  
+  <Accordion title="labels (optional)">
+    Tags for categorizing the workflow.
+    
+    ```yaml
+    labels: ['ospo', 'reporting', 'contributors']
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Trigger Types
+
+Agentic Workflows support multiple trigger types:
+
+### Schedule Triggers
+
+Run workflows on a schedule using natural language:
+
+```yaml
+on:
+  schedule: daily on weekdays
+```
+
+Or use cron syntax:
+
+```yaml
+on:
+  schedule:
+    - cron: "0 9 * * 1-5"  # 9 AM weekdays
+```
+
+### GitHub Event Triggers
+
+Run workflows when specific GitHub events occur:
+
+```yaml
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, synchronize]
+```
+
+### Slash Command Triggers
+
+Run workflows via slash commands in issues or PRs:
+
+```yaml
+on:
+  slash_command:
+    name: relevance-check
+  roles: [admin, maintainer, write]
+```
+
+Users can trigger with: `/relevance-check`
+
+### Manual Dispatch
+
+Run workflows manually with optional inputs:
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      organization:
+        description: "GitHub organization to analyze"
+        required: false
+        type: string
+      start_date:
+        description: "Start date (YYYY-MM-DD)"
+        required: false
+        type: string
+```
+
+## Safe Outputs
+
+Safe outputs are guardrails that constrain AI agent actions to prevent unintended consequences:
+
+<CodeGroup>
+```yaml Create Issue Constraint
+safe-outputs:
+  create-issue:
+    max: 1                    # Maximum 1 issue
+    title-prefix: "[report] " # Required title prefix
+    labels: [automated]       # Required labels
+```
+
+```yaml Add Comment Constraint
+safe-outputs:
+  add-comment:
+    max: 1  # Maximum 1 comment per run
+```
+
+```yaml Multiple Constraints
+safe-outputs:
+  create-issue:
+    max: 5
+    title-prefix: "[auto] "
+    labels: [bot]
+  add-comment:
+    max: 10
+  update-issue:
+    max: 20
+```
+</CodeGroup>
+
+## Installation & Usage
+
+<Steps>
+  <Step title="Install gh aw CLI">
+    Install the GitHub CLI extension for Agentic Workflows:
+    
+    ```bash
+    gh extension install github/gh-aw
+    ```
+  </Step>
+  
+  <Step title="Copy Workflow File">
+    Copy the workflow `.md` file to your repository's `.github/workflows/` directory:
+    
+    ```bash
+    cp workflows/daily-issues-report.md .github/workflows/
+    ```
+  </Step>
+  
+  <Step title="Compile Workflow">
+    Generate the `.lock.yml` GitHub Actions file:
+    
+    ```bash
+    gh aw compile
+    ```
+    
+    Or compile with validation:
+    
+    ```bash
+    gh aw compile --validate
+    ```
+  </Step>
+  
+  <Step title="Commit Both Files">
+    Commit both the source `.md` and compiled `.lock.yml` files:
+    
+    ```bash
+    git add .github/workflows/daily-issues-report.md
+    git add .github/workflows/daily-issues-report.lock.yml
+    git commit -m "Add daily issues report workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+## Managing Workflows
+
+### Trigger Manual Run
+
+```bash
+gh aw run daily-issues-report
+```
+
+### Check Workflow Status
+
+```bash
+gh aw status
+```
+
+### View Workflow Logs
+
+```bash
+gh aw logs daily-issues-report
+```
+
+### List All Workflows
+
+```bash
+gh aw list
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Least Privilege" icon="key">
+    Only request the minimum permissions needed
+  </Card>
+  <Card title="Use Safe Outputs" icon="shield-check">
+    Always constrain AI agent actions with safe-outputs
+  </Card>
+  <Card title="Clear Instructions" icon="file-lines">
+    Write specific, step-by-step instructions for the agent
+  </Card>
+  <Card title="Test Thoroughly" icon="vial">
+    Use workflow_dispatch to test before deploying
+  </Card>
+</CardGroup>
+
+### Security Guidelines
+
+<Warning>
+  Never commit `.yml` or `.yaml` files directly — always use `.md` source files and compile to `.lock.yml`.
+</Warning>
+
+- **Read-only by default**: Start with read permissions only
+- **Validate inputs**: Sanitize user inputs from slash commands
+- **Limit outputs**: Use `max` constraints in safe-outputs
+- **Review compiled output**: Check `.lock.yml` before committing
+- **Use title-prefix**: Clearly mark automated issues/PRs
+
+## When to Use Agentic Workflows
+
+Agentic Workflows are ideal for:
+
+- **Issue triage and labeling** based on content
+- **Daily/weekly status reports** from repository data
+- **Automated documentation maintenance** and updates
+- **Scheduled code quality checks** and reports
+- **Slash command tools** for maintainers
+- **Multi-step repository automation** with AI decision-making
+
+For session-based automation during Copilot coding sessions, see [Hooks](/resources/hooks/overview).
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Browse Workflow Catalog" icon="book" href="/resources/workflows/catalog">
+    Explore available workflows and examples
+  </Card>
+  <Card title="GitHub Agentic Workflows Spec" icon="book-open" href="https://github.github.com/gh-aw">
+    Read the official specification and documentation
+  </Card>
+</CardGroup>

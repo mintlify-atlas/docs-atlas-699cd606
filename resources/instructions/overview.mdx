@@ -1,0 +1,310 @@
+---
+title: Instructions Overview
+description: Learn about custom instructions and how they guide GitHub Copilot to follow your coding standards
+---
+
+## What are Custom Instructions?
+
+Custom instructions are markdown files that provide context-aware guidance to GitHub Copilot. They automatically apply coding standards, best practices, and project-specific conventions when working with files that match specific patterns.
+
+<Note>
+Instructions help GitHub Copilot understand your project's conventions without needing to repeat them in every prompt.
+</Note>
+
+## How Instructions Work
+
+Instructions use **file pattern matching** to automatically activate when you're working with specific file types. When an instruction file matches your current context, its guidelines are applied to Copilot's suggestions.
+
+### Example Flow
+
+1. You open a file: `components/Button.tsx`
+2. Copilot checks for instructions that match `**/*.tsx`
+3. The React and TypeScript instructions automatically apply
+4. Copilot generates code following your project's React patterns
+
+## Instruction File Format
+
+Every instruction file follows a standard format with YAML frontmatter and markdown content.
+
+### Required Frontmatter
+
+<CodeGroup>
+
+```yaml Basic Structure
+---
+description: 'Brief description of what this instruction provides'
+applyTo: '**/*.ts, **/*.tsx'
+---
+```
+
+```yaml Real Example
+---
+description: 'Angular-specific coding standards and best practices'
+applyTo: '**/*.ts, **/*.html, **/*.scss, **/*.css'
+---
+```
+
+</CodeGroup>
+
+<ParamField path="description" type="string" required>
+  A clear, concise description of the instruction's purpose. Must be wrapped in single quotes.
+</ParamField>
+
+<ParamField path="applyTo" type="string" required>
+  File patterns that trigger this instruction. Supports glob patterns and comma-separated values.
+</ParamField>
+
+### File Content
+
+After the frontmatter, write your instructions in markdown. Include:
+
+- **Coding standards** - Naming conventions, formatting rules
+- **Best practices** - Recommended patterns and approaches
+- **Project structure** - How to organize code and files
+- **Common patterns** - Reusable code examples
+- **Testing guidelines** - How to write and structure tests
+
+## Understanding applyTo Patterns
+
+The `applyTo` field uses glob patterns to match files. Here are common patterns:
+
+<AccordionGroup>
+  <Accordion title="Single File Extension">
+    ```yaml
+    applyTo: '**/*.py'
+    ```
+    Applies to all Python files in the project.
+  </Accordion>
+
+  <Accordion title="Multiple Extensions">
+    ```yaml
+    applyTo: '**/*.ts, **/*.tsx, **/*.js, **/*.jsx'
+    ```
+    Applies to TypeScript and JavaScript files (including JSX/TSX).
+  </Accordion>
+
+  <Accordion title="Specific File Types">
+    ```yaml
+    applyTo: '**/*.razor, **/*.razor.cs, **/*.razor.css'
+    ```
+    Applies to Blazor component files and their code-behind/styles.
+  </Accordion>
+
+  <Accordion title="All Files">
+    ```yaml
+    applyTo: '**'
+    ```
+    Applies to all files in the project (use for universal guidelines like accessibility).
+  </Accordion>
+
+  <Accordion title="Infrastructure as Code">
+    ```yaml
+    applyTo: '**/*.tf'
+    ```
+    Applies to Terraform configuration files.
+  </Accordion>
+</AccordionGroup>
+
+### Pattern Matching Rules
+
+- `**` - Matches any directory at any level
+- `*` - Matches any characters except directory separator
+- `*.ext` - Matches files with specific extension
+- Multiple patterns are comma-separated
+
+## Real-World Examples
+
+### C# Development Instructions
+
+<CodeGroup>
+
+```yaml Frontmatter
+---
+description: 'Guidelines for building C# applications'
+applyTo: '**/*.cs'
+---
+```
+
+```markdown Content Excerpt
+# C# Development
+
+## C# Instructions
+- Always use the latest version C#, currently C# 14 features.
+- Write clear and concise comments for each function.
+
+## Naming Conventions
+- Follow PascalCase for component names, method names, and public members.
+- Use camelCase for private fields and local variables.
+- Prefix interface names with "I" (e.g., IUserService).
+
+## Nullable Reference Types
+- Declare variables non-nullable, and check for `null` at entry points.
+- Always use `is null` or `is not null` instead of `== null` or `!= null`.
+```
+
+</CodeGroup>
+
+### React Development Instructions
+
+<CodeGroup>
+
+```yaml Frontmatter
+---
+description: 'ReactJS development standards and best practices'
+applyTo: '**/*.jsx, **/*.tsx, **/*.js, **/*.ts, **/*.css, **/*.scss'
+---
+```
+
+```markdown Content Excerpt
+# ReactJS Development Instructions
+
+## Architecture
+- Use functional components with hooks as the primary pattern
+- Implement component composition over inheritance
+- Organize components by feature or domain for scalability
+
+## State Management
+- Use `useState` for local component state
+- Implement `useReducer` for complex state logic
+- Leverage `useContext` for sharing state across component trees
+```
+
+</CodeGroup>
+
+### Accessibility Instructions
+
+<CodeGroup>
+
+```yaml Frontmatter
+---
+description: "Guidance for creating more accessible code"
+applyTo: "**"
+---
+```
+
+```markdown Content Excerpt
+# Accessibility instructions
+
+## Non-negotiables (MUST)
+- Conform to WCAG 2.2 Level AA.
+- All interactive elements are keyboard operable, with clearly visible focus.
+- Ensure correct accessible **name, role, value, states, and properties**.
+
+## Contrast requirements (MUST)
+- Text contrast: at least 4.5:1 (large text: 3:1).
+- Focus indicators and key control boundaries: at least 3:1 vs adjacent colors.
+```
+
+</CodeGroup>
+
+## Installation and Usage
+
+### Using VS Code Install Buttons
+
+Most instructions in the Awesome GitHub Copilot repository include install buttons:
+
+<Steps>
+  <Step title="Click Install Button">
+    Click the VS Code or VS Code Insiders badge next to the instruction you want
+  </Step>
+  <Step title="Confirm Installation">
+    VS Code will prompt to install the instruction file
+  </Step>
+  <Step title="Automatic Activation">
+    The instruction will automatically apply when working with matching files
+  </Step>
+</Steps>
+
+### Manual Installation
+
+You can also manually add instructions to your project:
+
+<Steps>
+  <Step title="Download the File">
+    Download the `*.instructions.md` file from the repository
+  </Step>
+  <Step title="Create Instructions Directory">
+    Create `.github/instructions/` in your workspace if it doesn't exist
+  </Step>
+  <Step title="Add the File">
+    Copy the instruction file to `.github/instructions/`
+  </Step>
+  <Step title="Verify Activation">
+    Open a file matching the `applyTo` pattern to verify the instruction applies
+  </Step>
+</Steps>
+
+### Global Instructions
+
+For workspace-wide instructions, use the special file:
+
+```
+.github/copilot-instructions.md
+```
+
+This file applies to all files and interactions with Copilot in your workspace.
+
+## Best Practices for Writing Instructions
+
+<CardGroup cols={2}>
+  <Card title="Be Specific" icon="bullseye">
+    Provide concrete examples and clear rules rather than vague guidelines
+  </Card>
+  <Card title="Stay Focused" icon="target">
+    Keep instructions relevant to the file types they target
+  </Card>
+  <Card title="Use Examples" icon="code">
+    Include code snippets showing the preferred patterns
+  </Card>
+  <Card title="Explain Why" icon="lightbulb">
+    Include rationale for important decisions and patterns
+  </Card>
+</CardGroup>
+
+### Structure Your Instructions
+
+Good instructions typically include:
+
+1. **Project Context** - Technology stack, versions, frameworks
+2. **Development Standards** - Architecture, patterns, conventions
+3. **Code Style** - Formatting, naming, organization
+4. **Testing Guidelines** - How to write and structure tests
+5. **Security & Performance** - Important considerations
+6. **Examples** - Real code showing preferred patterns
+
+## Common Use Cases
+
+<Accordion title="Framework-Specific Standards">
+  Apply React, Angular, Vue, or other framework best practices automatically when working with those files.
+</Accordion>
+
+<Accordion title="Language Conventions">
+  Enforce language-specific patterns like C# naming conventions, Python PEP 8 compliance, or Java code style.
+</Accordion>
+
+<Accordion title="Infrastructure as Code">
+  Guide Terraform, Bicep, or CloudFormation generation with security and maintainability standards.
+</Accordion>
+
+<Accordion title="Testing Patterns">
+  Ensure consistent test structure, naming, and coverage requirements across your codebase.
+</Accordion>
+
+<Accordion title="Accessibility Requirements">
+  Apply WCAG compliance and accessibility best practices to UI code automatically.
+</Accordion>
+
+<Accordion title="Security Standards">
+  Enforce security patterns, input validation, and OWASP guidelines in your code.
+</Accordion>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Browse the Catalog" icon="books" href="/resources/instructions/catalog">
+    Explore available instructions organized by technology
+  </Card>
+  <Card title="Create Your Own" icon="pen-to-square" href="https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md">
+    Learn how to create custom instructions for your projects
+  </Card>
+</CardGroup>

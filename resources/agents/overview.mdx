@@ -1,0 +1,372 @@
+---
+title: "Agents Overview"
+description: "Learn about custom agents and how to use them with GitHub Copilot"
+---
+
+## What are Custom Agents?
+
+Custom agents are specialized GitHub Copilot configurations that enhance the coding agent's capabilities for specific tasks, domains, or workflows. They allow you to "teach" Copilot new skills by providing structured instructions, tools, and context through simple markdown files.
+
+<Card
+  title="Browse the Agent Catalog"
+  icon="grid"
+  href="/resources/agents/catalog"
+>
+  Explore hundreds of ready-to-use agents for different languages, frameworks, and use cases.
+</Card>
+
+## How Agents Work
+
+Agents are defined using `.agent.md` files with YAML frontmatter that specifies:
+
+- **Instructions**: Natural language guidance for how Copilot should behave
+- **Tools**: Which capabilities the agent has access to
+- **MCP Servers**: External services the agent can connect to
+- **Model**: Specific AI model to use (e.g., GPT-4, Claude)
+
+### Agent File Structure
+
+All agents follow the `.agent.md` format with YAML frontmatter:
+
+```markdown
+---
+name: 'API Architect'
+description: 'Your role is that of an API architect. Help mentor the engineer by providing guidance, support, and working code.'
+tools: ['codebase', 'edit/editFiles', 'search', 'runCommands']
+model: 'gpt-4'
+---
+
+# API Architect mode instructions
+
+Your primary goal is to act on the mandatory and optional API aspects...
+```
+
+## Frontmatter Fields
+
+<ParamField path="name" type="string" required>
+  Human-readable name for the agent (e.g., "API Architect" not "api-architect")
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Brief description of what the agent does. Must be wrapped in single quotes.
+</ParamField>
+
+<ParamField path="tools" type="array">
+  List of tools the agent can access. Examples: `codebase`, `edit/editFiles`, `search`, `runCommands`, `web/fetch`
+</ParamField>
+
+<ParamField path="model" type="string">
+  Specific AI model to use. Strongly recommended to specify. Examples: `gpt-4`, `claude-3-5-sonnet`
+</ParamField>
+
+<ParamField path="mcp-servers" type="object">
+  MCP (Model Context Protocol) server configurations for external integrations
+</ParamField>
+
+## MCP Server Integration
+
+Many agents integrate with MCP servers to access external services and APIs. MCP servers enable agents to:
+
+- Query external databases and APIs
+- Access real-time documentation
+- Interact with cloud services
+- Retrieve up-to-date library information
+
+### MCP Server Configuration
+
+Agents define MCP servers in their frontmatter:
+
+<Tabs>
+  <Tab title="HTTP MCP Server">
+    ```yaml
+    mcp-servers:
+      context7:
+        type: http
+        url: "https://mcp.context7.com/mcp"
+        headers:
+          CONTEXT7_API_KEY: "${{ secrets.COPILOT_MCP_CONTEXT7 }}"
+        tools:
+          - "get-library-docs"
+          - "resolve-library-id"
+    ```
+  </Tab>
+  
+  <Tab title="Local MCP Server">
+    ```yaml
+    mcp-servers:
+      opik:
+        type: 'local'
+        command: 'npx'
+        args:
+          - '-y'
+          - 'opik-mcp'
+        env:
+          OPIK_API_KEY: COPILOT_MCP_OPIK_API_KEY
+          OPIK_WORKSPACE_NAME: COPILOT_MCP_OPIK_WORKSPACE
+        tools: ['*']
+    ```
+  </Tab>
+  
+  <Tab title="Docker MCP Server">
+    ```yaml
+    mcp-servers:
+      arm-migration:
+        type: 'local'
+        command: 'docker'
+        args:
+          - 'run'
+          - '--rm'
+          - '-i'
+          - '-v'
+          - '${{ github.workspace }}:/workspace'
+          - 'armlimited/arm-mcp:latest'
+    ```
+  </Tab>
+</Tabs>
+
+### Real-World MCP Examples
+
+<CardGroup cols={2}>
+  <Card title="Context7" icon="book">
+    Provides up-to-date library documentation and best practices
+  </Card>
+  <Card title="Apify" icon="spider">
+    Access web scraping actors and automation workflows
+  </Card>
+  <Card title="CAST Imaging" icon="diagram-project">
+    Software discovery and impact analysis tools
+  </Card>
+  <Card title="Comet Opik" icon="chart-line">
+    LLM observability, prompt management, and tracing
+  </Card>
+</CardGroup>
+
+## Installing Agents
+
+### Using VS Code Install Links
+
+The easiest way to install agents is using the VS Code install buttons:
+
+1. Browse the [Agent Catalog](/resources/agents/catalog)
+2. Click the **Install in VS Code** button for your desired agent
+3. The agent will be automatically added to your repository
+
+<Tip>
+  Install buttons are available for both VS Code and VS Code Insiders.
+</Tip>
+
+### Manual Installation
+
+You can also manually download `.agent.md` files:
+
+1. Download the agent file from the repository
+2. Place it in your project's `.github/copilot/` directory
+3. Restart GitHub Copilot to load the new agent
+
+<CodeGroup>
+```bash Terminal
+# Download an agent
+curl -O https://raw.githubusercontent.com/github/awesome-copilot/main/agents/api-architect.agent.md
+
+# Move to Copilot directory
+mkdir -p .github/copilot
+mv api-architect.agent.md .github/copilot/
+```
+
+```bash VS Code Command
+# Open command palette (Cmd+Shift+P or Ctrl+Shift+P)
+> GitHub Copilot: Reload Agents
+```
+</CodeGroup>
+
+## Using Agents
+
+Once installed, agents can be used in multiple ways:
+
+### In VS Code Chat
+
+Access agents through the chat interface:
+
+```
+@agent-name your question or task
+```
+
+### In Copilot Edits
+
+Assign an agent to guide multi-file edits:
+
+1. Open Copilot Edits panel
+2. Select your agent from the dropdown
+3. Describe your changes
+
+### Via Copilot CLI
+
+Use agents from the command line (coming soon):
+
+```bash
+gh copilot agent run api-architect "design a REST API for user management"
+```
+
+## Agent Categories
+
+Agents are organized by their primary use case:
+
+<AccordionGroup>
+  <Accordion title="Language-Specific" icon="code">
+    Agents specialized for specific programming languages:
+    - **C# Expert**: .NET development and modernization
+    - **C++ Expert**: Modern C++ best practices
+    - **Clojure Interactive Programming**: REPL-first development
+    - **Go MCP Development**: Building MCP servers in Go
+    - **Java MCP Development**: MCP server creation in Java
+  </Accordion>
+
+  <Accordion title="Cloud & Infrastructure" icon="cloud">
+    Agents for cloud platforms and infrastructure:
+    - **Azure Principal Architect**: Well-Architected Framework guidance
+    - **Azure SaaS Architect**: Multi-tenant application design
+    - **Bicep Specialist**: Azure infrastructure as code
+    - **Terraform Azure**: Azure Terraform implementation
+    - **ARM Migration**: x86 to ARM cloud migration
+  </Accordion>
+
+  <Accordion title="DevOps & Automation" icon="gears">
+    Agents for CI/CD and automation:
+    - **DevOps Expert**: Infinity loop principle workflows
+    - **GitHub Actions**: Workflow automation
+    - **Docker Expert**: Container optimization
+    - **Kubernetes**: Orchestration and deployment
+  </Accordion>
+
+  <Accordion title="Web Development" icon="browser">
+    Agents for frontend and web applications:
+    - **React Expert**: Modern React patterns
+    - **Next.js**: App router and server components
+    - **Tailwind CSS**: Utility-first styling
+    - **Accessibility Expert**: WCAG compliance
+    - **AEM Frontend**: Adobe Experience Manager
+  </Accordion>
+
+  <Accordion title="Architecture & Design" icon="compass-drafting">
+    Agents for software architecture:
+    - **API Architect**: REST API design and mentoring
+    - **ADR Generator**: Architectural decision records
+    - **Blueprint Mode**: Structured problem-solving
+    - **Context Architect**: Multi-file change planning
+  </Accordion>
+
+  <Accordion title="Testing & Quality" icon="vial">
+    Agents focused on code quality:
+    - **Test Expert**: Test-driven development
+    - **Code Review**: Best practice reviews
+    - **Security Auditor**: Security vulnerability scanning
+    - **Performance Optimizer**: Code optimization
+  </Accordion>
+
+  <Accordion title="Integration & Services" icon="puzzle-piece">
+    Agents for third-party integrations:
+    - **Apify Integration**: Web scraping automation
+    - **Context7 Expert**: Latest library documentation
+    - **CAST Imaging**: Impact analysis
+    - **Dynatrace Expert**: Observability integration
+  </Accordion>
+</AccordionGroup>
+
+## Creating Your Own Agents
+
+Want to create custom agents for your team?
+
+<Steps>
+  <Step title="Create the file">
+    Create a new `.agent.md` file with YAML frontmatter
+  </Step>
+  <Step title="Define metadata">
+    Add `name`, `description`, and optional `tools` and `model` fields
+  </Step>
+  <Step title="Write instructions">
+    Use natural language to describe how the agent should behave
+  </Step>
+  <Step title="Test thoroughly">
+    Try your agent with various scenarios to ensure it works as expected
+  </Step>
+  <Step title="Share (optional)">
+    Contribute back to the community via pull request
+  </Step>
+</Steps>
+
+<Card
+  title="Contributing Guide"
+  icon="code-pull-request"
+  href="/community/contributing"
+>
+  Learn how to contribute your agents to the Awesome GitHub Copilot repository
+</Card>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Writing Effective Instructions" icon="pen">
+    - Use clear, concise natural language
+    - Provide concrete examples of expected behavior
+    - Define scope and boundaries clearly
+    - Include common patterns and anti-patterns
+    - Reference specific tools and their usage
+  </Accordion>
+
+  <Accordion title="Tool Selection" icon="toolbox">
+    - Only request tools the agent truly needs
+    - Understand tool capabilities and limitations
+    - Document why specific tools are required
+    - Test agent behavior with and without tools
+  </Accordion>
+
+  <Accordion title="Model Selection" icon="microchip">
+    - Specify `model` for consistent behavior
+    - Choose models based on task complexity
+    - Consider token limits and costs
+    - Test with your target model during development
+  </Accordion>
+
+  <Accordion title="Naming Conventions" icon="tag">
+    - Use descriptive, human-readable names
+    - Keep file names lowercase with hyphens
+    - Name field should match agent purpose
+    - Description should be concise but informative
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Browse Agent Catalog"
+    icon="grid"
+    href="/resources/agents/catalog"
+  >
+    Explore hundreds of ready-to-use agents
+  </Card>
+  
+  <Card
+    title="Learn About Instructions"
+    icon="file-lines"
+    href="/resources/instructions/overview"
+  >
+    Discover coding standards and patterns
+  </Card>
+  
+  <Card
+    title="Explore Skills"
+    icon="wand-magic-sparkles"
+    href="/resources/skills/overview"
+  >
+    Self-contained task bundles with resources
+  </Card>
+  
+  <Card
+    title="View Plugins"
+    icon="puzzle-piece"
+    href="/resources/plugins/overview"
+  >
+    Pre-packaged collections of related agents
+  </Card>
+</CardGroup>

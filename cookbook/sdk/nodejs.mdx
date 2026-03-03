@@ -1,0 +1,360 @@
+---
+title: Node.js SDK Cookbook
+description: Practical recipes for building with the GitHub Copilot SDK in Node.js and TypeScript
+---
+
+# Node.js / TypeScript SDK Cookbook
+
+Short, practical recipes for using the GitHub Copilot SDK with Node.js and TypeScript. Each recipe is concise, copy-pasteable, and points to complete runnable examples.
+
+## Setup
+
+Install the GitHub Copilot SDK:
+
+<CodeGroup>
+```bash npm
+npm install @github/copilot-sdk
+```
+
+```bash yarn
+yarn add @github/copilot-sdk
+```
+
+```bash pnpm
+pnpm add @github/copilot-sdk
+```
+</CodeGroup>
+
+Import in your code:
+
+```typescript
+import { CopilotClient } from "@github/copilot-sdk";
+```
+
+## Error Handling
+
+Handle errors gracefully including connection failures, timeouts, and cleanup.
+
+### Basic try-catch Pattern
+
+<CodeGroup>
+```typescript Basic Example
+import { CopilotClient } from "@github/copilot-sdk";
+
+const client = new CopilotClient();
+
+try {
+    await client.start();
+    const session = await client.createSession({ model: "gpt-5" });
+
+    const response = await session.sendAndWait({ prompt: "Hello!" });
+    console.log(response?.data.content);
+
+    await session.destroy();
+} catch (error: any) {
+    console.error("Error:", error.message);
+} finally {
+    await client.stop();
+}
+```
+
+```typescript Specific Error Types
+try {
+    await client.start();
+} catch (error) {
+    if (error.message.includes("ENOENT")) {
+        console.error("Copilot CLI not found. Please install it first.");
+    } else if (error.message.includes("ECONNREFUSED")) {
+        console.error("Could not connect to Copilot CLI server.");
+    } else {
+        console.error("Unexpected error:", error.message);
+    }
+}
+```
+</CodeGroup>
+
+### Timeout Handling
+
+```typescript
+const session = await client.createSession({ model: "gpt-5" });
+
+try {
+    // sendAndWait with timeout (in milliseconds)
+    const response = await session.sendAndWait(
+        { prompt: "Complex question..." },
+        30000 // 30 second timeout
+    );
+
+    if (response) {
+        console.log(response.data.content);
+    } else {
+        console.log("No response received");
+    }
+} catch (error) {
+    if (error.message.includes("timeout")) {
+        console.error("Request timed out");
+    }
+}
+```
+
+### Aborting Requests
+
+```typescript
+const session = await client.createSession({ model: "gpt-5" });
+
+// Start a request
+session.send({ prompt: "Write a very long story..." });
+
+// Abort it after some condition
+setTimeout(async () => {
+    await session.abort();
+    console.log("Request aborted");
+}, 5000);
+```
+
+### Graceful Shutdown
+
+```typescript
+process.on("SIGINT", async () => {
+    console.log("Shutting down...");
+
+    const errors = await client.stop();
+    if (errors.length > 0) {
+        console.error("Cleanup errors:", errors);
+    }
+
+    process.exit(0);
+});
+```
+
+<Tip>
+Always use try-finally to ensure `client.stop()` is called. This prevents resource leaks and ensures the Copilot CLI process is properly terminated.
+</Tip>
+
+## Multiple Sessions
+
+Manage multiple independent conversations simultaneously.
+
+```typescript
+import { CopilotClient } from "@github/copilot-sdk";
+
+const client = new CopilotClient();
+await client.start();
+
+// Create multiple independent sessions
+const session1 = await client.createSession({ model: "gpt-5" });
+const session2 = await client.createSession({ model: "gpt-5" });
+const session3 = await client.createSession({ model: "claude-sonnet-4.5" });
+
+// Each session maintains its own conversation history
+await session1.sendAndWait({ prompt: "You are helping with a Python project" });
+await session2.sendAndWait({ prompt: "You are helping with a TypeScript project" });
+await session3.sendAndWait({ prompt: "You are helping with a Go project" });
+
+// Follow-up messages stay in their respective contexts
+await session1.sendAndWait({ prompt: "How do I create a virtual environment?" });
+await session2.sendAndWait({ prompt: "How do I set up tsconfig?" });
+await session3.sendAndWait({ prompt: "How do I initialize a module?" });
+
+// Clean up all sessions
+await session1.destroy();
+await session2.destroy();
+await session3.destroy();
+await client.stop();
+```
+
+### Custom Session IDs
+
+```typescript
+const session = await client.createSession({
+    sessionId: "user-123-chat",
+    model: "gpt-5",
+});
+
+console.log(session.sessionId); // "user-123-chat"
+```
+
+### Listing and Deleting Sessions
+
+<CodeGroup>
+```typescript List Sessions
+const sessions = await client.listSessions();
+console.log(sessions);
+// [{ sessionId: "user-123-chat", ... }, ...]
+```
+
+```typescript Delete Session
+await client.deleteSession("user-123-chat");
+```
+</CodeGroup>
+
+### Use Cases
+
+<CardGroup cols={3}>
+  <Card title="Multi-User Apps" icon="users">
+    One session per user in web servers
+  </Card>
+  <Card title="Multi-Task Workflows" icon="list-check">
+    Separate sessions for different tasks
+  </Card>
+  <Card title="A/B Testing" icon="flask">
+    Compare responses from different models
+  </Card>
+</CardGroup>
+
+## Session Persistence
+
+Save and resume sessions across application restarts.
+
+```typescript
+import { CopilotClient } from "@github/copilot-sdk";
+import { writeFile, readFile } from "fs/promises";
+
+// Save session state
+const client = new CopilotClient();
+await client.start();
+
+const session = await client.createSession({ model: "gpt-5" });
+await session.sendAndWait({ prompt: "Remember: my name is Alice" });
+
+const sessionState = session.getState();
+await writeFile("session.json", JSON.stringify(sessionState, null, 2));
+
+await session.destroy();
+await client.stop();
+
+// Later: restore session state
+const client2 = new CopilotClient();
+await client2.start();
+
+const savedState = await readFile("session.json", "utf-8");
+const state = JSON.parse(savedState);
+
+const restoredSession = await client2.createSession({
+    model: "gpt-5",
+    state: state,
+});
+
+// Session remembers previous context
+const response = await restoredSession.sendAndWait({ prompt: "What's my name?" });
+console.log(response?.data.content); // "Your name is Alice"
+```
+
+<Note>
+Session persistence is perfect for maintaining long-running conversations or implementing user session management in web applications.
+</Note>
+
+## Managing Local Files
+
+Use AI to organize and categorize files.
+
+```typescript
+import { CopilotClient } from "@github/copilot-sdk";
+
+const client = new CopilotClient();
+await client.start();
+
+const session = await client.createSession({ model: "gpt-5" });
+
+const response = await session.sendAndWait({
+    prompt: `
+        I have these files in a directory:
+        - report.pdf
+        - meeting-notes.txt
+        - photo.jpg
+        - invoice.xlsx
+        - presentation.pptx
+        
+        Please organize them into folders by type.
+        Return JSON with the folder structure.
+    `,
+});
+
+console.log(response?.data.content);
+
+// Parse the AI response and execute file operations
+// ...
+```
+
+## Running Examples
+
+All complete, runnable examples are available in the [cookbook/copilot-sdk/nodejs/recipe](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/nodejs/recipe) directory.
+
+<Steps>
+  <Step title="Navigate to the recipe directory">
+    ```bash
+    cd cookbook/copilot-sdk/nodejs/recipe
+    ```
+  </Step>
+  
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+  
+  <Step title="Run any example">
+    ```bash
+    npx tsx error-handling.ts
+    npx tsx multiple-sessions.ts
+    npx tsx persisting-sessions.ts
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always Clean Up Resources">
+    Use try-finally to ensure `client.stop()` is called, preventing resource leaks.
+    
+    ```typescript
+    try {
+        await client.start();
+        // ... work ...
+    } finally {
+        await client.stop();
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Handle Connection Errors">
+    The Copilot CLI might not be installed or running. Check for ENOENT and ECONNREFUSED errors.
+    
+    ```typescript
+    if (error.message.includes("ENOENT")) {
+        console.error("Please install GitHub Copilot CLI");
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Set Appropriate Timeouts">
+    Always provide a timeout to `sendAndWait()` for long-running requests.
+    
+    ```typescript
+    await session.sendAndWait({ prompt }, 30000); // 30s timeout
+    ```
+  </Accordion>
+  
+  <Accordion title="Type Your Responses">
+    Use TypeScript types for better IDE support and type safety.
+    
+    ```typescript
+    const response: AssistantMessageEvent | null = await session.sendAndWait(...);
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Additional Recipes
+
+Explore more advanced recipes in the source repository:
+
+- **[Ralph Loop](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/nodejs/ralph-loop.md)** - Autonomous AI coding loops
+- **[PR Visualization](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/nodejs/pr-visualization.md)** - Generate interactive PR charts
+- **[Accessibility Report](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/nodejs/accessibility-report.md)** - WCAG accessibility reports
+
+## Resources
+
+- [GitHub Copilot SDK Repository](https://github.com/github/copilot-sdk)
+- [Node.js SDK Documentation](https://github.com/github/copilot-sdk/tree/main/nodejs)
+- [Complete Recipe Collection](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/nodejs)

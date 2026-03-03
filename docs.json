@@ -1,122 +1,150 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Awesome GitHub Copilot",
+  "theme": "palm",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0969DA",
+    "light": "#58A6FF",
+    "dark": "#1F6FEB"
   },
-  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/github/awesome-copilot"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/github/awesome-copilot"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Get Started",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Overview",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Installation",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "installation/mcp-server",
+              "installation/manual-install"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Usage",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "usage/agents",
+              "usage/instructions",
+              "usage/skills",
+              "usage/hooks",
+              "usage/workflows",
+              "usage/plugins"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Resources",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Agents",
             "pages": [
-              "api-reference/introduction"
+              "resources/agents/overview",
+              "resources/agents/catalog"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Instructions",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "resources/instructions/overview",
+              "resources/instructions/catalog"
+            ]
+          },
+          {
+            "group": "Skills",
+            "pages": [
+              "resources/skills/overview",
+              "resources/skills/catalog"
+            ]
+          },
+          {
+            "group": "Hooks",
+            "pages": [
+              "resources/hooks/overview",
+              "resources/hooks/catalog"
+            ]
+          },
+          {
+            "group": "Workflows",
+            "pages": [
+              "resources/workflows/overview",
+              "resources/workflows/catalog"
+            ]
+          },
+          {
+            "group": "Plugins",
+            "pages": [
+              "resources/plugins/overview",
+              "resources/plugins/catalog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Cookbook",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "cookbook/overview"
+            ]
+          },
+          {
+            "group": "SDK Examples",
+            "pages": [
+              "cookbook/sdk/csharp",
+              "cookbook/sdk/go",
+              "cookbook/sdk/nodejs",
+              "cookbook/sdk/python"
+            ]
+          },
+          {
+            "group": "Practical Examples",
+            "pages": [
+              "cookbook/examples/custom-agents",
+              "cookbook/examples/custom-instructions",
+              "cookbook/examples/custom-skills"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Community",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "community/contributing",
+              "community/code-of-conduct"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": [
+              "community/faq",
+              "community/support",
+              "community/security"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

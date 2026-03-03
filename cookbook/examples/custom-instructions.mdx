@@ -1,0 +1,516 @@
+---
+title: Creating Custom Instructions
+description: Define coding standards and best practices that automatically apply to specific file patterns
+---
+
+# Creating Custom Instructions
+
+Custom instructions let you define coding standards, best practices, and project-specific guidelines that GitHub Copilot automatically applies to files matching specific patterns. This ensures consistent code quality across your project.
+
+## What are Custom Instructions?
+
+Custom instructions are markdown files with YAML frontmatter that:
+
+- **Apply automatically** to files matching specific patterns
+- **Enforce standards** like formatting, naming conventions, and best practices
+- **Provide context** about frameworks, libraries, and project requirements
+- **Guide Copilot** to generate code that matches your team's style
+
+<Note>
+Instructions live in `.github/instructions/` (repository) or `instructions/` (organization/enterprise).
+</Note>
+
+## Anatomy of Custom Instructions
+
+Here's the basic structure:
+
+```markdown
+---
+description: 'What these instructions enforce'
+applyTo: '**/*.js, **/*.ts'
+---
+
+# Instruction Title
+
+Detailed guidelines and standards...
+```
+
+## Quick Start: Your First Instructions
+
+Let's create instructions for React components:
+
+<Steps>
+  <Step title="Create the instructions file">
+    Create `.github/instructions/react-components.instructions.md`:
+    
+    ```markdown
+    ---
+    description: 'React component best practices and standards'
+    applyTo: '**/*.jsx, **/*.tsx'
+    ---
+    
+    # React Component Instructions
+    
+    ## Component Structure
+    
+    - Use functional components with hooks
+    - Define PropTypes or TypeScript interfaces for props
+    - Export one component per file (named export)
+    - Keep components under 300 lines
+    
+    ## Naming Conventions
+    
+    - Component files: PascalCase (e.g., `UserProfile.tsx`)
+    - Component names: Match filename
+    - Props interfaces: `ComponentNameProps`
+    - Event handlers: `handleEventName`
+    
+    ## Best Practices
+    
+    - Use React.memo() for expensive renders
+    - Extract custom hooks for reusable logic
+    - Keep useState close to where it's used
+    - Use useCallback for event handlers passed as props
+    ```
+  </Step>
+  
+  <Step title="Test the instructions">
+    1. Create or edit a `.jsx` or `.tsx` file
+    2. Ask Copilot to generate a component
+    3. Verify it follows the guidelines
+  </Step>
+  
+  <Step title="Refine">
+    Adjust the instructions based on how well Copilot follows them
+  </Step>
+</Steps>
+
+## Real-World Example: Angular Instructions
+
+Here's a production instructions file from the Awesome Copilot repository:
+
+```markdown
+---
+description: 'Angular-specific coding standards and best practices'
+applyTo: '**/*.ts, **/*.html, **/*.scss, **/*.css'
+---
+
+# Angular Development Instructions
+
+Instructions for generating high-quality Angular applications with TypeScript,
+using Angular Signals for state management, adhering to Angular best practices
+as outlined at https://angular.dev.
+
+## Project Context
+- Latest Angular version (use standalone components by default)
+- TypeScript for type safety
+- Angular CLI for project setup and scaffolding
+- Follow Angular Style Guide (https://angular.dev/style-guide)
+- Use Angular Material or other modern UI libraries for consistent styling
+
+## Architecture
+- Use standalone components unless modules are explicitly required
+- Organize code by standalone feature modules or domains for scalability
+- Implement lazy loading for feature modules to optimize performance
+- Use Angular's built-in dependency injection system effectively
+- Structure components with clear separation (smart vs. presentational)
+
+## TypeScript
+- Enable strict mode in `tsconfig.json` for type safety
+- Define clear interfaces and types for components, services, and models
+- Use type guards and union types for robust type checking
+- Implement proper error handling with RxJS operators (e.g., `catchError`)
+- Use typed forms (e.g., `FormGroup`, `FormControl`) for reactive forms
+
+## State Management
+- Use Angular Signals for reactive state management in components/services
+- Leverage `signal()`, `computed()`, and `effect()` for reactive updates
+- Use writable signals for mutable state and computed signals for derived state
+- Handle loading and error states with signals and proper UI feedback
+- Use Angular's `AsyncPipe` to handle observables in templates
+```
+
+<Tip>
+Provide links to official documentation and style guides. This helps Copilot generate more accurate, framework-appropriate code.
+</Tip>
+
+## Frontmatter Properties
+
+### Required Properties
+
+<ParamField path="description" type="string" required>
+  Brief description wrapped in single quotes (not empty)
+  
+  ```yaml
+  description: 'React component best practices and standards'
+  ```
+</ParamField>
+
+<ParamField path="applyTo" type="string" required>
+  Comma-separated file patterns (glob syntax)
+  
+  ```yaml
+  applyTo: '**/*.js, **/*.ts'
+  applyTo: '**/components/**/*.tsx'
+  applyTo: '**.py'
+  ```
+</ParamField>
+
+## File Pattern Examples
+
+<CodeGroup>
+```yaml JavaScript/TypeScript
+applyTo: '**/*.js, **/*.ts, **/*.jsx, **/*.tsx'
+```
+
+```yaml Python
+applyTo: '**/*.py'
+```
+
+```yaml Specific Directory
+applyTo: '**/src/components/**/*.tsx'
+```
+
+```yaml Multiple Patterns
+applyTo: '**/*.test.ts, **/*.spec.ts'
+```
+</CodeGroup>
+
+## Instruction Content Structure
+
+### Recommended Sections
+
+<Tabs>
+  <Tab title="Project Context">
+    Information about the project environment:
+    
+    ```markdown
+    ## Project Context
+    - Framework: Next.js 14 with App Router
+    - TypeScript: Strict mode enabled
+    - Styling: Tailwind CSS
+    - State: Zustand for global state
+    - Testing: Vitest + React Testing Library
+    ```
+  </Tab>
+  
+  <Tab title="Standards">
+    Coding standards and conventions:
+    
+    ```markdown
+    ## Development Standards
+    
+    ### File Naming
+    - Components: PascalCase (`UserCard.tsx`)
+    - Utilities: camelCase (`formatDate.ts`)
+    - Constants: UPPER_SNAKE_CASE in `constants.ts`
+    
+    ### Code Style
+    - Use functional components exclusively
+    - Prefer arrow functions for components
+    - Maximum function length: 50 lines
+    - Extract complex logic into custom hooks
+    ```
+  </Tab>
+  
+  <Tab title="Best Practices">
+    Framework-specific best practices:
+    
+    ```markdown
+    ## Best Practices
+    
+    ### Performance
+    - Use React.memo() for expensive renders
+    - Implement code splitting with React.lazy()
+    - Use useCallback for event handlers
+    - Debounce user input handlers
+    
+    ### Accessibility
+    - All interactive elements must be keyboard accessible
+    - Include ARIA labels for screen readers
+    - Maintain proper heading hierarchy
+    - Test with keyboard navigation
+    ```
+  </Tab>
+  
+  <Tab title="Implementation">
+    Step-by-step implementation guidance:
+    
+    ```markdown
+    ## Implementation Process
+    
+    1. Define TypeScript interfaces for props and state
+    2. Create component skeleton with proper structure
+    3. Implement business logic in custom hooks
+    4. Add error handling and loading states
+    5. Implement accessibility features
+    6. Write unit tests with >80% coverage
+    7. Document component usage with JSDoc
+    ```
+  </Tab>
+</Tabs>
+
+## Common Use Cases
+
+### 1. Testing Standards
+
+```markdown
+---
+description: 'Testing standards and best practices'
+applyTo: '**/*.test.ts, **/*.test.tsx, **/*.spec.ts'
+---
+
+# Testing Instructions
+
+## Test Structure
+
+- Use `describe` blocks to group related tests
+- One assertion per test when possible
+- Clear test names: "should [expected behavior] when [condition]"
+
+## Example Test Structure
+
+Use describe blocks to organize tests by component and scenario.
+Within each describe block, write focused it() statements.
+Follow the Arrange-Act-Assert pattern for test clarity.
+
+## Coverage Requirements
+
+- Minimum 80% code coverage
+- 100% coverage for critical paths
+- Test both happy path and error cases
+```
+
+### 2. API Integration Standards
+
+```markdown
+---
+description: 'API service layer standards'
+applyTo: '**/services/**/*.ts, **/api/**/*.ts'
+---
+
+# API Service Instructions
+
+## Service Structure
+
+Create a typed ApiResponse interface with data, optional error, and status fields.
+Build ApiService classes with a baseUrl property and generic get/post methods.
+Use TypeScript generics to ensure type safety for API responses.
+
+## Error Handling
+
+- Always wrap API calls in try-catch
+- Return typed error responses
+- Log errors with context
+- Retry failed requests (max 3 attempts)
+
+## Best Practices
+
+- Use TypeScript generics for type-safe responses
+- Implement request/response interceptors
+- Add timeout for all requests (30s default)
+- Cache GET requests where appropriate
+```
+
+### 3. Database Schema Standards
+
+```markdown
+---
+description: 'Database schema and migration standards'
+applyTo: '**/migrations/**/*.sql, **/schema/**/*.sql'
+---
+
+# Database Schema Instructions
+
+## Naming Conventions
+
+- Tables: plural, snake_case (`user_profiles`)
+- Columns: snake_case (`created_at`)
+- Primary keys: `id` (UUID)
+- Foreign keys: `{table}_id` (`user_id`)
+- Indexes: `idx_{table}_{column}`
+
+## Required Columns
+
+Every table must include:
+- id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+- created_at TIMESTAMP DEFAULT NOW()
+- updated_at TIMESTAMP DEFAULT NOW()
+
+## Migration Standards
+
+- One migration per logical change
+- Include both `up` and `down` migrations
+- Test migrations on sample data
+- Never modify existing migrations
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Be Specific and Actionable">
+    Provide concrete examples, not vague guidelines.
+    
+    **Good**: "Use `async/await` instead of `.then()` chains"
+    
+    **Avoid**: "Use modern JavaScript features"
+  </Accordion>
+  
+  <Accordion title="Include Code Examples">
+    Show what good code looks like in your instructions file.
+    
+    Use descriptive text to explain patterns instead of showing raw code with JSX tags.
+    Define clear component signatures and explain expected prop interfaces.
+    Describe the structure rather than embedding complex code samples.
+  </Accordion>
+  
+  <Accordion title="Reference External Standards">
+    Link to official style guides and documentation:
+    
+    ```markdown
+    - Follow [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
+    - Adhere to [React TypeScript Cheatsheet](https://react-typescript-cheatsheet.netlify.app/)
+    ```
+  </Accordion>
+  
+  <Accordion title="Keep It Focused">
+    Create separate instructions for different file types rather than one massive file.
+  </Accordion>
+</AccordionGroup>
+
+## File Organization
+
+### Repository-Level Instructions
+
+```
+.github/instructions/
+  ├── react-components.instructions.md
+  ├── testing.instructions.md
+  ├── api-services.instructions.md
+  └── database-schema.instructions.md
+```
+
+Apply only to this repository.
+
+### Organization-Level Instructions
+
+```
+instructions/
+  ├── company-coding-standards.instructions.md
+  ├── security-requirements.instructions.md
+  └── accessibility-standards.instructions.md
+```
+
+Apply across all repositories in the organization.
+
+## Testing Your Instructions
+
+<Steps>
+  <Step title="Create a test file">
+    Create a file matching your `applyTo` pattern
+  </Step>
+  
+  <Step title="Ask Copilot to generate code">
+    Request code generation that should follow your guidelines
+  </Step>
+  
+  <Step title="Verify compliance">
+    Check if the generated code follows your instructions
+  </Step>
+  
+  <Step title="Refine">
+    If Copilot doesn't follow the instructions:
+    - Make guidelines more explicit
+    - Add code examples
+    - Simplify complex rules
+  </Step>
+</Steps>
+
+## Common Mistakes to Avoid
+
+<Warning>
+**Empty Description**: The `description` field cannot be empty and must be wrapped in single quotes.
+</Warning>
+
+<Warning>
+**Missing applyTo**: Every instruction file MUST have an `applyTo` field with file patterns.
+</Warning>
+
+<Warning>
+**Too Broad**: Don't create one instruction file for all file types. Create focused instructions for specific patterns.
+</Warning>
+
+<Warning>
+**No Examples**: Instructions without code examples are often ignored. Always include examples.
+</Warning>
+
+## Multi-Language Project Example
+
+For projects with multiple languages, create separate instructions:
+
+<Tabs>
+  <Tab title="Frontend">
+    ```markdown
+    ---
+    description: 'Frontend TypeScript and React standards'
+    applyTo: 'frontend/**/*.ts, frontend/**/*.tsx'
+    ---
+    
+    # Frontend Instructions
+    
+    - Use React 18+ with TypeScript
+    - Implement strict null checks
+    - Use Tailwind for styling
+    ...
+    ```
+  </Tab>
+  
+  <Tab title="Backend">
+    ```markdown
+    ---
+    description: 'Backend Python and FastAPI standards'
+    applyTo: 'backend/**/*.py'
+    ---
+    
+    # Backend Instructions
+    
+    - Use FastAPI with Pydantic models
+    - Type hint all function signatures
+    - Use async/await for I/O operations
+    ...
+    ```
+  </Tab>
+  
+  <Tab title="Infrastructure">
+    ```markdown
+    ---
+    description: 'Terraform infrastructure as code standards'
+    applyTo: 'infrastructure/**/*.tf'
+    ---
+    
+    # Infrastructure Instructions
+    
+    - Use Terraform 1.5+
+    - Define variables in variables.tf
+    - Tag all resources with environment
+    ...
+    ```
+  </Tab>
+</Tabs>
+
+## Example Instructions from the Community
+
+Explore real production instructions:
+
+- **[Angular](https://github.com/github/awesome-copilot/blob/main/instructions/angular.instructions.md)** - Angular best practices with Signals
+- **[Python](https://github.com/github/awesome-copilot/blob/main/instructions/python.instructions.md)** - Python code quality and style
+- **[React](https://github.com/github/awesome-copilot/blob/main/instructions/react.instructions.md)** - React component patterns
+- **[TypeScript](https://github.com/github/awesome-copilot/blob/main/instructions/typescript.instructions.md)** - TypeScript best practices
+
+Browse [all community instructions →](https://github.com/github/awesome-copilot/tree/main/instructions)
+
+## Resources
+
+- [Official Custom Instructions Documentation](https://docs.github.com/en/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot)
+- [Awesome Copilot Instructions Collection](https://github.com/github/awesome-copilot/tree/main/instructions)
+- [Style Guide Examples](https://github.com/github/awesome-copilot/tree/main/instructions)

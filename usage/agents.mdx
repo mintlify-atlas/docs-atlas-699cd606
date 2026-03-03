@@ -1,0 +1,247 @@
+---
+title: Using Custom Agents
+description: Learn how to use custom GitHub Copilot agents to specialize your coding experience
+---
+
+# Using Custom Agents
+
+Custom agents allow you to "specialize" GitHub Copilot through simple file-based configuration. Each agent is a `.agent.md` file that defines a specific AI persona or specialized mode for particular workflows and tools.
+
+## What are Custom Agents?
+
+Custom agents are specialized GitHub Copilot agents that integrate with MCP (Model Context Protocol) servers to provide enhanced capabilities for specific workflows. They can be used in:
+
+- **Copilot Coding Agent (CCA)** - Assign to issues for automated development
+- **VS Code** - Activate in chat sessions alongside built-in agents
+- **Copilot CLI** - Coming soon
+
+<Note>
+  Custom agents differ from instructions and skills:
+  - **Agents** define AI personas with specific tools and behaviors
+  - **Instructions** provide coding standards that apply to file patterns
+  - **Skills** are self-contained capabilities with bundled resources
+</Note>
+
+## Installing Custom Agents
+
+There are multiple ways to install custom agents:
+
+<Tabs>
+  <Tab title="One-Click Install">
+    Browse the [Agents Catalog](https://github.com/github/awesome-copilot/blob/main/docs/README.agents.md) and click the install button:
+
+    - **VS Code**: Click the VS Code install badge
+    - **VS Code Insiders**: Click the VS Code Insiders install badge
+
+    The agent file will be automatically downloaded to your workspace.
+  </Tab>
+
+  <Tab title="Manual Download">
+    1. Browse to the [agents/ directory](https://github.com/github/awesome-copilot/tree/main/agents)
+    2. Find the desired `*.agent.md` file
+    3. Download or copy the file content
+    4. Save it to your repository's `.github/copilot/` directory
+  </Tab>
+
+  <Tab title="MCP Server">
+    Use the [Awesome Copilot MCP Server](https://github.com/github/awesome-copilot#how-to-install-customizations) to search and install agents directly:
+
+    ```json
+    {
+      "servers": {
+        "awesome-copilot": {
+          "type": "stdio",
+          "command": "docker",
+          "args": [
+            "run", "-i", "--rm",
+            "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+          ]
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Agent File Structure
+
+Every agent file follows this structure:
+
+```markdown
+---
+description: 'Brief description of what the agent does'
+name: 'Human-Readable Agent Name'
+tools: ['tool1', 'tool2', 'tool3']
+model: 'claude-sonnet-4.5'  # Strongly recommended
+---
+
+# Agent Instructions
+
+Detailed instructions for how the agent should behave...
+```
+
+<Accordion title="Frontmatter Field Requirements">
+  - **description** (required): Wrapped in single quotes, describes the agent's purpose
+  - **name** (required): Human-readable name (e.g., "Debug Mode" not "debug-mode")
+  - **tools** (recommended): Array of tool names the agent can use
+  - **model** (strongly recommended): Specific AI model to use
+  - **File naming**: Use lowercase with hyphens (e.g., `debug-mode.agent.md`)
+</Accordion>
+
+## Activating Agents
+
+Once installed, agents can be activated in different environments:
+
+<Tabs>
+  <Tab title="VS Code">
+    1. Open the GitHub Copilot chat panel
+    2. Type `@` to see available agents
+    3. Select your custom agent from the list
+    4. Start chatting with the specialized agent
+
+    **Example:**
+    ```
+    @debug-mode Find and fix the null reference error
+    ```
+  </Tab>
+
+  <Tab title="Copilot Coding Agent (CCA)">
+    When assigning an issue to Copilot:
+
+    1. Go to the GitHub issue
+    2. Click "Assign to Copilot"
+    3. Select your custom agent from the dropdown
+    4. Copilot will work on the issue using that agent's persona
+
+    This is ideal for specialized workflows like:
+    - Security reviews
+    - Performance optimization
+    - Database migrations
+    - Infrastructure automation
+  </Tab>
+
+  <Tab title="CLI (Coming Soon)">
+    Custom agent support is coming to GitHub Copilot CLI:
+
+    ```bash
+    # Future syntax (not yet available)
+    gh copilot --agent debug-mode "why is this test failing?"
+    ```
+  </Tab>
+</Tabs>
+
+## MCP Server Integration
+
+Many custom agents require MCP servers to function:
+
+<Steps>
+  <Step title="Check Agent Requirements">
+    Review the agent's documentation to see which MCP servers it needs. For example, the Context7 agent requires the Context7 MCP server.
+  </Step>
+
+  <Step title="Install Required MCP Servers">
+    Click the MCP server install badges in the agent documentation, or manually configure in your VS Code settings:
+
+    ```json
+    {
+      "github.copilot.chat.mcp.servers": {
+        "context7": {
+          "url": "https://mcp.context7.com/mcp",
+          "headers": {
+            "CONTEXT7_API_KEY": "your-api-key-here"
+          }
+        }
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Verify Access">
+    The agent will have access to tools from configured MCP servers. Check the agent's `tools` field to see what capabilities it expects.
+  </Step>
+</Steps>
+
+## Popular Agent Examples
+
+Here are some commonly used agents from the repository:
+
+<CodeGroup>
+```markdown Debug Mode
+---
+description: 'Debug your application to find and fix a bug'
+name: 'Debug Mode Instructions'
+tools: ['edit/editFiles', 'search', 'execute/runInTerminal']
+---
+
+# Debug Mode
+Systematically identify, analyze, and resolve bugs...
+```
+
+```markdown Azure Architect
+---
+description: 'Provide expert Azure Principal Architect guidance'
+name: 'Azure Principal Architect mode'
+model: 'claude-sonnet-4.5'
+---
+
+# Azure Principal Architect
+Expert guidance using Azure Well-Architected Framework...
+```
+
+```markdown API Architect
+---
+description: 'Help mentor engineers with API architecture'
+name: 'API Architect'
+tools: ['web/fetch', 'web/githubRepo']
+---
+
+# API Architect
+Your role is that of an API architect...
+```
+</CodeGroup>
+
+## Creating Your Own Agents
+
+Want to create custom agents for your team? See the [Custom Agent File Guidelines](https://github.com/github/awesome-copilot/blob/main/instructions/agents.instructions.md) in the repository.
+
+Key requirements:
+- Use `.agent.md` file extension
+- Include required frontmatter fields
+- Follow lowercase-with-hyphens naming convention
+- Specify the `model` field for consistent behavior
+- List `tools` the agent needs
+
+## Best Practices
+
+<Accordion title="Choosing the Right Agent">
+  - Use **specialized agents** for domain-specific tasks (e.g., security, performance)
+  - Use **general agents** for everyday coding
+  - Switch agents based on the current task context
+  - Combine agents with instructions for maximum effectiveness
+</Accordion>
+
+<Accordion title="Agent Organization">
+  - Store agents in `.github/copilot/` for repository-wide availability
+  - Name agents clearly to indicate their purpose
+  - Document agent requirements (MCP servers, environment variables)
+  - Share successful agents with your team via pull requests
+</Accordion>
+
+<Accordion title="Troubleshooting">
+  **Agent not appearing:**
+  - Check the file is in `.github/copilot/`
+  - Verify frontmatter is valid YAML
+  - Reload VS Code window
+
+  **Agent not working as expected:**
+  - Verify required MCP servers are configured
+  - Check the `tools` field matches available capabilities
+  - Review agent instructions for clarity
+</Accordion>
+
+## Related Resources
+
+- [Browse All Agents](https://github.com/github/awesome-copilot/blob/main/docs/README.agents.md)
+- [Agent Skills](/usage/skills) - Self-contained capabilities
+- [Custom Instructions](/usage/instructions) - Coding standards
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-agents)

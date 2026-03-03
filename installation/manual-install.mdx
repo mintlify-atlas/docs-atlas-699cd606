@@ -1,0 +1,383 @@
+---
+title: 'Manual Installation'
+description: 'Manually install agents, instructions, and skills by copying files to your project or workspace'
+icon: 'file-code'
+---
+
+While the [MCP Server](/installation/mcp-server) provides the easiest installation method, you can also manually install agents, instructions, and skills by copying files directly into your project.
+
+## File Types and Locations
+
+Awesome GitHub Copilot provides three main types of customizations, each with specific file naming conventions and locations:
+
+<CardGroup cols={3}>
+  <Card title="Agents" icon="robot">
+    Files ending in `.agent.md` that define specialized AI personas
+  </Card>
+  <Card title="Instructions" icon="list-check">
+    Files ending in `.instructions.md` that provide coding standards
+  </Card>
+  <Card title="Skills" icon="toolbox">
+    Folders containing `SKILL.md` with bundled resources
+  </Card>
+</CardGroup>
+
+## Installing Agents
+
+Agents are specialized GitHub Copilot configurations that transform the assistant into domain-specific experts.
+
+<Steps>
+  <Step title="Choose an agent">
+    Browse the [Agents Catalog](/resources/agents/catalog) or the [GitHub repository](https://github.com/github/awesome-copilot/tree/main/agents) to find an agent.
+  </Step>
+  
+  <Step title="Create agents directory">
+    Create a `.github/copilot/agents/` directory in your project root:
+    
+    ```bash
+    mkdir -p .github/copilot/agents
+    ```
+  </Step>
+  
+  <Step title="Copy the agent file">
+    Download the `.agent.md` file and place it in the agents directory:
+    
+    ```bash
+    # Example: Installing the Python expert agent
+    curl -o .github/copilot/agents/python-expert.agent.md \
+      https://raw.githubusercontent.com/github/awesome-copilot/main/agents/python-expert.agent.md
+    ```
+    
+    Or manually copy the file from the repository.
+  </Step>
+  
+  <Step title="Verify the installation">
+    The agent file must:
+    - Have the `.agent.md` extension
+    - Use lowercase with hyphens (e.g., `python-expert.agent.md`)
+    - Include required frontmatter with `description` and `name` fields
+    
+    <Accordion title="Example agent frontmatter">
+    ```yaml
+    ---
+    description: 'Expert assistant for Python development'
+    name: 'Python Expert'
+    model: 'gpt-4.1'
+    tools: ['codebase', 'terminal']
+    ---
+    ```
+    </Accordion>
+  </Step>
+</Steps>
+
+### Agent File Structure
+
+```
+project/
+└── .github/
+    └── copilot/
+        └── agents/
+            ├── python-expert.agent.md
+            ├── react-specialist.agent.md
+            └── devops-helper.agent.md
+```
+
+## Installing Instructions
+
+Instructions provide coding standards and best practices that automatically apply to specific file patterns.
+
+<Steps>
+  <Step title="Choose instructions">
+    Browse the [Instructions Catalog](/resources/instructions/catalog) or the [GitHub repository](https://github.com/github/awesome-copilot/tree/main/instructions).
+  </Step>
+  
+  <Step title="Create instructions directory">
+    Create a `.github/copilot/instructions/` directory:
+    
+    ```bash
+    mkdir -p .github/copilot/instructions
+    ```
+  </Step>
+  
+  <Step title="Copy the instruction file">
+    Download the `.instructions.md` file:
+    
+    ```bash
+    # Example: Installing React instructions
+    curl -o .github/copilot/instructions/react.instructions.md \
+      https://raw.githubusercontent.com/github/awesome-copilot/main/instructions/react.instructions.md
+    ```
+  </Step>
+  
+  <Step title="Verify the installation">
+    The instruction file must:
+    - Have the `.instructions.md` extension
+    - Use lowercase with hyphens
+    - Include required frontmatter with `description` and `applyTo` fields
+    
+    <Accordion title="Example instruction frontmatter">
+    ```yaml
+    ---
+    description: 'React best practices and coding standards'
+    applyTo: '**.jsx, **.tsx'
+    ---
+    ```
+    </Accordion>
+  </Step>
+</Steps>
+
+### Instructions File Structure
+
+```
+project/
+└── .github/
+    └── copilot/
+        └── instructions/
+            ├── react.instructions.md
+            ├── typescript.instructions.md
+            └── python-django.instructions.md
+```
+
+## Installing Skills
+
+Skills are self-contained folders with instructions and bundled resources for specialized tasks.
+
+<Steps>
+  <Step title="Choose a skill">
+    Browse the [Skills Catalog](/resources/skills/catalog) or the [GitHub repository](https://github.com/github/awesome-copilot/tree/main/skills).
+  </Step>
+  
+  <Step title="Create skills directory">
+    Create a `.github/copilot/skills/` directory:
+    
+    ```bash
+    mkdir -p .github/copilot/skills
+    ```
+  </Step>
+  
+  <Step title="Copy the entire skill folder">
+    Download the complete skill folder with all bundled assets:
+    
+    ```bash
+    # Example: Installing the mintlify skill
+    git clone --depth 1 --filter=blob:none --sparse \
+      https://github.com/github/awesome-copilot.git temp-repo
+    cd temp-repo
+    git sparse-checkout set skills/mintlify
+    cp -r skills/mintlify ../.github/copilot/skills/
+    cd ..
+    rm -rf temp-repo
+    ```
+    
+    Or manually download the folder from the repository.
+  </Step>
+  
+  <Step title="Verify the installation">
+    Each skill folder must:
+    - Contain a `SKILL.md` file
+    - Use lowercase folder name with hyphens
+    - SKILL.md must have `name` and `description` in frontmatter
+    - The `name` field must match the folder name
+    
+    <Accordion title="Example skill frontmatter">
+    ```yaml
+    ---
+    name: mintlify
+    description: 'Comprehensive reference for building Mintlify documentation sites'
+    ---
+    ```
+    </Accordion>
+  </Step>
+</Steps>
+
+### Skills File Structure
+
+```
+project/
+└── .github/
+    └── copilot/
+        └── skills/
+            ├── mintlify/
+            │   ├── SKILL.md
+            │   ├── components/
+            │   └── references/
+            └── web-design-reviewer/
+                ├── SKILL.md
+                └── references/
+```
+
+<Note>
+Skills may include bundled assets like scripts, templates, and reference files. Make sure to copy the entire skill folder to preserve these resources.
+</Note>
+
+## Naming Conventions
+
+All files must follow these naming rules:
+
+<Warning>
+Incorrect file naming will prevent GitHub Copilot from recognizing your customizations.
+</Warning>
+
+| Type | Convention | Examples |
+|------|-----------|----------|
+| **Agents** | `lowercase-with-hyphens.agent.md` | `python-expert.agent.md`<br/>`react-specialist.agent.md` |
+| **Instructions** | `lowercase-with-hyphens.instructions.md` | `typescript.instructions.md`<br/>`python-django.instructions.md` |
+| **Skills** | `lowercase-with-hyphens/` folder | `mintlify/`<br/>`web-design-reviewer/` |
+
+## Frontmatter Requirements
+
+All customizations require YAML frontmatter at the top of the file:
+
+<CodeGroup>
+```yaml Agent Frontmatter
+---
+description: 'Brief description of the agent and its purpose'
+name: 'Human Readable Agent Name'
+model: 'gpt-4.1'  # strongly recommended
+tools: ['codebase', 'terminal']  # recommended
+---
+```
+
+```yaml Instruction Frontmatter
+---
+description: 'Brief description of coding standards'
+applyTo: '**.js, **.ts'  # file patterns where this applies
+---
+```
+
+```yaml Skill Frontmatter
+---
+name: skill-folder-name  # must match folder name
+description: 'Brief description of the skill (10-1024 characters)'
+---
+```
+</CodeGroup>
+
+<Warning>
+- Always wrap `description` field values in single quotes
+- The skill's `name` field must match the folder name exactly
+- Use lowercase with hyphens for all file and folder names
+</Warning>
+
+## Using Installed Customizations
+
+### Activating Agents
+
+Once installed, agents appear in the GitHub Copilot agent selector:
+
+1. Open GitHub Copilot Chat
+2. Type `@` to see available agents
+3. Select your custom agent from the list
+
+### Using Instructions
+
+Instructions automatically apply to files matching the `applyTo` patterns. No manual activation needed.
+
+### Invoking Skills
+
+Skills are loaded when referenced by name in conversations:
+
+```
+@github load the mintlify skill
+```
+
+## Workspace vs Global Installation
+
+<CardGroup cols={2}>
+  <Card title="Workspace Installation" icon="folder">
+    Install in `.github/copilot/` within a project to share customizations with the team via version control.
+    
+    **Best for:** Team standards, project-specific agents
+  </Card>
+  
+  <Card title="Global Installation" icon="globe">
+    Install in your user configuration directory to use customizations across all projects.
+    
+    **Best for:** Personal preferences, cross-project tools
+  </Card>
+</CardGroup>
+
+<Accordion title="Global installation paths">
+**VS Code / VS Code Insiders:**
+- Windows: `%APPDATA%\Code\User\globalStorage\github.copilot\`
+- macOS: `~/Library/Application Support/Code/User/globalStorage/github.copilot/`
+- Linux: `~/.config/Code/User/globalStorage/github.copilot/`
+
+**Visual Studio:**
+Configure through Visual Studio settings (Tools → Options → GitHub Copilot)
+</Accordion>
+
+## Updating Customizations
+
+To update a customization:
+
+1. Download the latest version from the repository
+2. Replace the existing file or folder
+3. Restart GitHub Copilot or reload your editor window
+
+<Note>
+Customizations are loaded when GitHub Copilot starts. You may need to reload your editor window for changes to take effect.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Agent not appearing in selector">
+    **Check:**
+    - File has `.agent.md` extension
+    - File is in `.github/copilot/agents/` directory
+    - Frontmatter includes `description` and `name` fields
+    - File name uses lowercase with hyphens
+    
+    **Fix:** Verify frontmatter syntax and reload editor window
+  </Accordion>
+  
+  <Accordion title="Instructions not applying">
+    **Check:**
+    - File has `.instructions.md` extension
+    - File is in `.github/copilot/instructions/` directory
+    - Frontmatter includes `description` and `applyTo` fields
+    - `applyTo` pattern matches your file type
+    
+    **Example applyTo patterns:**
+    ```yaml
+    applyTo: '**.js, **.jsx'  # JavaScript files
+    applyTo: '**.py'          # Python files
+    applyTo: '**'             # All files
+    ```
+  </Accordion>
+  
+  <Accordion title="Skill not loading">
+    **Check:**
+    - Folder is in `.github/copilot/skills/` directory
+    - Folder contains a `SKILL.md` file (not `skill.md`)
+    - SKILL.md has frontmatter with `name` and `description`
+    - The `name` field matches the folder name exactly
+    - Folder name uses lowercase with hyphens
+    
+    **Fix:** Ensure all bundled assets are copied with the skill folder
+  </Accordion>
+</AccordionGroup>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Using Agents" icon="robot" href="/usage/agents">
+    Learn how to use custom agents in your workflow
+  </Card>
+  <Card title="Using Instructions" icon="list-check" href="/usage/instructions">
+    Understand how instructions customize Copilot behavior
+  </Card>
+  <Card title="Using Skills" icon="toolbox" href="/usage/skills">
+    Explore how to invoke and use skills
+  </Card>
+  <Card title="Browse Catalog" icon="books" href="/resources/agents/catalog">
+    Discover available agents, instructions, and skills
+  </Card>
+</CardGroup>
+
+## Additional Resources
+
+- [File Naming Conventions (AGENTS.md)](https://github.com/github/awesome-copilot/blob/main/AGENTS.md)
+- [Contributing Guidelines](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md)
+- [GitHub Copilot Documentation](https://docs.github.com/copilot)

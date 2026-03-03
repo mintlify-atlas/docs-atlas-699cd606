@@ -1,80 +1,365 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Quick Start Guide"
+description: "Get up and running with Awesome GitHub Copilot in under 5 minutes"
 ---
 
-## Get started in three steps
+## Prerequisites
 
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
+Before you begin, make sure you have:
 
 <AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
+  <Accordion icon="github" title="GitHub Copilot subscription">
+    You need an active GitHub Copilot subscription (Individual, Business, or Enterprise). If you don't have one, [sign up for GitHub Copilot](https://github.com/features/copilot).
   </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
+
+  <Accordion icon="code" title="Supported IDE">
+    Install one of the following:
+    - **VS Code** (recommended) - [Download](https://code.visualstudio.com/)
+    - **VS Code Insiders** - [Download](https://code.visualstudio.com/insiders/)
+    - **Visual Studio** - [Download](https://visualstudio.microsoft.com/)
+  </Accordion>
+
+  <Accordion icon="docker" title="Docker (for MCP Server)">
+    Docker must be installed and running to use the MCP server. [Download Docker Desktop](https://www.docker.com/products/docker-desktop/).
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Deploy your changes
+## Installation Methods
+
+Choose your preferred installation method:
+
+<Tabs>
+  <Tab title="One-Click Install (Recommended)">
+    The fastest way to get started is using our one-click installation badges.
+
+    ### Install the MCP Server
+
+    Click the badge for your IDE to automatically configure the Awesome Copilot MCP server:
+
+    <CardGroup cols={3}>
+      <Card title="VS Code" icon="code">
+        [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vscode)
+      </Card>
+      <Card title="VS Code Insiders" icon="flask">
+        [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?logo=visualstudiocode&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vscode-insiders)
+      </Card>
+      <Card title="Visual Studio" icon="microsoft">
+        [![Install in Visual Studio](https://img.shields.io/badge/Visual_Studio-Install-C16FDE?logo=visualstudio&logoColor=white)](https://aka.ms/awesome-copilot/mcp/vs)
+      </Card>
+    </CardGroup>
+
+    <Note>
+      The MCP server runs as a Docker container and provides tools for searching and installing agents, instructions, and skills directly from the repository.
+    </Note>
+
+    ### What gets installed?
+
+    The one-click installer automatically adds this configuration to your IDE:
+
+    <CodeGroup>
+      ```json VS Code / VS Code Insiders
+      {
+        "servers": {
+          "awesome-copilot": {
+            "type": "stdio",
+            "command": "docker",
+            "args": [
+              "run",
+              "-i",
+              "--rm",
+              "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+            ]
+          }
+        }
+      }
+      ```
+
+      ```json Visual Studio
+      {
+        "mcpServers": {
+          "awesome-copilot": {
+            "type": "stdio",
+            "command": "docker",
+            "args": [
+              "run",
+              "-i",
+              "--rm",
+              "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"
+            ]
+          }
+        }
+      }
+      ```
+    </CodeGroup>
+
+  </Tab>
+
+  <Tab title="Manual Installation">
+    If you prefer to manually configure the MCP server:
+
+    <Steps>
+      <Step title="Open MCP settings">
+        In VS Code:
+        1. Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
+        2. Type "MCP: Edit Settings"
+        3. Select and open the MCP configuration file
+
+        In Visual Studio:
+        1. Go to Tools > Options
+        2. Navigate to GitHub Copilot > MCP Servers
+        3. Click "Edit Configuration"
+      </Step>
+
+      <Step title="Add the configuration">
+        Copy the appropriate configuration from above and paste it into your MCP settings file.
+      </Step>
+
+      <Step title="Restart your IDE">
+        Restart VS Code or Visual Studio to activate the MCP server.
+      </Step>
+
+      <Step title="Verify installation">
+        Open GitHub Copilot chat and verify the MCP server is running by checking for available tools.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Your First Agent
+
+Now that the MCP server is installed, let's install and use your first custom agent!
+
+<Steps>
+  <Step title="Browse available agents">
+    Visit the [Agents Catalog](/resources/agents/catalog) or use the MCP server tools in Copilot chat to search for agents.
+
+    <Tip>
+      Try asking Copilot: "Show me available agents for React development" or "Find agents for Azure infrastructure"
+    </Tip>
+  </Step>
+
+  <Step title="Install an agent">
+    Let's install a popular agent as an example. Choose one of these methods:
+
+    **Option 1: One-click install (from catalog)**
+
+    In the [Agents Catalog](/resources/agents/catalog), click the "Install in VS Code" badge next to any agent.
+
+    **Option 2: Manual download**
+
+    1. Navigate to the [agents directory](https://github.com/github/awesome-copilot/tree/main/agents) on GitHub
+    2. Find an agent (e.g., `context7.agent.md` for up-to-date library documentation)
+    3. Click "Raw" and save the file to your repository
+
+    **Option 3: Using MCP tools**
+
+    In Copilot chat:
+    ```
+    @workspace Search for agents related to "documentation"
+    ```
+  </Step>
+
+  <Step title="Activate the agent">
+    Once installed, the agent becomes available in your GitHub Copilot interface.
+
+    **In VS Code:**
+    - Open Copilot Chat
+    - Type `@` to see available agents
+    - Select your newly installed agent
+
+    **In Coding Agent (CCA):**
+    - When assigning an issue to Copilot
+    - Select the custom agent from the provided list
+  </Step>
+
+  <Step title="Use the agent">
+    Let's test the Context7 Expert agent (if you installed it):
+
+    ```
+    @context7-expert What are the best practices for Next.js 14 routing?
+    ```
+
+    The agent will use the Context7 MCP server to fetch up-to-date documentation and provide accurate, current information.
+  </Step>
+</Steps>
+
+## Understanding Agent Resources
+
+Many agents work with **MCP servers** to provide enhanced capabilities. Here's what you need to know:
 
 <AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+  <Accordion icon="server" title="What are MCP servers?">
+    MCP (Model Context Protocol) servers are services that provide tools and resources to AI agents. They enable agents to:
+    - Search external documentation
+    - Access APIs and databases
+    - Retrieve real-time information
+    - Perform specialized computations
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    Each agent's documentation specifies which MCP servers it requires.
+  </Accordion>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
+  <Accordion icon="plug" title="Installing MCP servers for agents">
+    Some agents require additional MCP servers beyond the Awesome Copilot server. For example:
+
+    **Context7 Expert** requires the Context7 MCP server:
+    ```json
+    {
+      "context7": {
+        "type": "http",
+        "url": "https://mcp.context7.com/mcp",
+        "headers": {
+          "CONTEXT7_API_KEY": "your-api-key-here"
+        }
+      }
+    }
+    ```
+
+    Each agent's page includes "Install MCP" badges for required servers.
+  </Accordion>
+
+  <Accordion icon="key" title="Environment variables and secrets">
+    Some MCP servers require API keys or credentials. These should be:
+    - Stored in your IDE's secrets manager
+    - Never committed to version control
+    - Referenced using `${{ secrets.SECRET_NAME }}` syntax
+
+    Example:
+    ```json
+    "headers": {
+      "Authorization": "Bearer ${{ secrets.APIFY_TOKEN }}"
+    }
+    ```
   </Accordion>
 </AccordionGroup>
 
-### Step 3: Go live
+## Adding Instructions
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+Instructions automatically apply coding standards to files based on patterns. Let's add one:
 
-## Next steps
+<Steps>
+  <Step title="Choose an instruction">
+    Browse the [Instructions Catalog](/resources/instructions/catalog) or search for instructions matching your tech stack.
 
-Now that you have your docs running, explore these key features:
+    Example: `typescript.instructions.md` for TypeScript best practices
+  </Step>
+
+  <Step title="Download the file">
+    Save the `.instructions.md` file to your repository's `instructions/` folder (create it if it doesn't exist).
+  </Step>
+
+  <Step title="Automatic activation">
+    Instructions automatically activate when you work on matching files. Check the frontmatter to see which file patterns trigger the instruction.
+
+    Example frontmatter:
+    ```yaml
+    ---
+    description: 'TypeScript best practices and coding standards'
+    applyTo: '**.ts, **.tsx'
+    ---
+    ```
+  </Step>
+</Steps>
+
+## Using Skills
+
+Skills are self-contained folders with specialized capabilities:
+
+<Steps>
+  <Step title="Find a skill">
+    Browse the [Skills Catalog](/resources/skills/catalog) for tasks like:
+    - Terraform analysis
+    - Web app testing
+    - Documentation generation
+    - Code migration
+  </Step>
+
+  <Step title="Install the skill">
+    Skills are folders with bundled resources. Clone or download the entire skill folder to your repository.
+  </Step>
+
+  <Step title="Load the skill">
+    Skills can be:
+    - Loaded on-demand in Copilot chat
+    - Referenced by custom agents
+    - Installed as part of plugins
+  </Step>
+</Steps>
+
+## Next Steps
+
+Now that you have the basics, explore these areas:
 
 <CardGroup cols={2}>
+  <Card
+    title="Explore All Resources"
+    icon="compass"
+    href="/resources/agents/catalog"
+  >
+    Browse the complete catalog of agents, instructions, skills, hooks, workflows, and plugins.
+  </Card>
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+  <Card
+    title="Learn Usage Patterns"
+    icon="book-open"
+    href="/usage/agents"
+  >
+    Understand how to use each type of resource effectively in your workflow.
+  </Card>
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+  <Card
+    title="Install Plugins"
+    icon="puzzle-piece"
+    href="/usage/plugins"
+  >
+    Discover curated plugin bundles that install multiple related resources at once.
+  </Card>
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card
+    title="Cookbook Examples"
+    icon="code"
+    href="/cookbook/overview"
+  >
+    Learn from practical, copy-paste-ready code examples and real-world use cases.
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="circle-xmark" title="MCP server not connecting">
+    1. Verify Docker is running: `docker ps`
+    2. Check the MCP server configuration in your IDE settings
+    3. Restart your IDE after configuration changes
+    4. Review IDE logs for MCP-related error messages
+  </Accordion>
+
+  <Accordion icon="triangle-exclamation" title="Agent not appearing">
+    1. Ensure the agent file is in the correct location
+    2. Check that the frontmatter is valid YAML
+    3. Restart your IDE to reload agent definitions
+    4. Verify the agent file has the `.agent.md` extension
+  </Accordion>
+
+  <Accordion icon="lock" title="MCP authentication errors">
+    1. Verify API keys are correctly set in secrets
+    2. Check the MCP server headers configuration
+    3. Ensure environment variables are accessible
+    4. Review the specific MCP server's authentication documentation
+  </Accordion>
+
+  <Accordion icon="file-slash" title="Instructions not activating">
+    1. Check the `applyTo` pattern matches your file extension
+    2. Verify the instruction file is in the `instructions/` folder
+    3. Ensure frontmatter includes both `description` and `applyTo` fields
+    4. Try opening a file that matches the pattern
+  </Accordion>
+</AccordionGroup>
+
+<Card
+  title="Need More Help?"
+  icon="life-ring"
+  href="/community/support"
+  horizontal
+>
+  Visit our support guide or join the community for assistance.
+</Card>

@@ -1,0 +1,623 @@
+---
+title: Using Agentic Workflows
+description: Automate repository tasks with AI-powered GitHub Actions workflows
+---
+
+# Using Agentic Workflows
+
+[Agentic Workflows](https://github.github.com/gh-aw) are AI-powered repository automations that run coding agents in GitHub Actions. Defined in markdown with natural language instructions, they enable event-triggered and scheduled automation with built-in guardrails and security-first design.
+
+## What are Agentic Workflows?
+
+Agentic Workflows combine:
+
+- **Natural Language Instructions** - Describe what you want in plain English
+- **GitHub Actions Integration** - Run on standard GitHub infrastructure
+- **AI Coding Agents** - Powered by GitHub Copilot
+- **Security Guardrails** - Safe outputs, least-privilege permissions
+- **Event Triggers** - Schedules, slash commands, issue/PR events
+
+<Note>
+  Agentic Workflows differ from regular GitHub Actions:
+  - **Traditional Actions**: YAML with explicit steps and commands
+  - **Agentic Workflows**: Markdown with natural language goals + AI execution
+</Note>
+
+## Workflow Structure
+
+Each workflow is a single `.md` file:
+
+```markdown
+---
+name: Daily Issues Report
+description: 'Generates daily summary of open issues'
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 9 AM daily
+permissions:
+  issues: write
+  contents: read
+safe-outputs:
+  - summary
+---
+
+# Daily Issues Report
+
+## Instructions
+
+Analyze all open issues in this repository and create a summary issue with:
+
+1. Total count of open issues
+2. Issues by label
+3. Oldest issues (>30 days old)
+4. Issues without assignees
+5. Recommended priorities
+
+Post the summary as a new issue titled "Daily Issues Summary - [DATE]".
+```
+
+<Accordion title="Frontmatter Fields">
+  - **name** (required): Human-readable workflow name
+  - **description** (required): Brief description in single quotes
+  - **on** (required): Trigger events (schedule, issues, workflow_dispatch, etc.)
+  - **permissions** (required): Least-privilege GitHub token permissions
+  - **safe-outputs** (optional): Whitelisted output variables
+  - **File naming**: Lowercase with hyphens (e.g., `daily-report.md`)
+</Accordion>
+
+## Installing Workflows
+
+<Steps>
+  <Step title="Install gh aw CLI">
+    Install the GitHub CLI extension:
+
+    ```bash
+    gh extension install github/gh-aw
+    ```
+
+    Verify installation:
+    ```bash
+    gh aw --version
+    ```
+  </Step>
+
+  <Step title="Copy workflow file">
+    Download a workflow from the [workflows/ directory](https://github.com/github/awesome-copilot/tree/main/workflows) or create your own:
+
+    ```bash
+    # Copy to .github/workflows/
+    cp daily-issues-report.md .github/workflows/
+    ```
+  </Step>
+
+  <Step title="Compile to GitHub Actions">
+    Generate the `.lock.yml` file:
+
+    ```bash
+    gh aw compile --validate
+    ```
+
+    This creates `daily-issues-report.lock.yml` from `daily-issues-report.md`.
+  </Step>
+
+  <Step title="Commit both files">
+    Commit the `.md` and `.lock.yml` files:
+
+    ```bash
+    git add .github/workflows/daily-issues-report.*
+    git commit -m "Add daily issues report workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  **Important:** Always commit both the `.md` source and `.lock.yml` compiled files. Only `.yml`, `.yaml`, and `.lock.yml` files are blocked - `.md` files are required.
+</Note>
+
+## Workflow Triggers
+
+Workflows can respond to various GitHub events:
+
+<Tabs>
+  <Tab title="Schedule">
+    Run workflows on a cron schedule:
+
+    ```yaml
+    on:
+      schedule:
+        - cron: '0 9 * * *'    # Daily at 9 AM
+        - cron: '0 0 * * MON'  # Every Monday at midnight
+    ```
+
+    **Use Cases:**
+    - Daily status reports
+    - Weekly metrics summaries
+    - Monthly contributor reports
+    - Automated maintenance tasks
+  </Tab>
+
+  <Tab title="Slash Commands">
+    Trigger workflows with comments in issues/PRs:
+
+    ```yaml
+    on:
+      slash_command:
+        - /relevance-check
+        - /summarize
+    roles:
+      - write  # Only users with write access
+    ```
+
+    **Use Cases:**
+    - On-demand issue analysis
+    - PR relevance checks
+    - Code quality scans
+    - Custom automation commands
+  </Tab>
+
+  <Tab title="Issue Events">
+    React to issue activity:
+
+    ```yaml
+    on:
+      issues:
+        types: [opened, labeled]
+    ```
+
+    **Use Cases:**
+    - Auto-triage new issues
+    - Apply labels based on content
+    - Assign issues to teams
+    - Generate issue summaries
+  </Tab>
+
+  <Tab title="Manual Trigger">
+    Allow manual workflow execution:
+
+    ```yaml
+    on:
+      workflow_dispatch:
+        inputs:
+          target:
+            description: 'Target repository'
+            required: true
+    ```
+
+    **Use Cases:**
+    - Ad-hoc reports
+    - Manual maintenance tasks
+    - Testing workflows
+    - Emergency operations
+  </Tab>
+</Tabs>
+
+## Workflow Examples from the Repository
+
+<Tabs>
+  <Tab title="Daily Issues Report">
+    **Purpose:** Generate daily summary of open issues
+
+    ```markdown
+    ---
+    name: Daily Issues Report
+    description: 'Generates daily summary of open issues'
+    on:
+      schedule:
+        - cron: '0 9 * * *'
+    permissions:
+      issues: write
+      contents: read
+    ---
+
+    # Daily Issues Report
+
+    Analyze all open issues and create a summary with:
+    - Total count by label
+    - Oldest issues (>30 days)
+    - Issues without assignees
+
+    Post as a new issue titled "Daily Summary - [DATE]".
+    ```
+
+    [View Full Source](https://github.com/github/awesome-copilot/blob/main/workflows/daily-issues-report.md)
+  </Tab>
+
+  <Tab title="Relevance Check">
+    **Purpose:** Slash command to evaluate issue relevance
+
+    ```markdown
+    ---
+    name: Relevance Check
+    description: 'Evaluate if issue/PR is still relevant'
+    on:
+      slash_command:
+        - /relevance-check
+    roles:
+      - write
+    permissions:
+      issues: write
+      pull-requests: write
+    ---
+
+    # Relevance Check
+
+    Analyze the issue/PR to determine if it's still relevant:
+
+    1. Check if referenced code still exists
+    2. Verify if the problem is still applicable
+    3. Review related issues/PRs
+    4. Check for duplicate efforts
+
+    Post findings as a comment.
+    ```
+
+    [View Full Source](https://github.com/github/awesome-copilot/blob/main/workflows/relevance-check.md)
+  </Tab>
+
+  <Tab title="OSPO Health Report">
+    **Purpose:** Weekly organization health metrics
+
+    ```markdown
+    ---
+    name: OSPO Organization Health Report
+    description: 'Comprehensive weekly health report'
+    on:
+      schedule:
+        - cron: '0 9 * * MON'
+      workflow_dispatch:
+    permissions:
+      issues: write
+      contents: read
+      pull-requests: read
+    ---
+
+    # Organization Health Report
+
+    Generate a comprehensive health report:
+
+    1. Stale issues/PRs (>60 days)
+    2. Merge time analysis
+    3. Contributor leaderboards
+    4. Actionable items needing attention
+
+    Create a GitHub issue with the full report.
+    ```
+
+    [View Full Source](https://github.com/github/awesome-copilot/blob/main/workflows/ospo-org-health.md)
+  </Tab>
+
+  <Tab title="Release Compliance">
+    **Purpose:** Analyze repositories against OSS release requirements
+
+    ```markdown
+    ---
+    name: OSS Release Compliance Checker
+    description: 'Analyzes repo against release requirements'
+    on:
+      issues:
+        types: [opened]
+      workflow_dispatch:
+    permissions:
+      issues: write
+      contents: read
+    ---
+
+    # Release Compliance Checker
+
+    Analyze the target repository for:
+
+    1. LICENSE file existence and type
+    2. README completeness
+    3. CONTRIBUTING.md presence
+    4. Security policy (SECURITY.md)
+    5. Code of conduct
+    6. CI/CD configuration
+
+    Post detailed compliance report as issue comment.
+    ```
+
+    [View Full Source](https://github.com/github/awesome-copilot/blob/main/workflows/ospo-release-compliance-checker.md)
+  </Tab>
+</Tabs>
+
+## CLI Commands
+
+Manage workflows with the `gh aw` CLI:
+
+<CodeGroup>
+```bash Compile Workflow
+# Compile .md to .lock.yml
+gh aw compile --validate
+
+# Compile specific file
+gh aw compile daily-issues-report.md
+```
+
+```bash Run Workflow
+# Trigger manual run
+gh aw run daily-issues-report
+
+# Run with inputs
+gh aw run compliance-check --input repo=owner/repo
+```
+
+```bash Monitor Workflows
+# Check status
+gh aw status
+
+# View logs
+gh aw logs daily-issues-report
+
+# List all workflows
+gh aw list
+```
+
+```bash Validate
+# Validate workflow syntax
+gh aw validate daily-issues-report.md
+
+# Check permissions
+gh aw check-permissions daily-issues-report.md
+```
+</CodeGroup>
+
+## Creating Your Own Workflows
+
+<Steps>
+  <Step title="Define the goal">
+    Start with a clear automation goal:
+    - What task should be automated?
+    - When should it run?
+    - What outputs are needed?
+  </Step>
+
+  <Step title="Create workflow file">
+    ```markdown
+    ---
+    name: My Workflow
+    description: 'Brief description'
+    on:
+      schedule:
+        - cron: '0 9 * * *'
+    permissions:
+      issues: write
+      contents: read
+    safe-outputs:
+      - summary
+    ---
+
+    # My Workflow
+
+    ## Instructions
+
+    Describe what the workflow should do in natural language...
+
+    1. First step
+    2. Second step
+    3. Expected output
+    ```
+  </Step>
+
+  <Step title="Set minimal permissions">
+    Use least-privilege principle:
+
+    ```yaml
+    permissions:
+      issues: write       # Only if creating/updating issues
+      contents: read      # Read-only repo access
+      pull-requests: read # Only if reading PRs
+    ```
+  </Step>
+
+  <Step title="Define safe outputs">
+    Whitelist any workflow outputs:
+
+    ```yaml
+    safe-outputs:
+      - summary
+      - report_url
+      - status
+    ```
+  </Step>
+
+  <Step title="Compile and test">
+    ```bash
+    # Validate
+    gh aw compile --validate my-workflow.md
+
+    # Test locally (if supported)
+    gh aw test my-workflow.md
+
+    # Commit and push
+    git add .github/workflows/my-workflow.*
+    git commit -m "Add workflow"
+    git push
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Accordion title="Write Clear Instructions">
+  - Be specific about expected outcomes
+  - Break down complex tasks into steps
+  - Specify output format (issue, comment, file)
+  - Include examples when helpful
+
+  **Good:**
+  ```markdown
+  Generate a report with:
+  1. List of issues by label
+  2. Oldest 5 issues with links
+  3. Recommended next actions
+
+  Post as a new issue titled "Weekly Report - [DATE]".
+  ```
+
+  **Bad:**
+  ```markdown
+  Summarize issues and post report.
+  ```
+</Accordion>
+
+<Accordion title="Use Minimal Permissions">
+  Only request permissions you actually need:
+
+  ```yaml
+  # Good - specific permissions
+  permissions:
+    issues: write
+    contents: read
+
+  # Bad - overly broad
+  permissions:
+    contents: write
+    issues: write
+    pull-requests: write
+    actions: write
+  ```
+</Accordion>
+
+<Accordion title="Handle Edge Cases">
+  Include instructions for edge cases:
+
+  ```markdown
+  ## Instructions
+
+  Generate daily report:
+
+  1. If no issues exist, post "No open issues"
+  2. If >100 issues, group by milestone
+  3. If rate limit hit, create partial report with note
+  ```
+</Accordion>
+
+<Accordion title="Version Control Workflows">
+  - Commit both `.md` and `.lock.yml` files
+  - Use descriptive commit messages
+  - Test workflows before deploying to production
+  - Review workflow runs regularly
+</Accordion>
+
+## Security Considerations
+
+<Note>
+  **Important:** Agentic Workflows run with your repository's permissions. Follow these security guidelines:
+</Note>
+
+<Accordion title="Least Privilege">
+  Always use minimal required permissions:
+
+  ```yaml
+  # Only what you need
+  permissions:
+    issues: read  # Not write if only reading
+    contents: read  # Not write unless modifying files
+  ```
+</Accordion>
+
+<Accordion title="Safe Outputs">
+  Whitelist outputs to prevent data leakage:
+
+  ```yaml
+  safe-outputs:
+    - public_summary  # OK to expose
+    # Never include: secrets, tokens, private data
+  ```
+</Accordion>
+
+<Accordion title="Input Validation">
+  Describe validation in instructions:
+
+  ```markdown
+  ## Instructions
+
+  Before processing input:
+  1. Validate input format
+  2. Sanitize user-provided data
+  3. Check input length limits
+  4. Reject if suspicious patterns detected
+  ```
+</Accordion>
+
+<Accordion title="Audit Workflow Runs">
+  - Review workflow execution logs
+  - Monitor for unexpected behavior
+  - Track API rate limit usage
+  - Set up alerts for failures
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="Workflow not compiling">
+  - Check frontmatter YAML is valid
+  - Verify all required fields are present
+  - Run `gh aw validate workflow.md`
+  - Check for syntax errors in markdown
+</Accordion>
+
+<Accordion title="Workflow not triggering">
+  - Verify `.lock.yml` file exists and is committed
+  - Check cron syntax for scheduled workflows
+  - Ensure permissions are set correctly
+  - Review GitHub Actions logs
+</Accordion>
+
+<Accordion title="Permission errors">
+  - Grant required permissions in frontmatter
+  - Check GitHub token scopes
+  - Verify repository settings allow Actions
+  - Review branch protection rules
+</Accordion>
+
+<Accordion title="Unexpected output">
+  - Refine natural language instructions
+  - Add more specific steps
+  - Include examples of expected format
+  - Test with smaller scope first
+</Accordion>
+
+## Common Use Cases
+
+<Tabs>
+  <Tab title="Maintenance">
+    - Daily/weekly issue reports
+    - Stale issue/PR identification
+    - Dependency update checks
+    - License compliance scanning
+    - Broken link detection
+  </Tab>
+
+  <Tab title="Triage">
+    - Auto-label new issues
+    - Assign to appropriate teams
+    - Detect duplicates
+    - Prioritize by severity
+    - Route to subject matter experts
+  </Tab>
+
+  <Tab title="Metrics">
+    - Contributor activity reports
+    - Code review metrics
+    - Merge time analysis
+    - Issue resolution tracking
+    - Release readiness checks
+  </Tab>
+
+  <Tab title="Quality">
+    - Code quality scans
+    - Test coverage reports
+    - Security vulnerability checks
+    - Documentation coverage
+    - Best practice compliance
+  </Tab>
+</Tabs>
+
+## Related Resources
+
+- [Browse All Workflows](https://github.com/github/awesome-copilot/tree/main/workflows)
+- [GitHub Agentic Workflows Specification](https://github.github.com/gh-aw)
+- [GitHub CLI Extension](https://github.com/github/gh-aw)
+- [Hooks](/usage/hooks) - Session-triggered automation
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-agentic-workflows)

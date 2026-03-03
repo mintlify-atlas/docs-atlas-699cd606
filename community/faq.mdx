@@ -1,0 +1,198 @@
+---
+title: Frequently Asked Questions
+description: Common questions about the Awesome GitHub Copilot project
+---
+
+Find answers to frequently asked questions about contributing to and using the Awesome GitHub Copilot repository.
+
+## General Questions
+
+<Accordion title="What is Awesome GitHub Copilot?">
+  Awesome GitHub Copilot is a community-driven collection of custom agents, instructions, skills, hooks, workflows, and plugins designed to enhance GitHub Copilot experiences across various domains, languages, and use cases.
+</Accordion>
+
+<Accordion title="Who maintains this project?">
+  This project is maintained by GitHub and Microsoft staff **and the community**. It's a collaborative effort where everyone can contribute to improve the resource for all GitHub Copilot users.
+</Accordion>
+
+<Accordion title="How can I use the resources in this repository?">
+  You can browse the repository to find instructions, agents, skills, hooks, workflows, and plugins that match your development needs. Each resource type has specific installation and usage instructions in its respective documentation.
+</Accordion>
+
+## Contributing
+
+<Accordion title="How do I contribute a new resource?">
+  You can contribute instructions, agents, skills, hooks, workflows, or plugins. Each type has specific guidelines:
+  
+  1. Fork the repository
+  2. Create a new branch for your contribution
+  3. Add your resource following the appropriate guidelines
+  4. Run `npm install` and `npm run build` to update the README
+  5. Submit a pull request to the `staged` branch
+  
+  See the [Contributing Guide](/community/contributing) for detailed instructions.
+</Accordion>
+
+<Accordion title="Which branch should I target for pull requests?">
+  All pull requests should target the **`staged`** branch, not `main`. This is important for the project's workflow.
+</Accordion>
+
+<Accordion title="What naming convention should I follow?">
+  All files and folders should use lowercase names with words separated by hyphens. For example:
+  
+  - `python-django.instructions.md`
+  - `react-performance-expert.agent.md`
+  - `my-skill-folder/SKILL.md`
+  - `session-logger/` (for hooks)
+</Accordion>
+
+<Accordion title="Do I need to update the README myself?">
+  No, the README is generated automatically. You just need to run `npm run build` after adding your contribution, and the script will update the README with your new resource.
+</Accordion>
+
+<Accordion title="What is the pre-commit checklist?">
+  Before submitting a pull request, ensure you:
+  
+  - Run `npm install` (or `npm ci`) to install dependencies
+  - Run `npm run build` to generate the updated README.md
+  - Run `bash scripts/fix-line-endings.sh` to normalize line endings
+  - Verify that all new files have proper front matter
+  - Test that your contribution works with GitHub Copilot
+  - Check that file names follow the naming convention
+</Accordion>
+
+## Resource Types
+
+<Accordion title="What's the difference between Instructions and Agents?">
+  **Instructions** are coding standards and best practices that apply to specific file patterns. They help customize GitHub Copilot's behavior for particular technologies or frameworks.
+  
+  **Agents** are specialized personas or assistants that transform GitHub Copilot Chat into domain-specific experts for particular development scenarios.
+</Accordion>
+
+<Accordion title="What are Skills?">
+  Skills are self-contained folders that include a `SKILL.md` file with instructions and optional bundled assets (scripts, templates, data files). They provide specialized knowledge for specific tasks and follow the [Agent Skills specification](https://agentskills.io/specification).
+</Accordion>
+
+<Accordion title="What are Plugins?">
+  Plugins are installable packages that group related agents, commands, and skills around specific themes or workflows. They make it easy for users to install comprehensive toolkits via GitHub Copilot CLI.
+</Accordion>
+
+<Accordion title="What are Hooks?">
+  Hooks are automated workflows triggered by specific events during GitHub Copilot coding agent sessions, such as session start, session end, user prompts, and tool usage. They follow the [GitHub Copilot hooks specification](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/use-hooks).
+</Accordion>
+
+<Accordion title="What are Agentic Workflows?">
+  [Agentic Workflows](https://github.github.com/gh-aw) are AI-powered repository automations that run coding agents in GitHub Actions. They're defined in markdown with natural language instructions and enable scheduled and event-triggered automation with built-in guardrails.
+</Accordion>
+
+## File Requirements
+
+<Accordion title="What frontmatter is required for Instructions?">
+  Instruction files (`*.instructions.md`) must have:
+  
+  - `description` field (wrapped in single quotes, not empty)
+  - `applyTo` field specifying file patterns (e.g., `'**.js, **.ts'`)
+</Accordion>
+
+<Accordion title="What frontmatter is required for Agents?">
+  Agent files (`*.agent.md`) must have:
+  
+  - `description` field (wrapped in single quotes, not empty)
+  - `name` field with human-readable name (e.g., "Address Comments" not "address-comments")
+  
+  It's also strongly recommended to include:
+  - `model` field
+  - `tools` field
+</Accordion>
+
+<Accordion title="What frontmatter is required for Skills?">
+  Skills (`SKILL.md`) must have:
+  
+  - `name` field (lowercase with hyphens, matching folder name, max 64 characters)
+  - `description` field (wrapped in single quotes, 10-1024 characters)
+</Accordion>
+
+<Accordion title="What frontmatter is required for Hooks?">
+  Hook folders must contain:
+  
+  - `README.md` with frontmatter including:
+    - `name` field (human-readable name)
+    - `description` field (wrapped in single quotes, not empty)
+    - Optional `tags` field for categorization
+  - `hooks.json` file with valid hook configuration
+</Accordion>
+
+<Accordion title="What frontmatter is required for Workflows?">
+  Workflow files (`*.md` in workflows/) must have:
+  
+  - `name` field (human-readable name)
+  - `description` field (wrapped in single quotes, not empty)
+  - Agentic workflow frontmatter including `on`, `permissions`, and optionally `safe-outputs`
+</Accordion>
+
+## Validation and Testing
+
+<Accordion title="How do I validate my plugin?">
+  Run `npm run plugin:validate` to verify your plugin structure. This will check that your `plugin.json` is valid and all referenced files exist.
+</Accordion>
+
+<Accordion title="How do I validate my skill?">
+  Run `npm run skill:validate` to validate your skill structure. This will check that your `SKILL.md` has the required frontmatter and follows the specification.
+</Accordion>
+
+<Accordion title="How do I test my workflow?">
+  Use the GitHub CLI command `gh aw compile --validate --no-emit <workflow-file>.md` to verify your workflow compiles correctly before submitting.
+</Accordion>
+
+<Accordion title="What should I do about line endings?">
+  Always run `bash scripts/fix-line-endings.sh` before committing. This normalizes line endings from CRLF (Windows) to LF (Unix-style), which is required for the repository.
+</Accordion>
+
+## Recognition
+
+<Accordion title="How does contributor recognition work?">
+  We use [all-contributors](https://github.com/all-contributors/all-contributors) to recognize all types of contributions. To add yourself, leave a comment on a relevant issue or pull request:
+  
+  ```markdown
+  @all-contributors add @username for contributionType1, contributionType2
+  ```
+  
+  The contributors list is updated automatically every Sunday at 3:00 AM UTC.
+</Accordion>
+
+<Accordion title="What contribution types are recognized?">
+  We recognize custom contribution types including:
+  
+  - **Instructions** 🧭 - Custom instruction sets
+  - **Agents** 🎭 - GitHub Copilot roles or personalities
+  - **Skills** 🧰 - Specialized knowledge for tasks
+  - **Workflows** ⚡ - Agentic Workflows for automation
+  - **Plugins** 🎁 - Installable packages
+  
+  Plus all standard [All Contributors](https://allcontributors.org/emoji-key/) types.
+</Accordion>
+
+## Policies
+
+<Accordion title="What content is not accepted?">
+  We will not accept contributions that:
+  
+  - Violate Responsible AI Principles
+  - Compromise Security
+  - Enable Malicious Activities
+  - Exploit Weaknesses
+  - Promote Harmful Content
+  - Circumvent Platform Policies
+  
+  See [What We Don't Accept](/community/contributing#what-we-dont-accept) for details.
+</Accordion>
+
+<Accordion title="What is the license for contributions?">
+  By contributing to this repository, you agree that your contributions will be licensed under the MIT License.
+</Accordion>
+
+## Getting Help
+
+<Note>
+Still have questions? Check out our [Support](/community/support) page to learn how to get help or file an issue on GitHub.
+</Note>

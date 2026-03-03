@@ -1,0 +1,386 @@
+---
+title: Go SDK Cookbook
+description: Practical recipes for building with the GitHub Copilot SDK in Go
+---
+
+# Go SDK Cookbook
+
+Short, practical recipes for using the GitHub Copilot SDK with Go. Each recipe is concise, copy-pasteable, and points to complete runnable examples.
+
+## Setup
+
+Install the GitHub Copilot SDK for Go:
+
+```bash
+go get github.com/github/copilot-sdk/go
+```
+
+Import in your code:
+
+```go
+import copilot "github.com/github/copilot-sdk/go"
+```
+
+## Error Handling
+
+Handle errors gracefully including connection failures, timeouts, and cleanup.
+
+### Basic Error Handling
+
+<CodeGroup>
+```go Basic Example
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func main() {
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
+
+    if err := client.Start(ctx); err != nil {
+        log.Fatalf("Failed to start client: %v", err)
+    }
+    defer client.Stop()
+
+    session, err := client.CreateSession(ctx, &copilot.SessionConfig{
+        Model: "gpt-5",
+    })
+    if err != nil {
+        log.Fatalf("Failed to create session: %v", err)
+    }
+    defer session.Destroy()
+
+    result, err := session.SendAndWait(ctx, copilot.MessageOptions{Prompt: "Hello!"})
+    if err != nil {
+        log.Printf("Failed to send message: %v", err)
+        return
+    }
+
+    if result != nil && result.Data.Content != nil {
+        fmt.Println(*result.Data.Content)
+    }
+}
+```
+
+```go Specific Error Types
+import (
+    "context"
+    "errors"
+    "fmt"
+    "os/exec"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func startClient(ctx context.Context) error {
+    client := copilot.NewClient(nil)
+
+    if err := client.Start(ctx); err != nil {
+        var execErr *exec.Error
+        if errors.As(err, &execErr) {
+            return fmt.Errorf("Copilot CLI not found. Please install it first: %w", err)
+        }
+        if errors.Is(err, context.DeadlineExceeded) {
+            return fmt.Errorf("Could not connect to Copilot CLI server: %w", err)
+        }
+        return fmt.Errorf("Unexpected error: %w", err)
+    }
+
+    return nil
+}
+```
+</CodeGroup>
+
+### Timeout Handling
+
+```go
+import (
+    "context"
+    "errors"
+    "fmt"
+    "time"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func sendWithTimeout(session *copilot.Session) error {
+    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    defer cancel()
+
+    result, err := session.SendAndWait(ctx, copilot.MessageOptions{Prompt: "Complex question..."})
+    if err != nil {
+        if errors.Is(err, context.DeadlineExceeded) {
+            return fmt.Errorf("request timed out")
+        }
+        return err
+    }
+
+    if result != nil && result.Data.Content != nil {
+        fmt.Println(*result.Data.Content)
+    }
+    return nil
+}
+```
+
+### Graceful Shutdown
+
+```go
+import (
+    "context"
+    "fmt"
+    "log"
+    "os"
+    "os/signal"
+    "syscall"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func main() {
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
+
+    // Set up signal handling
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+    go func() {
+        <-sigChan
+        fmt.Println("\nShutting down...")
+        client.Stop()
+        os.Exit(0)
+    }()
+
+    if err := client.Start(ctx); err != nil {
+        log.Fatal(err)
+    }
+
+    // ... do work ...
+}
+```
+
+<Tip>
+Always use `defer client.Stop()` to ensure cleanup happens even when errors occur. Go's defer mechanism makes resource cleanup reliable and concise.
+</Tip>
+
+## Multiple Sessions
+
+Manage multiple independent conversations simultaneously.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func main() {
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
+
+    if err := client.Start(ctx); err != nil {
+        log.Fatal(err)
+    }
+    defer client.Stop()
+
+    // Create multiple independent sessions
+    session1, _ := client.CreateSession(ctx, &copilot.SessionConfig{Model: "gpt-5"})
+    session2, _ := client.CreateSession(ctx, &copilot.SessionConfig{Model: "gpt-5"})
+    session3, _ := client.CreateSession(ctx, &copilot.SessionConfig{Model: "claude-sonnet-4.5"})
+
+    defer session1.Destroy()
+    defer session2.Destroy()
+    defer session3.Destroy()
+
+    // Each session maintains its own conversation history
+    session1.Send(ctx, copilot.MessageOptions{Prompt: "You are helping with a Python project"})
+    session2.Send(ctx, copilot.MessageOptions{Prompt: "You are helping with a TypeScript project"})
+    session3.Send(ctx, copilot.MessageOptions{Prompt: "You are helping with a Go project"})
+
+    // Follow-up messages stay in their respective contexts
+    session1.SendAndWait(ctx, copilot.MessageOptions{Prompt: "How do I create a virtual environment?"})
+    session2.SendAndWait(ctx, copilot.MessageOptions{Prompt: "How do I set up tsconfig?"})
+    session3.SendAndWait(ctx, copilot.MessageOptions{Prompt: "How do I initialize a module?"})
+
+    fmt.Println("All sessions completed")
+}
+```
+
+### Custom Session IDs
+
+```go
+session, err := client.CreateSession(ctx, &copilot.SessionConfig{
+    SessionID: "user-123-chat",
+    Model:     "gpt-5",
+})
+
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Session ID: %s\n", session.SessionID)
+```
+
+### Use Cases
+
+<CardGroup cols={3}>
+  <Card title="Multi-User Apps" icon="users">
+    One session per user with custom session IDs
+  </Card>
+  <Card title="Parallel Processing" icon="layer-group">
+    Run multiple AI tasks concurrently
+  </Card>
+  <Card title="Model Comparison" icon="code-compare">
+    Compare outputs from different models
+  </Card>
+</CardGroup>
+
+## Session Persistence
+
+Save and resume sessions across application restarts.
+
+```go
+import (
+    "context"
+    "encoding/json"
+    "os"
+    copilot "github.com/github/copilot-sdk/go"
+)
+
+func saveSession(session *copilot.Session) error {
+    state := session.GetState()
+    data, err := json.Marshal(state)
+    if err != nil {
+        return err
+    }
+    return os.WriteFile("session.json", data, 0644)
+}
+
+func restoreSession(ctx context.Context, client *copilot.Client) (*copilot.Session, error) {
+    data, err := os.ReadFile("session.json")
+    if err != nil {
+        return nil, err
+    }
+
+    var state copilot.SessionState
+    if err := json.Unmarshal(data, &state); err != nil {
+        return nil, err
+    }
+
+    return client.CreateSession(ctx, &copilot.SessionConfig{
+        Model: "gpt-5",
+        State: &state,
+    })
+}
+```
+
+<Note>
+Session persistence is useful for long-running workflows or when you need to maintain conversation context between application restarts.
+</Note>
+
+## Deferred Cleanup Pattern
+
+Go's defer makes resource cleanup elegant:
+
+```go
+func doWork() error {
+    ctx := context.Background()
+    client := copilot.NewClient(nil)
+
+    if err := client.Start(ctx); err != nil {
+        return fmt.Errorf("failed to start: %w", err)
+    }
+    defer client.Stop()
+
+    session, err := client.CreateSession(ctx, &copilot.SessionConfig{Model: "gpt-5"})
+    if err != nil {
+        return fmt.Errorf("failed to create session: %w", err)
+    }
+    defer session.Destroy()
+
+    // ... do work ...
+
+    return nil
+}
+```
+
+## Running Examples
+
+All complete, runnable examples are available in the [cookbook/copilot-sdk/go/recipe](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/go/recipe) directory.
+
+<Steps>
+  <Step title="Navigate to the recipe directory">
+    ```bash
+    cd cookbook/copilot-sdk/go/recipe
+    ```
+  </Step>
+  
+  <Step title="Run any example">
+    ```bash
+    go run error-handling.go
+    go run multiple-sessions.go
+    go run persisting-sessions.go
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always Use defer for Cleanup">
+    Use `defer` to ensure `Stop()` and `Destroy()` are called, maintaining Go's resource cleanup idioms.
+    
+    ```go
+    defer client.Stop()
+    defer session.Destroy()
+    ```
+  </Accordion>
+  
+  <Accordion title="Handle Connection Errors">
+    The Copilot CLI might not be installed. Check for specific error types.
+    
+    ```go
+    var execErr *exec.Error
+    if errors.As(err, &execErr) {
+        return fmt.Errorf("CLI not found: %w", err)
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Use Context for Timeouts">
+    Use `context.WithTimeout` for all long-running requests.
+    
+    ```go
+    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    defer cancel()
+    ```
+  </Accordion>
+  
+  <Accordion title="Wrap Errors for Context">
+    Use `fmt.Errorf` with `%w` to preserve error chains for debugging.
+    
+    ```go
+    return fmt.Errorf("failed to create session: %w", err)
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Additional Recipes
+
+Explore more advanced recipes in the source repository:
+
+- **[Ralph Loop](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/go/ralph-loop.md)** - Autonomous AI coding loops
+- **[PR Visualization](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/go/pr-visualization.md)** - Generate interactive PR charts
+- **[Accessibility Report](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/go/accessibility-report.md)** - WCAG accessibility reports
+- **[Managing Local Files](https://github.com/github/awesome-copilot/blob/main/cookbook/copilot-sdk/go/managing-local-files.md)** - AI-powered file organization
+
+## Resources
+
+- [GitHub Copilot SDK Repository](https://github.com/github/copilot-sdk)
+- [Go SDK Documentation](https://github.com/github/copilot-sdk/tree/main/go)
+- [Complete Recipe Collection](https://github.com/github/awesome-copilot/tree/main/cookbook/copilot-sdk/go)

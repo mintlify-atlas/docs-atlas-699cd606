@@ -1,0 +1,400 @@
+---
+title: Using Custom Instructions
+description: Apply coding standards and best practices automatically with custom instructions
+---
+
+# Using Custom Instructions
+
+Custom instructions enable you to apply team-specific coding standards, best practices, and framework patterns automatically to your GitHub Copilot experience. Instructions are stored as `.instructions.md` files and apply contextually based on file patterns.
+
+## What are Custom Instructions?
+
+Custom instructions are markdown files that provide guidance to GitHub Copilot for specific file types, languages, or project contexts. They help ensure:
+
+- **Consistency** - All team members follow the same coding standards
+- **Best Practices** - Framework-specific patterns are automatically applied
+- **Quality** - Code meets organizational requirements
+- **Context** - Copilot understands your project's unique conventions
+
+<Note>
+  Instructions automatically apply to Copilot's behavior - no manual activation needed!
+</Note>
+
+## Installing Custom Instructions
+
+<Tabs>
+  <Tab title="One-Click Install">
+    Browse the [Instructions Catalog](https://github.com/github/awesome-copilot/blob/main/docs/README.instructions.md) and click the install button:
+
+    - **VS Code**: Click the VS Code install badge
+    - **VS Code Insiders**: Click the VS Code Insiders install badge
+
+    The instruction file will be automatically added to your workspace.
+  </Tab>
+
+  <Tab title="Manual Installation">
+    <Steps>
+      <Step title="Download the file">
+        Navigate to the [instructions/ directory](https://github.com/github/awesome-copilot/tree/main/instructions) and download the desired `*.instructions.md` file.
+      </Step>
+
+      <Step title="Choose installation location">
+        Install instructions in one of these locations:
+
+        - **Project-wide**: `.github/copilot-instructions.md` (single file)
+        - **Organized**: `.github/instructions/my-rules.instructions.md` (multiple files)
+        - **Root directory**: `copilot-instructions.md` (legacy)
+      </Step>
+
+      <Step title="Verify installation">
+        Copilot will automatically detect and apply the instructions when you work with matching files.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Instruction File Structure
+
+Every instruction file follows this structure:
+
+```markdown
+---
+description: 'Brief description of the instructions'
+applyTo: '**/*.cs, **/*.ts'  # File patterns
+---
+
+# Instruction Title
+
+## Guidelines
+
+Detailed coding standards and practices...
+```
+
+<Accordion title="Frontmatter Field Requirements">
+  - **description** (required): Wrapped in single quotes, not empty
+  - **applyTo** (required): File patterns using glob syntax (e.g., `'**.js, **.ts'`)
+  - **File naming**: Use lowercase with hyphens (e.g., `csharp-coding.instructions.md`)
+</Accordion>
+
+## File Pattern Matching
+
+The `applyTo` field uses glob patterns to determine when instructions activate:
+
+<CodeGroup>
+```yaml Single Language
+---
+applyTo: '**/*.cs'
+---
+Applies to all C# files
+```
+
+```yaml Multiple Extensions
+---
+applyTo: '**/*.ts, **/*.tsx'
+---
+Applies to TypeScript and TSX files
+```
+
+```yaml Specific Directory
+---
+applyTo: 'src/api/**/*.js'
+---
+Applies only to JS files in src/api/
+```
+
+```yaml All Files
+---
+applyTo: '**/*'
+---
+Applies to all files in the project
+```
+</CodeGroup>
+
+## How Instructions Apply
+
+Instructions automatically activate based on context:
+
+<Steps>
+  <Step title="File Match">
+    When you open or edit a file, Copilot checks the `applyTo` pattern for all instructions in your workspace.
+  </Step>
+
+  <Step title="Context Loading">
+    Matching instructions are loaded into Copilot's context, influencing completions and chat responses.
+  </Step>
+
+  <Step title="Automatic Application">
+    Copilot follows the guidelines when:
+    - Generating code completions
+    - Answering questions in chat
+    - Refactoring code
+    - Creating new files
+  </Step>
+</Steps>
+
+## Common Instruction Patterns
+
+<Tabs>
+  <Tab title="Language Standards">
+    Define coding conventions for specific languages:
+
+    ```markdown
+    ---
+    description: 'C# coding standards'
+    applyTo: '**/*.cs'
+    ---
+
+    # C# Development
+
+    ## Naming Conventions
+    - Use PascalCase for classes, methods, and properties
+    - Use camelCase for local variables and private fields
+    - Prefix interfaces with "I" (e.g., IUserService)
+
+    ## Formatting
+    - Use file-scoped namespace declarations
+    - Always use `is null` instead of `== null`
+    - Prefer pattern matching and switch expressions
+    ```
+  </Tab>
+
+  <Tab title="Framework Patterns">
+    Enforce framework-specific best practices:
+
+    ```markdown
+    ---
+    description: 'Angular development standards'
+    applyTo: '**/*.ts, **/*.html'
+    ---
+
+    # Angular Development
+
+    ## Component Structure
+    - Use OnPush change detection by default
+    - Implement OnDestroy and unsubscribe from observables
+    - Use standalone components with provideHttpClient
+
+    ## State Management
+    - Use signals for reactive state
+    - Avoid nested subscriptions
+    ```
+  </Tab>
+
+  <Tab title="Security & Quality">
+    Embed security and quality checks:
+
+    ```markdown
+    ---
+    description: 'Security best practices'
+    applyTo: '**/*.js, **/*.ts, **/*.py'
+    ---
+
+    # Security Standards
+
+    ## Input Validation
+    - Always validate and sanitize user input
+    - Use parameterized queries to prevent SQL injection
+    - Validate file uploads (type, size, content)
+
+    ## Authentication
+    - Never store passwords in plain text
+    - Use bcrypt with salt for password hashing
+    - Implement rate limiting for auth endpoints
+    ```
+  </Tab>
+
+  <Tab title="Project-Specific">
+    Document your unique project conventions:
+
+    ```markdown
+    ---
+    description: 'Project API conventions'
+    applyTo: 'src/api/**/*.ts'
+    ---
+
+    # API Development Standards
+
+    ## Error Handling
+    - Use AppError class for all errors
+    - Return standard error format: { code, message, details }
+    - Log errors with correlation IDs
+
+    ## Response Format
+    - All responses use { success, data, error } structure
+    - Include pagination metadata for list endpoints
+    ```
+  </Tab>
+</Tabs>
+
+## Real Examples from the Repository
+
+Here are popular instructions from awesome-copilot:
+
+<CodeGroup>
+```markdown C# Development
+---
+description: 'Guidelines for building C# applications'
+applyTo: '**/*.cs'
+---
+
+# C# Development
+
+- Always use the latest C# version (C# 14)
+- Follow PascalCase for public members, camelCase for private
+- Prefix interfaces with "I"
+- Use file-scoped namespaces
+- Trust null annotations - don't add null checks unnecessarily
+```
+
+```markdown React Best Practices
+---
+description: 'React development standards'
+applyTo: '**/*.tsx, **/*.jsx'
+---
+
+# React Development
+
+- Use functional components with hooks
+- Implement proper error boundaries
+- Memoize expensive computations with useMemo
+- Use useCallback for function props to child components
+```
+
+```markdown Terraform Azure
+---
+description: 'Azure Terraform best practices'
+applyTo: '**/*.tf'
+---
+
+# Azure Terraform
+
+- Use Azure Verified Modules (AVM) when available
+- Always tag resources with environment, owner, project
+- Use remote state in Azure Storage
+- Implement least-privilege access with managed identities
+```
+</CodeGroup>
+
+## Organizing Multiple Instructions
+
+For projects with many instructions:
+
+<Accordion title="Single File Approach">
+  Combine all instructions in `.github/copilot-instructions.md`:
+
+  ```markdown
+  # TypeScript Standards
+  Apply to: **/*.ts
+
+  [TypeScript rules here]
+
+  ---
+
+  # React Standards
+  Apply to: **/*.tsx
+
+  [React rules here]
+  ```
+
+  **Pros:** Simple, one file to manage  
+  **Cons:** Can become large, harder to maintain
+</Accordion>
+
+<Accordion title="Multi-File Approach (Recommended)">
+  Create separate files in `.github/instructions/`:
+
+  ```
+  .github/instructions/
+    ├── typescript.instructions.md
+    ├── react.instructions.md
+    ├── testing.instructions.md
+    └── security.instructions.md
+  ```
+
+  **Pros:** Organized, easier to maintain, reusable  
+  **Cons:** Multiple files to track
+</Accordion>
+
+## Best Practices
+
+<Accordion title="Keep Instructions Focused">
+  - Create separate instruction files for different concerns
+  - Use specific `applyTo` patterns to avoid conflicts
+  - Keep instructions concise and actionable
+  - Avoid duplicating framework documentation
+</Accordion>
+
+<Accordion title="Make Instructions Actionable">
+  **Good:**
+  ```markdown
+  - Use PascalCase for class names
+  - Implement IDisposable for unmanaged resources
+  ```
+
+  **Bad:**
+  ```markdown
+  - Write good code
+  - Follow best practices
+  ```
+</Accordion>
+
+<Accordion title="Version-Specific Guidance">
+  When referencing frameworks, specify versions:
+
+  ```markdown
+  ## React 18+ Features
+  - Use Suspense for data fetching
+  - Implement useTransition for non-urgent updates
+  - Use useId for unique IDs in SSR
+  ```
+</Accordion>
+
+## Creating Your Own Instructions
+
+To create custom instructions for your team:
+
+<Steps>
+  <Step title="Identify patterns">
+    Review your codebase and identify common patterns, conventions, and frequently violated rules.
+  </Step>
+
+  <Step title="Create instruction file">
+    Create a new `.instructions.md` file with proper frontmatter:
+
+    ```markdown
+    ---
+    description: 'Your team standards'
+    applyTo: '**/*.ext'
+    ---
+
+    # Standards
+    [Your rules here]
+    ```
+  </Step>
+
+  <Step title="Test and iterate">
+    Test with Copilot, refine based on results, and share with your team.
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Instructions not applying">
+  - Verify file is in `.github/instructions/` or `.github/copilot-instructions.md`
+  - Check `applyTo` pattern matches your files
+  - Ensure frontmatter YAML is valid
+  - Reload VS Code window
+</Accordion>
+
+<Accordion title="Conflicting instructions">
+  - More specific `applyTo` patterns take precedence
+  - Later instructions override earlier ones
+  - Consider combining related instructions
+</Accordion>
+
+## Related Resources
+
+- [Browse All Instructions](https://github.com/github/awesome-copilot/blob/main/docs/README.instructions.md)
+- [Custom Agents](/usage/agents) - Specialized AI personas
+- [Agent Skills](/usage/skills) - Self-contained capabilities
+- [Contributing Guide](https://github.com/github/awesome-copilot/blob/main/CONTRIBUTING.md#adding-instructions)
