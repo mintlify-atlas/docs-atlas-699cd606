@@ -1,0 +1,158 @@
+{
+  "projectType": "general",
+  "projectName": "Awesome GitHub Copilot",
+  "projectDescription": "A community collection of custom agents, instructions, skills, hooks, workflows, and plugins to enhance GitHub Copilot across different domains and use cases.",
+  "theme": "palm",
+  "primaryColor": "#0969DA",
+  "lightColor": "#58A6FF",
+  "darkColor": "#1F6FEB",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Installation",
+            "pages": [
+              "installation/mcp-server",
+              "installation/manual-install"
+            ]
+          },
+          {
+            "group": "Usage",
+            "pages": [
+              "usage/agents",
+              "usage/instructions",
+              "usage/skills",
+              "usage/hooks",
+              "usage/workflows",
+              "usage/plugins"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Agents",
+            "pages": [
+              "resources/agents/overview",
+              "resources/agents/catalog"
+            ]
+          },
+          {
+            "group": "Instructions",
+            "pages": [
+              "resources/instructions/overview",
+              "resources/instructions/catalog"
+            ]
+          },
+          {
+            "group": "Skills",
+            "pages": [
+              "resources/skills/overview",
+              "resources/skills/catalog"
+            ]
+          },
+          {
+            "group": "Hooks",
+            "pages": [
+              "resources/hooks/overview",
+              "resources/hooks/catalog"
+            ]
+          },
+          {
+            "group": "Workflows",
+            "pages": [
+              "resources/workflows/overview",
+              "resources/workflows/catalog"
+            ]
+          },
+          {
+            "group": "Plugins",
+            "pages": [
+              "resources/plugins/overview",
+              "resources/plugins/catalog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Cookbook",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "cookbook/overview"
+            ]
+          },
+          {
+            "group": "SDK Examples",
+            "pages": [
+              "cookbook/sdk/csharp",
+              "cookbook/sdk/go",
+              "cookbook/sdk/nodejs",
+              "cookbook/sdk/python"
+            ]
+          },
+          {
+            "group": "Practical Examples",
+            "pages": [
+              "cookbook/examples/custom-agents",
+              "cookbook/examples/custom-instructions",
+              "cookbook/examples/custom-skills"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Community",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "community/contributing",
+              "community/code-of-conduct"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": [
+              "community/faq",
+              "community/support",
+              "community/security"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "400+ custom agents for specialized GitHub Copilot workflows",
+    "500+ instruction sets for coding standards and best practices",
+    "200+ skills with bundled resources for complex tasks",
+    "Hooks for automated workflows during development",
+    "Agentic workflows for GitHub Actions automation",
+    "MCP Server for easy installation and discovery",
+    "Plugin system for bundled collections",
+    "Multi-language support across major programming languages"
+  ],
+  "publicApiSurface": [
+    "Custom Agents (.agent.md files)",
+    "Custom Instructions (.instructions.md files)",
+    "Agent Skills (SKILL.md with bundled assets)",
+    "Hooks (README.md + hooks.json)",
+    "Agentic Workflows (.md workflow files)",
+    "Plugins (plugin.json manifests)",
+    "MCP Server (Docker-based installation)",
+    "Copilot CLI plugin marketplace integration"
+  ]
+}
